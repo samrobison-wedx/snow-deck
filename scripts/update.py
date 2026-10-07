@@ -12,6 +12,7 @@ TZ = ZoneInfo("America/Denver")  # every current area is in Mountain time
 UA = "SnowDeck (https://github.com/%s)" % os.environ.get("GITHUB_REPOSITORY", "local-test")
 SNOTEL = "https://wcc.sc.egov.usda.gov/awdbRestApi/services/v1"
 OM = "https://api.open-meteo.com/v1/forecast"
+SNOTEL_STATES = ["CO", "UT", "NM", "MT", "WY", "ID", "CA", "NV", "OR", "WA", "AZ", "AK", "VT", "NH", "ME", "NY"]  # empty states are harmless
 AV = "https://api.avalanche.org/v2/public"
 MODELS = {"gfs_seamless": "GFS", "ecmwf_ifs025": "ECMWF", "icon_seamless": "ICON", "gem_seamless": "GEM"}
 NOW = datetime.now(TZ)
@@ -54,7 +55,7 @@ def hourly(series, spread=False):
             out[int((t + timedelta(hours=k)).timestamp())] = v["value"] / hrs if spread else v["value"]
     return out
  
-def forecast(lat, lon):
+def forecast(lat, lon, tz=TZ):
     pts = get("https://api.weather.gov/points/%.4f,%.4f" % (lat, lon))
     if not pts:
         return None
@@ -64,8 +65,8 @@ def forecast(lat, lon):
     g = grid["properties"]
     snow, temp = hourly(g["snowfallAmount"], True), hourly(g["temperature"])
     pop, wind = hourly(g["probabilityOfPrecipitation"]), hourly(g["windSpeed"])
-    today = NOW.date()
-    day = lambda ts: datetime.fromtimestamp(ts, TZ).date()
+    today = datetime.now(tz).date()
+    day = lambda ts: datetime.fromtimestamp(ts, tz).date()
     fc, temps, rain, windD, dates = [], [], [], [], []
     last = (30.0, 15.0)
     for i in range(7):
@@ -82,7 +83,7 @@ def forecast(lat, lon):
         dates.append(d.isoformat())
     h0 = int(NOW.astimezone(timezone.utc).replace(minute=0, second=0, microsecond=0).timestamp())
     hrs = [h0 + 3600 * k for k in range(72)]
-    hr = {"t": datetime.fromtimestamp(h0, TZ).isoformat(timespec="minutes"),
+    hr = {"t": datetime.fromtimestamp(h0, tz).isoformat(timespec="minutes"),
           "snow": [round(snow.get(t, 0) / 25.4, 2) for t in hrs],
           "temp": [round(temp[t] * 9 / 5 + 32) if t in temp else None for t in hrs],
           "wind": [round(wind.get(t, 0) * 0.621) for t in hrs],
@@ -90,10 +91,62 @@ def forecast(lat, lon):
     nowt = next((hr["temp"][k] for k in range(72) if hr["temp"][k] is not None), 20)
     return {"dates": dates, "fc": fc, "temps": temps, "rain": rain, "windD": windD, "now": nowt, "wind": hr["wind"][0], "hr": hr}
  
+ 
+def forecast_om(a, tz):
+    """Forecast from Open-Meteo, in the same shape as forecast(). Used for Canada (the NWS covers the US only)
+    and as a backup if the NWS is down. Also returns model-based past snowfall and snow depth."""
+    mid = round((a["base_ft"] + a["top_ft"]) / 2 / M_TO_FT)
+    q = {"latitude": a["lat"], "longitude": a["lon"], "elevation": mid, "timezone": tz.key, "forecast_days": 7, "past_days": 3,
+         "temperature_unit": "fahrenheit", "wind_speed_unit": "mph", "precipitation_unit": "inch",
+         "hourly": "temperature_2m,snowfall,wind_speed_10m,precipitation_probability,snow_depth"}
+    j = get(OM + "?" + urllib.parse.urlencode(q))
+    h = (j or {}).get("hourly") or {}
+    if not h.get("time") or not h.get("temperature_2m"):
+        return None
+    ts = [int(datetime.fromisoformat(t).replace(tzinfo=tz).timestamp()) for t in h["time"]]
+    col = lambda k: dict(zip(ts, h.get(k) or []))
+    snow, temp, wind, pop, dep = col("snowfall"), col("temperature_2m"), col("wind_speed_10m"), col("precipitation_probability"), col("snow_depth")
+    snow = {t: v for t, v in snow.items() if v is not None}
+    temp = {t: v for t, v in temp.items() if v is not None}
+    wind = {t: v for t, v in wind.items() if v is not None}
+    pop = {t: v for t, v in pop.items() if v is not None}
+    today = datetime.now(tz).date()
+    day = lambda t: datetime.fromtimestamp(t, tz).date()
+    fc, temps, rain, windD, dates = [], [], [], [], []
+    last = (30.0, 15.0)
+    for i in range(7):
+        d = today + timedelta(days=i)
+        ts_ = [v for t, v in temp.items() if day(t) == d]
+        hi, lo = (max(ts_), min(ts_)) if ts_ else last
+        last = (hi, lo)
+        pm = max([v for t, v in pop.items() if day(t) == d] or [0])
+        wm = max([v for t, v in wind.items() if day(t) == d] or [0])
+        fc.append(round(sum(v for t, v in snow.items() if day(t) == d), 1))
+        temps.append({"hi": round(hi), "lo": round(lo)})
+        rain.append(hi >= 36 and pm >= 40)
+        windD.append(round(wm))
+        dates.append(d.isoformat())
+    nowts = int(datetime.now(timezone.utc).timestamp())
+    h0 = nowts - nowts % 3600
+    hrs = [h0 + 3600 * k for k in range(72)]
+    hr = {"t": datetime.fromtimestamp(h0, tz).isoformat(timespec="minutes"),
+          "snow": [round(snow.get(t, 0), 2) for t in hrs],
+          "temp": [round(temp[t]) if t in temp else None for t in hrs],
+          "wind": [round(wind.get(t, 0)) for t in hrs],
+          "pop": [round(pop.get(t, 0)) for t in hrs]}
+    nowt = next((hr["temp"][k] for k in range(72) if hr["temp"][k] is not None), 20)
+    e = {"dates": dates, "fc": fc, "temps": temps, "rain": rain, "windD": windD, "now": nowt, "wind": hr["wind"][0], "hr": hr, "wxSrc": "Open-Meteo"}
+    past = lambda hrs_: round(sum(v for t, v in snow.items() if h0 - 3600 * hrs_ < t <= h0), 1)
+    e["_model"] = {"s24": past(24), "s72": past(72)}
+    d_now = next((dep[t] for t in (h0, h0 - 3600, h0 - 7200) if dep.get(t) is not None), None)
+    if d_now is not None:
+        e["_model"]["base"] = round(d_now * 39.37)  # metres to inches
+    return e
+ 
 # ---------- Open-Meteo: other forecast models, base and summit ----------
-def open_meteo(a):
+def open_meteo(a, tz=TZ):
     base = {"latitude": a["lat"], "longitude": a["lon"], "temperature_unit": "fahrenheit", "precipitation_unit": "inch",
-            "wind_speed_unit": "mph", "timezone": "America/Denver", "forecast_days": 7}
+            "wind_speed_unit": "mph", "timezone": tz.key, "forecast_days": 7}
     daily = "snowfall_sum,temperature_2m_max,temperature_2m_min"
     q1 = dict(base, elevation=round(a["base_ft"] / M_TO_FT), daily=daily, models=",".join(MODELS))
     j1 = get(OM + "?" + urllib.parse.urlencode(q1))
@@ -129,7 +182,7 @@ def open_meteo(a):
  
 # ---------- SNOTEL (snow depth, history, snowpack vs median) ----------
 def snotel_stations():
-    q = urllib.parse.urlencode({"stationTriplets": "*:CO:SNTL,*:UT:SNTL,*:NM:SNTL,*:MT:SNTL", "activeOnly": "true"})
+    q = urllib.parse.urlencode({"stationTriplets": ",".join("*:%s:SNTL" % x for x in SNOTEL_STATES), "activeOnly": "true"})
     s = get("%s/stations?%s" % (SNOTEL, q)) or []
     return [x for x in s if x.get("latitude") is not None and x.get("stationTriplet")]
  
@@ -242,16 +295,33 @@ def main():
     for a in areas:
         print(a["id"])
         try:
-            e = forecast(a["lat"], a["lon"])
+            tz = ZoneInfo(a.get("tz", "America/Denver"))
+            e = None if a.get("country", "US") != "US" else forecast(a["lat"], a["lon"], tz)  # NWS covers the US only
+            if e:
+                e["wxSrc"] = "NWS"
+            else:
+                e = forecast_om(a, tz)
+                if e:
+                    print("  forecast from Open-Meteo")
             if not e:
-                raise RuntimeError("no NWS forecast")
+                raise RuntimeError("no forecast")
+            model = e.pop("_model", None)
             e.update({"s24": 0, "s72": 0, "base": 0, "snotel": None})
             if a["id"] in pick:
                 dist, st = pick[a["id"]]
                 e.update(snow_from(sdata.get(st["stationTriplet"], {})))
                 e["snotel"] = {"id": st["stationTriplet"], "name": st.get("name"), "km": round(dist, 1), "elev": st.get("elevation")}
+            if not e["snotel"]:
+                # No SNOTEL station within 45 km (eastern US, Canada, some others): use the weather model's estimate.
+                if not model:
+                    try:
+                        model = (forecast_om(a, tz) or {}).get("_model")
+                    except Exception as ex:
+                        print("  model snow depth skipped:", ex)
+                if model:
+                    e.update({"s24": model["s24"], "s72": model["s72"], "base": model.get("base", 0), "baseModel": True})
             try:
-                om = open_meteo(a)
+                om = open_meteo(a, tz)
                 if om:
                     e["om"] = om
             except Exception as ex:
