@@ -10,12 +10,18 @@ concurrency:
   cancel-in-progress: false
 jobs:
   update:
+    timeout-minutes: 40
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install headless browser (for resort pages that load their numbers by script)
+        continue-on-error: true
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
       - name: Collect lifts and trails
         run: python scripts/terrain.py
       - name: Save data
