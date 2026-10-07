@@ -143,8 +143,6 @@ select{font:inherit;padding:6px 8px;border-radius:8px;border:1px solid var(--lin
 .tbl.plain tbody tr{cursor:default}.tbl.plain tbody tr:hover td{background:none}
 .tbl td.hl{font-weight:700}
 /* map */
-.mapbox{position:relative;border:1px solid var(--line);border-radius:14px;background:var(--card);overflow:hidden;touch-action:none}
-.mapbox svg{display:block;width:100%;height:auto;max-height:70vh;cursor:grab}
 .mapctl{position:absolute;right:10px;top:10px;display:flex;flex-direction:column;gap:6px}
 .mapctl button{width:34px;height:34px;border:1px solid var(--line);background:var(--card);border-radius:8px;font-size:18px;line-height:1}
 .mapctl button.fit{font-size:12px}
@@ -285,6 +283,36 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 .news .tags button:hover{background:var(--ice)}
 .srcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:4px 14px;font-size:14px;margin:8px 0}
 .srcgrid .bad{color:var(--mute)}
+ 
+/* street map */
+.mapbox{position:relative;height:min(66vh,640px);min-height:380px;border:1px solid var(--line);border-radius:14px;background:var(--ice);overflow:hidden;touch-action:none;cursor:grab;user-select:none}
+.mapbox.grab{cursor:grabbing}
+.mapbox:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.mtiles,.mmarks{position:absolute;inset:0;overflow:hidden}
+.mmarks{pointer-events:none}
+.mt{position:absolute;left:0;top:0;max-width:none;opacity:0;transition:opacity .2s;-webkit-user-drag:none;user-select:none}
+.mt.ok{opacity:1}
+.mk{position:absolute;left:0;top:0;width:24px;height:24px;margin:-12px 0 0 -12px;border:0;background:none;padding:0;pointer-events:auto;cursor:pointer;font:inherit}
+.mk i{position:absolute;left:2px;top:2px;width:20px;height:20px;border-radius:50%;background:var(--c);border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.5);box-sizing:border-box}
+.mk.zn i{border-radius:3px;transform:rotate(45deg);width:17px;height:17px;left:3.5px;top:3.5px}
+.mk.cl{width:32px;height:32px;margin:-16px 0 0 -16px}
+.mk.cl i{inset:0;left:0;top:0;width:32px;height:32px;background:#fff;border:4px solid var(--c);display:flex;align-items:center;justify-content:center;font-style:normal;font-weight:700;font-size:12.5px;color:#14212b}
+.mk:hover i,.mk:focus-visible i{outline:3px solid var(--ink);outline-offset:2px}
+.mk .lab{position:absolute;left:25px;top:3px;white-space:nowrap;font-size:12px;line-height:18px;color:#14212b;text-shadow:0 0 3px #fff,0 0 3px #fff,0 0 3px #fff,0 0 3px #fff;pointer-events:none;text-align:left}
+.mapbox.dk .mk .lab{color:#fff;text-shadow:0 0 3px #000,0 0 3px #000,0 0 3px #000,0 0 3px #000}
+.mapbox .mapctl{z-index:5}
+.matt{position:absolute;right:0;bottom:0;background:rgba(255,255,255,.82);font-size:10.5px;padding:1px 6px;color:#333;border-radius:6px 0 0 0;pointer-events:none;max-width:90%}
+.mhint{position:absolute;left:50%;top:12px;transform:translateX(-50%);background:rgba(20,33,43,.88);color:#fff;font-size:13px;padding:6px 12px;border-radius:999px;pointer-events:none;z-index:6}
+.merr{position:absolute;left:10px;bottom:26px;background:var(--card);border:1px solid var(--line);padding:6px 10px;border-radius:8px;font-size:12px;z-index:5}
+.you{position:absolute;left:-7px;top:-7px;width:14px;height:14px;border-radius:50%;background:#1a73e8;border:3px solid #fff;box-shadow:0 0 0 6px rgba(26,115,232,.25);pointer-events:none}
+ 
+/* model comparison */
+.mpick{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 8px}
+.mpick .pchip{display:inline-flex;align-items:center;gap:6px}
+.mpick .pchip[aria-pressed=false]{opacity:.55}
+.mtbl td.selday{background:var(--ice);font-weight:700}
+.mbar{display:inline-block;width:44px;height:6px;background:var(--line);border-radius:3px;vertical-align:middle;overflow:hidden}
+.mbar i{display:block;height:100%;background:var(--m1)}
 </style>
 </head>
 <body>
@@ -341,7 +369,9 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 <div class="dh"><h2>Options</h2><button class="x" id="dclose" aria-label="Close options">×</button></div>
 <div class="sec"><h3>Display</h3>
 <div class="sw"><span>Theme</span><span class="seg"><button data-seg="theme" data-v="auto">Auto</button><button data-seg="theme" data-v="light">Light</button><button data-seg="theme" data-v="dark">Dark</button></span></div>
-<div class="sw"><span>Units</span><span class="seg"><button data-seg="units" data-v="imperial">in · °F</button><button data-seg="units" data-v="metric">cm · °C</button></span></div></div>
+<div class="sw"><span>Units</span><span class="seg"><button data-seg="units" data-v="imperial">in · °F</button><button data-seg="units" data-v="metric">cm · °C</button></span></div>
+<div class="sw"><label for="modelsel">Forecast model</label><select id="modelsel"></select></div>
+<p class="meta" style="margin:2px 0 0">Changes the snow and temperature forecast used on cards, scores, the planner and alerts. Hourly charts and wind stay NOAA.</p></div>
 <div class="sec"><h3>Distance</h3>
 <div class="sw" style="cursor:default"><span>Measure distance from<small id="locnow"></small></span></div>
 <div class="grow" id="locbtns"><button class="btn sm" id="locme">My current location</button><button class="btn sm" id="locoff">Turn off</button></div>
@@ -372,11 +402,11 @@ PASSES.forEach(p=>p[1]=p[1].filter(id=>BY[id]));
 const PASSOF={};PASSES.forEach(p=>p[1].forEach(id=>PASSOF[id]=p[0].split(" ")[0]));
 const passOf=a=>a.zone?"":(PASSOF[a.id]||"None");
 const LEVELS=["","Low","Moderate","Considerable","High","Extreme"];
-const MAX=48,$=id=>document.getElementById(id);
+const MAX=200,$=id=>document.getElementById(id);
 const CARDT=[["pass","Pass tag"],["dist","Distance"],["score","Skiing score (needs Rank mountains)"],["alerts","Alert chips"],["stats","Snow totals (24 h, 72 h, base)"],["bars","7-day snowfall bars"],["best","Best day line"],["terrain","Lifts and trails"],["aval","Avalanche danger (zones)"]];
 const PAGET=[["tiles","Summary tiles"],["score","Skiing score and breakdown"],["storm","Storm tracker (hourly charts)"],["powder","Powder quality"],["best","Best day this week"],["models","Forecast models compared"],["summit","Base vs summit"],["swe","Snowpack vs history"],["fall","Snowfall vs history"],["hist","Recent snow depth"],["aval","Avalanche forecast (zones)"],["avhist","Avalanche danger vs history (zones)"],["trail","Trail map (resorts)"],["terrain","Lifts and trails (resorts)"],["news","Recent news"],["links","Webcams and links"],["roads","Roads and passes (zones)"]];
 const allOn=l=>Object.fromEntries(l.map(x=>[x[0],true]));
-const DEF={theme:"auto",units:"imperial",rank:false,layout:"cards",sort:"mine",pass:"all",avalIn:false,cond:false,wx:false,geo:null,card:allOn(CARDT),page:allOn(PAGET),
+const DEF={theme:"auto",units:"imperial",rank:true,mapStyle:"map",model:"noaa",layout:"cards",sort:"mine",pass:"all",avalIn:false,cond:false,wx:false,geo:null,card:allOn(CARDT),page:allOn(PAGET),
 alerts:{on:false,defMode:"normal",decks:{},cfg:{normal:{},adv:{}},maxDist:0}};
 const clone=o=>JSON.parse(JSON.stringify(o));
 function merge(d,o){if(!o||typeof o!=="object")return d;const r=Array.isArray(d)?d:{...d};for(const k of Object.keys(o)){r[k]=d[k]&&typeof d[k]==="object"&&!Array.isArray(d[k])&&o[k]&&typeof o[k]==="object"?merge(d[k],o[k]):o[k]}return r}
@@ -447,15 +477,31 @@ return e}
 /* data access */
 let LIVE=null,TERR=null;const DC=new Map();
 function terr(a){const T=TERR&&TERR.resorts&&TERR.resorts[a.id];return T&&Date.now()-Date.parse(T.fetched)<12*36e5?T:null}
-const T0=a=>{const T=a.zone?null:terr(a);return T&&T.lifts?T.lifts[0]/T.lifts[1]*15:0};
+const lf=T=>T&&T.lifts?(T.lifts[1]?T.lifts[0]/T.lifts[1]:T.lifts[0]>0?.5:0):0;
+const T0=a=>{const T=a.zone?null:terr(a);return lf(T)*15};
 function estCond(d){const h=d.temps[0].hi;return h>=40?"Slushy":h>=34?"Wet snow":d.s24>=6?"Powder":d.s24>=2?"Packed powder":"Variable"}
+/* forecast model choice: NOAA (the National Weather Service forecast) is the default */
+const MODELS=[["noaa","NOAA / National Weather Service (default)"],["gfs","GFS (NOAA global model)"],["ecmwf","ECMWF (European model)"],["icon","ICON (German weather service)"],["gem","GEM (Environment Canada)"],["avg","Average of the four models"]];
+const MLAB={gfs:"GFS",ecmwf:"ECMWF",icon:"ICON",gem:"GEM"};
+function applyModel(d){d.fcMain=d.fc;d.modelKey="noaa";d.modelNote="";const M=d.om&&d.om.models;let k=S.model||"noaa";
+if(k==="noaa"&&d.wxSrc==="Open-Meteo"&&M&&M.GFS){k="gfs";d.modelNote="The US National Weather Service does not cover this area, so NOAA's GFS model is used."}
+if(k==="noaa")return;
+let fc,T=null;
+if(k==="avg"){const ns=Object.keys(M||{}).filter(n=>Array.isArray(M[n])&&M[n].length===7);if(!ns.length){d.modelNote="Model data is not available yet, so the main forecast is shown.";return}
+fc=[...Array(7)].map((_,i)=>ns.reduce((s,n)=>s+M[n][i],0)/ns.length);
+const mt=d.om.mt;if(mt){const t=ns.filter(n=>mt[n]&&mt[n].hi&&mt[n].hi.length===7);if(t.length)T={hi:[...Array(7)].map((_,i)=>t.reduce((s,n)=>s+mt[n].hi[i],0)/t.length),lo:[...Array(7)].map((_,i)=>t.reduce((s,n)=>s+mt[n].lo[i],0)/t.length)}}}
+else{const lab=MLAB[k];if(!M||!Array.isArray(M[lab])||M[lab].length!==7){d.modelNote=`${lab||k} data is not available for this area, so the main forecast is shown.`;return}
+fc=M[lab];const mt=d.om.mt&&d.om.mt[lab];if(mt&&mt.hi&&mt.hi.length===7)T=mt}
+d.fc=fc.map(x=>Math.round((x||0)*10)/10);
+if(T){d.temps=T.hi.map((h,i)=>({hi:Math.round(h),lo:Math.round(T.lo[i])}));d.rain=d.rain.map((r,i)=>!!r&&d.temps[i].hi>=36)}
+d.modelKey=k}
 function data(a){if(DC.has(a.id))return DC.get(a.id);let Z,live=false,missing=false;
 if(!LIVE)Z=sample(a);else{Z=LIVE.areas[a.id];live=true;if(!Z){missing=true;Z={}}}
 const z7=v=>Array.isArray(v)&&v.length?v:Array(7).fill(0);
 const d={...Z,live,missing,fc:z7(Z.fc),temps:Array.isArray(Z.temps)&&Z.temps.length?Z.temps:Array(7).fill({hi:32,lo:20}),rain:Array.isArray(Z.rain)&&Z.rain.length?Z.rain:Array(7).fill(false),
 windD:Array.isArray(Z.windD)&&Z.windD.length?Z.windD:Array(7).fill(Z.wind||0),s24:Z.s24||0,s72:Z.s72||0,base:Z.base||0,now:Z.now==null?32:Z.now,wind:Z.wind||0,aval:Z.aval||0,prev:Z.prev||Z.aval||0,off:Z.offSeason};
 d.dates=Z.dates&&Z.dates.length?Z.dates:[...Array(7)].map((_,i)=>{const t=new Date();t.setDate(t.getDate()+i);return iso(t)});
-d.cond=estCond(d);DC.set(a.id,d);return d}
+applyModel(d);d.cond=estCond(d);DC.set(a.id,d);return d}
 const dname=(d,i)=>i===0?"Today":dayOf(d.dates[i]).toLocaleDateString("en-US",{weekday:"short"});
 const dlong=(d,i)=>dayOf(d.dates[i]).toLocaleDateString("en-US",{weekday:"long",month:"short",day:"numeric"});
  
@@ -465,7 +511,7 @@ const CQ={Powder:15,"Packed powder":10,Groomed:8,Variable:4,Crud:3,Icy:1,"Wet sn
 function scoreParts(a,d){const snowy=d.base>=6||d.s72>=.5||f7(d)>=.5;
 if(!snowy)return{total:0,parts:[],notes:["No snow on the ground, none recent and none forecast."]};
 const T=a.zone?null:terr(a),parts=[["Snow, last 24 hours",Math.min(1,d.s24/12)*30,30],["Snow forecast, next 3 days",Math.min(1,f3(d)/18)*20,20],["Snow, last 72 hours",Math.min(1,d.s72/24)*10,10],["Base depth",Math.min(1,d.base/120)*10,10],
-["Open lifts",T&&T.lifts?T.lifts[0]/T.lifts[1]*15:0,15],["Snow quality guess",CQ[d.cond]||0,15]],notes=[];
+["Open lifts",lf(T)*15,15],["Snow quality guess",CQ[d.cond]||0,15]],notes=[];
 if(!(T&&T.lifts)&&!a.zone)notes.push("Lift status is not available for this resort, so open lifts count for nothing.");
 const m=[];if(d.rain.slice(0,3).some(Boolean))m.push(["Rain in the next 3 days",-10]);if(d.wind>=35)m.push(["High wind",-8]);
 if(a.zone||S.avalIn){if(d.aval>=4)m.push(["High avalanche danger",-10]);else if(d.aval===3)m.push(["Considerable avalanche danger",-4])}
@@ -619,6 +665,28 @@ el("n-avhist").innerHTML=t}
  
 /* base vs summit */
 function stateOf(hi,lo){if(hi==null||lo==null)return["","snow"];return lo>32?["Rain likely","rain"]:hi<=32?["Snow","snow"]:["Mix or wet snow","mix"]}
+const MHIDE=new Set();
+function drawModels(a,d){const host=el("c-models");if(!host)return;const u=su(),om=d.om,M=om&&om.models?om.models:null;
+if(!M||!Object.keys(M).length){host.innerHTML=`<p class="meta">Model comparison is not available yet. It appears after the next data update.</p>`;el("modelnote").innerHTML="";return}
+const names=Object.keys(M),cols=["var(--m1)","var(--m2)","var(--m3)","var(--m4)"],dashes=["","6 3","2 3","8 3 2 3"],main=d.fcMain||d.fc;
+const rows=[{name:d.wxSrc==="Open-Meteo"?"Open-Meteo":"NOAA (NWS)",key:"noaa",color:"var(--ink)",dash:"",vals:main}].concat(names.map((k,i)=>({name:k,key:Object.keys(MLAB).find(x=>MLAB[x]===k)||k.toLowerCase(),color:cols[i%4],dash:dashes[i%4],vals:M[k],isModel:true})));
+const avg=[...Array(7)].map((_,i)=>names.reduce((s,k)=>s+M[k][i],0)/names.length);
+const all=rows.concat([{name:"Average of the four",key:"avg",vals:avg,isAvg:true}]);
+const tot=r=>r.vals.reduce((x,y)=>x+y,0),vis=rows.filter(r=>!MHIDE.has(r.key)),day=Math.min(DET.day||0,6);
+const chips=all.map(r=>`<span class="mchip"><button type="button" class="pchip" ${r.isAvg?"disabled":`data-mtog="${r.key}" aria-pressed="${!MHIDE.has(r.key)}"`} title="${r.isAvg?"":"Show or hide this line"}">${r.isAvg?"":`<svg viewBox="0 0 22 8" aria-hidden="true" width="22" height="8"><line x1="0" x2="22" y1="4" y2="4" style="stroke:${r.color};stroke-width:2.5${r.dash?";stroke-dasharray:"+r.dash:""}"/></svg> `}${esc(r.name)} <b>${sn(tot(r))} ${u}</b></button></span>`).join("");
+const hs=vis.filter(r=>r.isModel),lo=[],hi=[];if(hs.length>1)for(let i=0;i<7;i++){const v=hs.map(r=>r.vals[i]);lo.push(sn(Math.min(...v)));hi.push(sn(Math.max(...v)))}
+const dv=all.map(r=>({n:r.name,v:r.vals[day]})).sort((x,y)=>y.v-x.v),dl=dlong(d,day);
+const note=dv[0].v-dv[dv.length-1].v<=Math.max(1,dv[0].v*.3)?`<b>Close agreement</b> on ${dl}`:`<b>Models differ</b> on ${dl}`;
+const mxT=Math.max(1,...all.map(tot));
+host.innerHTML=`<div class="mpick" role="group" aria-label="Choose which forecasts to draw">${chips}</div><div id="c-modelchart"></div>
+<div class="tblwrap"><table class="tbl mtbl"><caption class="meta" style="text-align:left;padding:6px 2px">Snow in ${u}. Pick a day to compare it. "Use" makes that model the forecast everywhere in Snow Deck.</caption>
+<thead><tr><th scope="col" style="text-align:left">Forecast</th>${d.dates.map((_,i)=>`<th scope="col"><button type="button" class="pchip" data-day="${i}" aria-pressed="${i===day}">${dname(d,i)}</button></th>`).join("")}<th scope="col">7 days</th><th scope="col"></th></tr></thead>
+<tbody>${all.map(r=>`<tr><th scope="row" style="text-align:left">${esc(r.name)}</th>${r.vals.map((v,i)=>`<td class="num${i===day?" selday":""}">${sn(v)}</td>`).join("")}<td class="num"><span class="mbar"><i style="width:${tot(r)/mxT*100}%"></i></span> ${sn(tot(r))}</td><td>${d.modelKey===r.key?`<span class="tag best">In use</span>`:`<button type="button" class="btn sm" data-usemodel="${r.key}" aria-label="Use ${esc(r.name)} as the forecast">Use</button>`}</td></tr>`).join("")}</tbody></table></div>`;
+if(vis.length)mountChart(el("c-modelchart"),{n:7,ticks:[0,1,2,3,4,5,6],xl:i=>dname(d,i),h:230,yMin:0,yFmt:v=>v,label:"Seven-day snowfall by forecast",xh:"Day",series:vis.map(r=>({name:r.name,color:r.color,dash:r.dash,vals:r.vals.map(sn),dots:true,tf:v=>v})),band:hi.length?{lo,hi,label:"Spread of the models"}:null,
+tip:i=>({title:dlong(d,i),rows:vis.map(r=>({key:"line",color:r.color,value:sn(r.vals[i])+" "+u,label:r.name}))})});
+else el("c-modelchart").innerHTML=`<p class="meta">All lines are hidden. Click a name above to show it again.</p>`;
+const t4=hs.length?hs.map(tot):[],mx=Math.max(...(t4.length?t4:[0])),mn=Math.min(...(t4.length?t4:[0]));
+el("modelnote").innerHTML=`<p class="meta" style="margin-top:8px">${note}: ${esc(dv[0].n)} is highest (${sn(dv[0].v)} ${u}), ${esc(dv[dv.length-1].n)} lowest (${sn(dv[dv.length-1].v)} ${u}). ${t4.length>1?(mx-mn>Math.max(3,(mx+mn)/2*.5)?`Over the week the models <b>disagree</b> (${sn(mn)} to ${sn(mx)} ${u}), so treat the total as uncertain.`:`Over the week the models <b>mostly agree</b> (${sn(mn)} to ${sn(mx)} ${u}).`):""} The forecast in use here: <b>${esc((MODELS.find(m=>m[0]===d.modelKey)||MODELS[0])[1])}</b>.${d.modelNote?" "+esc(d.modelNote):""}</p>`}
 function drawSummit(a,d){const host=el("summit");if(!host)return;const om=d.om,i=DET.day;
 if(!om||!om.base||!om.top||!om.top.hi||!om.top.hi.length){host.innerHTML=`<p class="meta">Base and summit comparison is not available yet. It appears after the next data update.</p>`;return}
 const B=om.base,T=om.top,fl=om.fl||[],cardH=(t,x,hi,lo,snow)=>{const st=stateOf(hi,lo);return`<div class="sumcard"><h4>${t} · ${ft(x)}</h4><div class="t">${tp(hi)}<small>low ${tp(lo)}</small></div><div>${sn(snow||0)} ${su()} of snow</div><span class="state ${st[1]}">${st[0]}</span></div>`};
@@ -650,7 +718,7 @@ const sc=score(a,d),bd=bestDay(d),wk=weekend(d),pq=powderQ(d),dsx=dist(a),inDeck
 const tiles=[[sn(d.s24),su(),"Last 24 hours"],[sn(d.s72),su(),"Last 72 hours"],[sn(d.base),su(),"Base depth"],[sn(f3(d)),su(),"Next 3 days"],[sn(f7(d)),su(),"Next 7 days"]];
 if(d.swe&&d.swe.pct!=null)tiles.push([d.swe.pct,"%","Snowpack vs normal"]);
 if(a.zone&&d.aval)tiles.push([d.aval,LEVELS[d.aval],"Avalanche danger"]);
-if(T&&T.lifts)tiles.push([T.lifts[0]+"/"+T.lifts[1],"","Lifts open"]);
+if(T&&T.lifts)tiles.push([T.lifts[0]+(T.lifts[1]?"/"+T.lifts[1]:""),"","Lifts open"]);
 if(PG("score"))tiles.push([sc,grade(sc),"Skiing score"]);
 const al=alerts(a,d),cn=CENTERS[d.avalCenter]||d.avalCenter;
 let h=`<div class="dwrap"><div class="dbar"><button class="btn" id="dback">← Back</button><span class="grow1"></span>
@@ -664,7 +732,7 @@ if(PG("storm"))h+=sect("storm","Storm tracker","Hour by hour for the next 3 days
 if(PG("score"))h+=scoreHtml(a,d);
 if(PG("powder"))h+=sect("pow","Powder quality","Estimated from the temperature while snow is falling.",pq?`<p class="big">${pq.label}</p><dl class="kv"><dt>Temperature in storm</dt><dd>${tp(pq.t)}</dd><dt>Snow-to-water ratio</dt><dd>about ${pq.ratio} to 1</dd></dl><p class="meta">Colder storms make lighter, drier snow. This is a rule-of-thumb estimate, not a measurement.${pq.src==="daily"?" Based on daily temperatures because hourly data is missing.":""}</p>`:`<p class="meta">No snow in the forecast, so there is nothing to rate yet.</p>`);
 if(PG("best"))h+=sect("best","Best day this week","Scores fresh snow, cold, wind and rain for each day.",`<p class="big">${dlong(d,bd.i)}</p><div class="daystrip">${d.dates.map((_,i)=>{const s=dayScore(d,i);return`<div class="daycell${i===bd.i?" best":""}"><span>${dname(d,i)}</span><b>${s}</b><span>${sn(d.fc[i])} ${su()}</span>${d.rain[i]?`<div class="rain">Rain</div>`:""}</div>`}).join("")}</div>${wk.length?`<p class="meta" style="margin-top:10px">Weekend: ${wk.map(i=>`${dname(d,i)} ${dayScore(d,i)}`).join(" · ")}.</p>`:""}`);
-if(PG("models"))h+=sect("mod","Forecast models compared","Daily snowfall from four weather models and the main forecast. When lines bunch up, confidence is higher.",`<div id="c-models"></div><div id="modelnote"></div>`,true);
+if(PG("models"))h+=sect("mod","Forecast models compared","Daily snowfall from NOAA and four weather models. Click a name to show or hide its line, pick a day to compare it, and press Use to switch the whole site to that model. When lines bunch up, confidence is higher.",`<div id="c-models"></div><div id="modelnote"></div>`,true);
 if(PG("summit"))h+=sect("prof","Base vs summit","How much colder and snowier it is up top. Pick a day.",`<div class="chips" id="daychips" role="group" aria-label="Day"></div><div id="summit"></div>`,true);
 if(PG("swe"))h+=histSection(a,d,"swe","swe","Snowpack vs history","Water held in the snow this season compared with every winter since 1991. The full season is shown, including the part still ahead.","in");
 if(PG("fall"))h+=histSection(a,d,"fall","fall","Snowfall vs history (estimated)","Snow added this season compared with earlier winters. The full season is shown.","in");
@@ -690,15 +758,7 @@ tip:i=>({title:hl(i),rows:[{key:"tick",color:"var(--snow)",value:sn(hr.snow[i]||
 const fz=tv(32);mountChart(el("c-htemp"),{n,ticks,xl:hl,h:150,yFmt:v=>Math.round(v)+"°",label:`Hourly temperature for the next ${n} hours`,xh:"Hour",tl:hl,skip:i=>i%3,
 series:[{name:"Temperature",color:"var(--m1)",vals:hr.temp.map(v=>v==null?null:Math.round(tv(v))),tf:v=>v+"°"},{name:"Freezing",color:"var(--mute)",dash:"4 3",vals:Array(n).fill(Math.round(fz)),tf:v=>v+"°"}],
 tip:i=>({title:hl(i),rows:[{key:"line",color:"var(--m1)",value:tp(hr.temp[i]),label:"temperature"}]})})}else{el("c-hsnow").innerHTML="";el("c-htemp").innerHTML=""}}
-if(el("c-models")){const om=d.om,M=om&&om.models?om.models:null,cols=["var(--m1)","var(--m2)","var(--m3)","var(--m4)"],dashes=["","6 3","2 3","8 3 2 3"];
-if(M&&Object.keys(M).length){const names=Object.keys(M),ser=names.map((k,i)=>({name:k,color:cols[i%4],dash:dashes[i%4],vals:M[k].map(sn),dots:true,tf:v=>v}));
-ser.push({name:d.wxSrc==="Open-Meteo"?"Open-Meteo":"NWS",color:"var(--ink)",vals:d.fc.map(sn),tf:v=>v});
-const lo=[],hi=[];for(let i=0;i<7;i++){const v=names.map(k=>M[k][i]).filter(x=>x!=null);lo.push(sn(Math.min(...v)));hi.push(sn(Math.max(...v)))}
-mountChart(el("c-models"),{n:7,ticks:[0,1,2,3,4,5,6],xl:i=>dname(d,i),h:230,yMin:0,yFmt:v=>v,label:"Seven-day snowfall by forecast model",xh:"Day",series:ser,band:{lo,hi},
-tip:i=>({title:dlong(d,i),rows:ser.map(s=>({key:"line",color:s.color,value:s.vals[i]+" "+u,label:s.name}))})});
-const tot=names.map(k=>M[k].reduce((x,y)=>x+y,0)),mx=Math.max(...tot),mn=Math.min(...tot),av=tot.reduce((x,y)=>x+y,0)/tot.length;
-el("modelnote").innerHTML=`<p class="meta" style="margin-top:8px">7-day totals: ${names.map((k,i)=>`${esc(k)} ${sn(tot[i])} ${u}`).join(" · ")}. ${mx-mn>Math.max(3,av*.5)?`<b>The models disagree</b> (${sn(mn)} to ${sn(mx)} ${u}), so treat the total as uncertain.`:`<b>The models mostly agree</b> (${sn(mn)} to ${sn(mx)} ${u}).`}</p>`}
-else{el("c-models").innerHTML=`<p class="meta">Model comparison is not available yet. It appears after the next data update.</p>`}}
+drawModels(a,d);
 if(el("daychips")){el("daychips").innerHTML=d.dates.map((_,i)=>`<button class="pchip" data-day="${i}" aria-pressed="${DET.day===i}">${dname(d,i)}</button>`).join("");drawSummit(a,d)}
 mountHist(a,d,"swe");mountHist(a,d,"fall");
 if(el("c-hist")){const hs=d.hist||[],rg=DET.range,sl=hs.slice(-rg);
@@ -736,7 +796,9 @@ const o=t.closest("[data-open]");if(o){CAME=true;history.replaceState(null,"","#
 if(t.closest("#dadd")){const s=sel();if(s.length>=MAX)return toast("Your deck is full");if(SHARED){toast("Save the shared deck first");return}s.push(DET.id);save();renderDetail(true);renderAll();return}
 if(t.closest("#trailshow")){const a=BY[DET.id];el("trailbox").innerHTML=`<iframe loading="lazy" title="${esc(a.name)} community trail map" src="https://www.openskimap.org/#14/${a.lat}/${a.lon}"></iframe>`;t.closest("#trailshow").hidden=true;return}
 const r=t.closest("[data-range]");if(r){DET.range=+r.dataset.range;renderDetail(true);return}
-const dy=t.closest("[data-day]");if(dy){DET.day=+dy.dataset.day;document.querySelectorAll("[data-day]").forEach(b=>b.setAttribute("aria-pressed",b===dy));drawSummit(BY[DET.id],data(BY[DET.id]))}});
+const mt=t.closest("[data-mtog]");if(mt){const k=mt.dataset.mtog;if(MHIDE.has(k))MHIDE.delete(k);else MHIDE.add(k);drawModels(BY[DET.id],data(BY[DET.id]));return}
+const um=t.closest("[data-usemodel]");if(um){S.model=um.dataset.usemodel;DC.clear();const lbl=(MODELS.find(m=>m[0]===S.model)||MODELS[0])[1];renderAll();toast("Forecast model: "+lbl);return}
+const dy=t.closest("[data-day]");if(dy){DET.day=+dy.dataset.day;document.querySelectorAll("[data-day]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.day===dy.dataset.day));drawSummit(BY[DET.id],data(BY[DET.id]));drawModels(BY[DET.id],data(BY[DET.id]))}});
  
 /* ---------- alerts: pop-ups on the main screen, per deck, normal and advanced ---------- */
 const PCONV={in:{to:v=>imp()?v:Math.round(v*2.54*10)/10,from:v=>imp()?v:v/2.54,u:()=>su()},F:{to:v=>imp()?v:Math.round((v-32)*5/9),from:v=>imp()?v:v*9/5+32,u:()=>imp()?"°F":"°C"},
@@ -766,7 +828,7 @@ const RULES=[
 {id:"avalChange",g:"Avalanche",n:1,on:1,zone:1,label:"Danger rating changed",desc:"The overall danger went up or down.",p:[],test:(a,d)=>d.aval&&d.prev&&d.aval!==d.prev?`Avalanche danger ${d.aval>d.prev?"up":"down"}: ${LEVELS[d.prev]} to ${LEVELS[d.aval]}`:null},
 {id:"avalHigh",g:"Avalanche",zone:1,label:"High danger",desc:"The danger rating is high.",p:[{k:"x",l:"level at least",t:"lvl",def:4}],test:(a,d,p)=>d.aval>=p.x?`Avalanche danger ${d.aval} ${LEVELS[d.aval]}`:null},
 {id:"avalProblem",g:"Avalanche",zone:1,label:"Avalanche problem present",desc:"A specific problem is in today's forecast.",p:[{k:"s",l:"problem",t:"sel",def:"Persistent Slab"}],test:(a,d,p)=>{const m=((d.av&&d.av.problems)||[]).find(x=>String(x.name).toLowerCase().includes(String(p.s).toLowerCase()));return m?`${m.name} in the forecast${m.likelihood?" ("+m.likelihood+")":""}`:null}},
-{id:"lifts",g:"Resort",resort:1,label:"Lifts open",desc:"Share of lifts running (only where lift status is available).",p:[{k:"x",l:"at least",t:"pct",def:60}],test:(a,d,p)=>{const T=terr(a);return T&&T.lifts&&T.lifts[0]/T.lifts[1]*100>=p.x?`${T.lifts[0]} of ${T.lifts[1]} lifts open`:null}}];
+{id:"lifts",g:"Resort",resort:1,label:"Lifts open",desc:"Share of lifts running (only where lift status is available).",p:[{k:"x",l:"at least",t:"pct",def:60}],test:(a,d,p)=>{const T=terr(a);return T&&T.lifts&&T.lifts[1]&&T.lifts[0]/T.lifts[1]*100>=p.x?`${T.lifts[0]} of ${T.lifts[1]} lifts open`:null}}];
 const RBY=Object.fromEntries(RULES.map(r=>[r.id,r]));
 function cfgOf(mode,r){const c=(S.alerts.cfg[mode]||{})[r.id]||{},p={};r.p.forEach(x=>p[x.k]=c.p&&c.p[x.k]!=null?c.p[x.k]:x.def);return{on:c.on!=null?c.on:!!r.on,p}}
 const deckMode=n=>S.alerts.decks[n]||S.alerts.defMode;
@@ -831,10 +893,94 @@ if(t.hasAttribute("data-on")){c.on=t.checked;const pr=t.closest(".rule").querySe
 else if(t.dataset.pk){c.p=c.p||{};c.p[t.dataset.pk]=t.tagName==="SELECT"?t.value:PCONV[t.dataset.t].from(+t.value)}
 save();SHOWN.clear();renderAlerts()});
  
+/* ---------- street map (no library: simple tiled map with pan, zoom and clustered markers) ---------- */
+const WS=256,ZMIN=3,ZMAX=17;
+const mercX=(lon,z)=>(lon+180)/360*WS*2**z;
+const mercY=(lat,z)=>{const s=Math.sin(Math.max(-85.05,Math.min(85.05,lat))*Math.PI/180);return(.5-Math.log((1+s)/(1-s))/(4*Math.PI))*WS*2**z};
+const unX=(x,z)=>x/(WS*2**z)*360-180;
+const unY=(y,z)=>180/Math.PI*(2*Math.atan(Math.exp(Math.PI*(1-2*y/(WS*2**z))))-Math.PI/2);
+const CARTO="https://{s}.basemaps.cartocdn.com/";
+const TILES={
+map:{name:"Map",att:"© OpenStreetMap contributors © CARTO",layers:[{u:CARTO+"rastertiles/voyager/{z}/{x}/{y}{r}.png",ud:CARTO+"dark_all/{z}/{x}/{y}{r}.png",sub:"abcd",max:19,r:1}]},
+terrain:{name:"Terrain",att:"Map data © OpenStreetMap contributors, SRTM | Style © OpenTopoMap (CC-BY-SA)",layers:[{u:"https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",sub:"abc",max:17}]},
+sat:{name:"Satellite",att:"Imagery © Esri, Maxar, Earthstar Geographics, and the GIS User Community",layers:[{u:"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",max:19},{u:"https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}",max:19}]}};
+const isDark=()=>S.theme==="dark"||(S.theme!=="light"&&matchMedia("(prefers-color-scheme: dark)").matches);
+let MV=null,MVKEY="";
+function fitView(pts,W,H){if(!pts.length)return{lat:39,lon:-106,z:5};
+let la0=90,la1=-90,lo0=180,lo1=-180;pts.forEach(p=>{la0=Math.min(la0,p.lat);la1=Math.max(la1,p.lat);lo0=Math.min(lo0,p.lon);lo1=Math.max(lo1,p.lon)});
+const pad=60;let z=ZMAX;for(;z>ZMIN;z-=.25){const w=mercX(lo1,z)-mercX(lo0,z),h=mercY(la0,z)-mercY(la1,z);if(w<=W-2*pad&&h<=H-2*pad)break}
+if(pts.length===1||la0===la1&&lo0===lo1)z=Math.min(z,9);
+return{lat:(la0+la1)/2,lon:(lo0+lo1)/2,z:Math.min(z,11)}}
+function mountMap(host,pts,opt){
+/* pts: [{id,name,lat,lon,zone,v,c,text}] ; opt: {onOpen,tipFor,style,dark,you} */
+const E=(c,t)=>{const e=document.createElement(t||"div");e.className=c;return e};
+const tiles=E("mtiles"),marks=E("mmarks"),att=E("matt"),hint=E("mhint");hint.hidden=true;host.append(tiles,marks,att,hint);host.classList.toggle("dk",(opt.style==="map"&&opt.dark)||opt.style==="sat");
+let W=host.clientWidth||600,H=host.clientHeight||440,errs=0,styleKey=opt.style;
+const key=pts.map(p=>p.id).join("|");
+if(!MV||MVKEY!==key){MV=fitView(pts,W,H);MVKEY=key}
+const V=MV;
+const TL=new Map(); // tile elements by key
+const sty=()=>TILES[styleKey]||TILES.map;
+function tileUrl(L,z,x,y){const dr=(devicePixelRatio||1)>1.5&&L.r?"@2x":"";const u=(opt.dark&&L.ud)?L.ud:L.u;return u.replace("{s}",L.sub?L.sub[(x+y)%L.sub.length]:"").replace("{z}",z).replace("{x}",x).replace("{y}",y).replace("{r}",dr)}
+function drawTiles(){const left=mercX(V.lon,V.z)-W/2,top=mercY(V.lat,V.z)-H/2,layers=sty().layers,want=new Set();
+layers.forEach((L,li)=>{const tz=Math.max(0,Math.min(L.max,Math.round(V.z))),ts=WS*2**(V.z-tz),n=2**tz;
+const x0=Math.floor(left/ts),x1=Math.floor((left+W)/ts),y0=Math.max(0,Math.floor(top/ts)),y1=Math.min(n-1,Math.floor((top+H)/ts));
+for(let ty=y0;ty<=y1;ty++)for(let tx=x0;tx<=x1;tx++){const wx=((tx%n)+n)%n,k=li+"/"+tz+"/"+tx+"/"+ty;want.add(k);let t=TL.get(k);
+if(!t){const im=new Image();im.className="mt";im.alt="";im.draggable=false;im.decoding="async";im.style.zIndex=li;im.onerror=()=>{errs++;im.remove();showErr()};im.onload=()=>im.classList.add("ok");im.src=tileUrl(L,tz,wx,ty);t={el:im,tz,tx,ty};TL.set(k,t);tiles.appendChild(im)}}});
+const allLoaded=[...want].every(k=>TL.get(k).el.classList.contains("ok")||TL.get(k).el.complete&&TL.get(k).el.naturalWidth);
+for(const [k,t] of TL){if(!want.has(k)&&allLoaded){t.el.remove();TL.delete(k)}}
+for(const [k,t] of TL){const ts=WS*2**(V.z-t.tz);const s=t.el.style;s.width=s.height=Math.ceil(ts)+1+"px";s.transform=`translate(${Math.round(t.tx*ts-left)}px,${Math.round(t.ty*ts-top)}px)`}}
+function showErr(){if(errs>=3&&!host.querySelector(".merr")){const m=E("merr");m.textContent="Map pictures could not load (offline or blocked). Markers still work.";host.appendChild(m)}}
+/* markers, clustered when close together */
+let items=[],zBuilt=-1;
+function build(){marks.textContent="";items=[];zBuilt=V.z;const R=30,cl=[];
+[...pts].sort((a,b)=>b.v-a.v).forEach(p=>{const x=mercX(p.lon,V.z),y=mercY(p.lat,V.z);let c=cl.find(c=>Math.abs(c.x-x)<R&&Math.abs(c.y-y)<R);if(c)c.m.push(p);else cl.push({x,y,m:[p]})});
+const few=pts.length<=14||V.z>=8;
+cl.forEach(c=>{const top=c.m[0],b=document.createElement("button");b.type="button";
+if(c.m.length>1){b.className="mk cl";b.style.setProperty("--c","var(--s"+Math.max(...c.m.map(p=>p.c))+")");b.innerHTML=`<i>${c.m.length}</i>`;b.setAttribute("aria-label",c.m.length+" areas close together. Zoom in.");
+b.onclick=()=>{const f=fitView(c.m,W,H);flyTo(f.lat,f.lon,Math.min(Math.max(f.z,V.z+1),ZMAX))};
+const tipx=ev=>opt.tipCluster(c.m,ev.clientX,ev.clientY);b.onpointerenter=tipx;b.onpointermove=tipx;b.onpointerleave=hideTip;b.onfocus=()=>{const r=b.getBoundingClientRect();opt.tipCluster(c.m,r.left+r.width/2,r.top)};b.onblur=hideTip}
+else{b.className="mk "+(top.zone?"zn":"rs");b.style.setProperty("--c","var(--s"+top.c+")");b.setAttribute("aria-label",top.text);b.innerHTML=`<i></i>`+(few?`<span class="lab"><b>${esc(top.name)}</b> ${esc(top.short)}</span>`:"");
+b.onclick=()=>opt.onOpen(top.id);const tipx=ev=>opt.tipFor(top.id,ev.clientX,ev.clientY);b.onpointerenter=tipx;b.onpointermove=tipx;b.onpointerleave=hideTip;b.onfocus=()=>{const r=b.getBoundingClientRect();opt.tipFor(top.id,r.left+r.width/2,r.top)};b.onblur=hideTip}
+marks.appendChild(b);items.push({el:b,lat:top.lat,lon:top.lon,mean:c.m.length>1?[c.m.reduce((s,p)=>s+p.lat,0)/c.m.length,c.m.reduce((s,p)=>s+p.lon,0)/c.m.length]:null})});
+if(opt.you){const y=E("you");y.title="Your distance location";marks.appendChild(y);items.push({el:y,lat:opt.you.lat,lon:opt.you.lon})}}
+function place(){const left=mercX(V.lon,V.z)-W/2,top=mercY(V.lat,V.z)-H/2;
+items.forEach(it=>{const la=it.mean?it.mean[0]:it.lat,lo=it.mean?it.mean[1]:it.lon;it.el.style.transform=`translate(${Math.round(mercX(lo,V.z)-left)}px,${Math.round(mercY(la,V.z)-top)}px)`})}
+function ctl(){att.textContent=sty().att}
+let raf=0;function draw(){raf=0;if(Math.abs(V.z-zBuilt)>=.2||!items.length)build();drawTiles();place()}
+const req=()=>{if(!raf)raf=requestAnimationFrame(draw)};
+const clampV=()=>{V.z=Math.max(ZMIN,Math.min(ZMAX,V.z));V.lat=Math.max(-80,Math.min(80,V.lat));V.lon=((V.lon+540)%360)-180};
+function zoomAt(f,px,py){const left=mercX(V.lon,V.z)-W/2,top=mercY(V.lat,V.z)-H/2,wx=left+px,wy=top+py,lon=unX(wx,V.z),lat=unY(wy,V.z);
+const nz=Math.max(ZMIN,Math.min(ZMAX,V.z+f));const nx=mercX(lon,nz)-px+W/2,ny=mercY(lat,nz)-py+H/2;V.z=nz;V.lon=unX(nx,nz);V.lat=unY(ny,nz);clampV();req()}
+let anim=0;function flyTo(lat,lon,z){cancelAnimationFrame(anim);const a={lat:V.lat,lon:V.lon,z:V.z},t0=performance.now(),D=320;
+const step=t=>{const k=Math.min(1,(t-t0)/D),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;V.lat=a.lat+(lat-a.lat)*e;V.lon=a.lon+(lon-a.lon)*e;V.z=a.z+(z-a.z)*e;clampV();draw();if(k<1)anim=requestAnimationFrame(step)};anim=requestAnimationFrame(step)}
+/* pan and pinch */
+const P=new Map();let moved=0,pinch=0;
+host.addEventListener("pointerdown",e=>{if(e.target.closest(".mctl,.mk"))return;P.set(e.pointerId,{x:e.clientX,y:e.clientY});moved=0;host.setPointerCapture(e.pointerId);host.classList.add("grab");
+if(P.size===2){const [a,b]=[...P.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y)}});
+host.addEventListener("pointermove",e=>{const p=P.get(e.pointerId);if(!p)return;hideTip();const dx=e.clientX-p.x,dy=e.clientY-p.y;
+if(P.size===1){moved+=Math.abs(dx)+Math.abs(dy);const left=mercX(V.lon,V.z)-W/2-dx,top=mercY(V.lat,V.z)-H/2-dy;V.lon=unX(left+W/2,V.z);V.lat=unY(top+H/2,V.z);clampV();req()}
+else if(P.size===2){const o=[...P.entries()].find(([id])=>id!==e.pointerId)[1],d=Math.hypot(e.clientX-o.x,e.clientY-o.y);if(pinch>0&&d>0){const r=host.getBoundingClientRect();zoomAt(Math.log2(d/pinch),(e.clientX+o.x)/2-r.left,(e.clientY+o.y)/2-r.top);pinch=d}}
+p.x=e.clientX;p.y=e.clientY});
+const up=e=>{P.delete(e.pointerId);if(!P.size)host.classList.remove("grab");pinch=0};host.addEventListener("pointerup",up);host.addEventListener("pointercancel",up);
+host.addEventListener("dblclick",e=>{if(e.target.closest(".mctl,.mk"))return;const r=host.getBoundingClientRect();zoomAt(1,e.clientX-r.left,e.clientY-r.top)});
+host.addEventListener("wheel",e=>{if(!(e.ctrlKey||e.metaKey)){hint.textContent="Hold Ctrl (or ⌘) and scroll to zoom the map";hint.hidden=false;clearTimeout(hint.t);hint.t=setTimeout(()=>hint.hidden=true,1200);return}
+e.preventDefault();const r=host.getBoundingClientRect();zoomAt(-e.deltaY*(e.deltaMode?.05:.01),e.clientX-r.left,e.clientY-r.top)},{passive:false});
+host.addEventListener("keydown",e=>{const k=e.key,s=80;if(e.target.closest(".mk"))return;let h=true;
+if(k==="ArrowLeft"||k==="ArrowRight"||k==="ArrowUp"||k==="ArrowDown"){const dx=k==="ArrowLeft"?-s:k==="ArrowRight"?s:0,dy=k==="ArrowUp"?-s:k==="ArrowDown"?s:0;const left=mercX(V.lon,V.z)-W/2+dx,top=mercY(V.lat,V.z)-H/2+dy;V.lon=unX(left+W/2,V.z);V.lat=unY(top+H/2,V.z);clampV();req()}
+else if(k==="+"||k==="=")zoomAt(1,W/2,H/2);else if(k==="-"||k==="_")zoomAt(-1,W/2,H/2);else h=false;if(h)e.preventDefault()});
+/* buttons */
+const c=E("mapctl mctl");c.innerHTML=`<button type="button" data-z="1" aria-label="Zoom in">+</button><button type="button" data-z="-1" aria-label="Zoom out">−</button><button type="button" data-z="0" class="fit" aria-label="Fit all areas">Fit</button>`;
+c.onclick=e=>{const b=e.target.closest("button");if(!b)return;const z=+b.dataset.z;if(z)flyTo(V.lat,V.lon,Math.max(ZMIN,Math.min(ZMAX,Math.round(V.z)+z)));else{const f=fitView(pts,W,H);flyTo(f.lat,f.lon,f.z)}};
+host.appendChild(c);
+const ro=typeof ResizeObserver!=="undefined"?new ResizeObserver(()=>{W=host.clientWidth||W;H=host.clientHeight||H;req()}):null;if(ro)ro.observe(host);
+ctl();clampV();draw();
+return{setStyle(k){styleKey=k;host.classList.toggle("dk",(k==="map"&&opt.dark)||k==="sat");TL.forEach(t=>t.el.remove());TL.clear();errs=0;const m=host.querySelector(".merr");if(m)m.remove();ctl();req()},view:V}}
+ 
 const AMAX=MAX;
 /* ---------- shared bits ---------- */
 function terrainHtml(a){const T=terr(a);if(!T)return`<div class="zone">Lift and trail status: not reported yet.</div>`;
-const row=(n,v)=>v?`<div class="row"><span>${n}</span><div class="track"><i style="width:${v[0]/v[1]*100}%"></i></div><b>${v[0]}/${v[1]}</b></div>`:"";
+const row=(n,v)=>v?(v[1]?`<div class="row"><span>${n}</span><div class="track"><i style="width:${v[0]/v[1]*100}%"></i></div><b>${v[0]}/${v[1]}</b></div>`:`<div class="row"><span>${n}</span><div class="track"></div><b>${v[0]} open</b></div>`):"";
 return`<div class="prog">${row("Lifts",T.lifts)}${row("Trails",T.trails)}</div><div class="meta" style="font-size:12px">From the resort's website, ${new Date(T.fetched).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</div>`}
 const ladder=n=>`<span class="ladder" aria-hidden="true">${[1,2,3,4,5].map(i=>`<i style="${i<=n?`background:var(--d${n})`:""}"></i>`).join("")}</span>`;
 /* ---------- list, filter, sort ---------- */
@@ -845,7 +991,7 @@ if(S.pass!=="all")l=l.filter(a=>!a.zone&&passOf(a)===S.pass);
 const k=S.sort;
 if(k==="name")l=[...l].sort((x,y)=>x.name.localeCompare(y.name));
 else if(k==="dist"&&S.geo)l=[...l].sort((x,y)=>dist(x)-dist(y));
-else if(KEY[k]&&k!=="dist"&&(k!=="score"||S.rank))l=[...l].sort((x,y)=>KEY[k](y,data(y))-KEY[k](x,data(x)));
+else if(KEY[k]&&k!=="dist")l=[...l].sort((x,y)=>KEY[k](y,data(y))-KEY[k](x,data(x)));
 return l}
 const canReorder=()=>S.sort==="mine"&&S.layout==="cards"&&!SHARED&&S.pass==="all";
  
@@ -859,7 +1005,7 @@ const cond=S.cond?`<div><span class="meta">Estimated conditions: </span><span cl
 const wx=S.wx?`<div class="wx"><div class="wxn"><span>Now <b>${tp(d.now)}</b></span><span>Wind <b>${wd(d.wind)}</b></span></div>
 <div class="wxd">${d.temps.map((t,k)=>`<div>${dname(d,k).slice(0,3)}<b>${tp(t.hi)}</b>${tp(t.lo)}${d.rain[k]?`<div class="rain">Rain</div>`:""}</div>`).join("")}</div></div>`:"";
 const sc=score(a,d),bd=bestDay(d),ds=dist(a),pass=passOf(a);
-return`<article class="card" ${ro?'draggable="true"':""} data-id="${esc(a.id)}"><div class="ch"><div><h2><button class="cardlink" data-open="${esc(a.id)}">${S.sort==="score"&&S.rank?"#"+(i+1)+" ":""}${esc(a.name)}</button></h2><div class="meta">${a.st} · ${a.zone?"Backcountry zone":"Resort"}${CD("pass")&&pass&&pass!=="None"?` · <span class="tag">${pass}</span>`:""}${CD("dist")&&ds!=null?` · ${mi(ds)}`:""}</div></div>
+return`<article class="card" ${ro?'draggable="true"':""} data-id="${esc(a.id)}"><div class="ch"><div><h2><button class="cardlink" data-open="${esc(a.id)}">${S.sort==="score"?"#"+(i+1)+" ":""}${esc(a.name)}</button></h2><div class="meta">${a.st} · ${a.zone?"Backcountry zone":"Resort"}${CD("pass")&&pass&&pass!=="None"?` · <span class="tag">${pass}</span>`:""}${CD("dist")&&ds!=null?` · ${mi(ds)}`:""}</div></div>
 <div class="ctl">${ro?`<button class="x" data-mv="-1" data-id="${esc(a.id)}" aria-label="Move ${esc(a.name)} earlier" ${i===0?"disabled":""}>‹</button><button class="x" data-mv="1" data-id="${esc(a.id)}" aria-label="Move ${esc(a.name)} later" ${i===n-1?"disabled":""}>›</button>`:""}${SHARED?"":`<button class="x" data-rm="${esc(a.id)}" aria-label="Remove ${esc(a.name)}">×</button>`}</div></div>
 ${S.rank&&CD("score")?`<div class="scr"><b>${sc}</b><span>${grade(sc)} for skiing now</span></div>`:""}
 ${alerts(a,d)}
@@ -877,7 +1023,7 @@ const th=cols.map(c=>`<th scope="col" ${S.sort===c[0]?'aria-sort="'+(c[0]==="nam
 const cell=(k,a,d)=>{const T=a.zone?null:terr(a);switch(k){case"name":return`<th scope="row" style="text-align:left"><button class="cardlink" data-open="${esc(a.id)}">${esc(a.name)}</button> <span class="meta">${a.st}${a.zone?" · zone":""}</span></th>`;
 case"pass":return`<td>${a.zone?"–":passOf(a)==="None"?"–":passOf(a)}</td>`;case"s24":return`<td class="num hl">${sn(d.s24)}</td>`;case"s72":return`<td class="num">${sn(d.s72)}</td>`;case"base":return`<td class="num">${sn(d.base)}</td>`;
 case"f3":return`<td class="num">${sn(f3(d))}</td>`;case"f7":return`<td class="num">${sn(f7(d))}</td>`;case"hi":return`<td class="num">${tp(d.temps[0].hi)}</td>`;case"wind":return`<td class="num">${wd(d.wind)}</td>`;
-case"lifts":return`<td class="num">${T&&T.lifts?T.lifts[0]+"/"+T.lifts[1]:"–"}</td>`;case"av":return`<td>${a.zone&&d.aval?`${d.aval} ${LEVELS[d.aval]}`:"–"}</td>`;case"score":return`<td class="num">${score(a,d)}</td>`;case"dist":return`<td class="num">${mi(dist(a))}</td>`}};
+case"lifts":return`<td class="num">${T&&T.lifts?T.lifts[0]+(T.lifts[1]?"/"+T.lifts[1]:" open"):"–"}</td>`;case"av":return`<td>${a.zone&&d.aval?`${d.aval} ${LEVELS[d.aval]}`:"–"}</td>`;case"score":return`<td class="num">${score(a,d)}</td>`;case"dist":return`<td class="num">${mi(dist(a))}</td>`}};
 return`<div class="tblwrap"><table class="tbl"><caption class="meta" style="text-align:left;padding:8px 10px;caption-side:top">Snow in ${su()}. Click a name for the full page. Sort with the column headings.</caption><thead><tr>${th}</tr></thead><tbody>${l.map(a=>{const d=data(a);return`<tr data-open="${esc(a.id)}">${cols.map(c=>cell(c[0],a,d)).join("")}</tr>`}).join("")}</tbody></table></div>`}
  
 /* ---------- planner ---------- */
@@ -889,46 +1035,24 @@ return`<tr data-open="${esc(a.id)}"><th scope="row" style="text-align:left"><but
 return`<div class="tblwrap"><table class="tbl"><caption class="meta" style="text-align:left;padding:8px 10px;caption-side:top">Weekend day scores from 0 to 100. Higher is better: fresh snow, cold, calm, no rain. Click an area for the full page.</caption><thead><tr><th scope="col">Area</th>${hdr.map(h=>`<th scope="col">${h}</th>`).join("")}<th scope="col">Weekend pick</th></tr></thead><tbody>${rows}</tbody></table></div>`}
  
 /* ---------- map ---------- */
-const OUT={CO:[[-109.05,37],[-102.05,37],[-102.05,41],[-109.05,41]],UT:[[-114.05,37],[-109.05,37],[-109.05,41],[-111.05,41],[-111.05,42],[-114.05,42]],WY:[[-111.05,41],[-104.05,41],[-104.05,45],[-111.05,45]],
-NM:[[-109.05,31.3],[-103,31.3],[-103,37],[-109.05,37]],MT:[[-104.05,45],[-104.05,49],[-116.05,49],[-116.05,47.9],[-114.3,46.6],[-113.1,45.8],[-112.4,44.5],[-111.05,44.5],[-111.05,45]],
-ID:[[-117,42],[-111.05,42],[-111.05,44.5],[-112.4,44.5],[-113.1,45.8],[-114.3,46.6],[-116.05,47.9],[-117,49]]};
-const KX=Math.cos(40*Math.PI/180);
-const mx=lon=>lon*KX,my=lat=>-lat;
-let MAPM="s24",VB=null,MAPKEY="";
+let MAPM="s24";
 const MAPS={s24:["Last 24 hours",(a,d)=>d.s24,[0,1,4,8,14],"snow"],f3:["Next 3 days",(a,d)=>f3(d),[0,1,4,8,14],"snow"],base:["Base depth",(a,d)=>d.base,[0,20,40,70,100],"snow"],score:["Score",(a,d)=>score(a,d),[0,20,40,60,80],"score"]};
 const bucket=(v,t)=>{let k=0;t.forEach((x,i)=>{if(v>=x&&(i===0||v>=x))k=i});return v<=0?0:k};
-function fitVB(l){const xs=l.map(a=>mx(a.lon)),ys=l.map(a=>my(a.lat));let x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
-const padx=Math.max(.9,(x1-x0)*.15),pady=Math.max(.9,(y1-y0)*.15);x0-=padx;x1+=padx;y0-=pady;y1+=pady;let w=x1-x0,h=y1-y0;const ar=1.5;
-if(w/h<ar){const nw=h*ar;x0-=(nw-w)/2;w=nw}else{const nh=w/ar;y0-=(nh-h)/2;h=nh}return{x:x0,y:y0,w,h,w0:w}}
 function renderMap(l){if(!l.length)return emptyHtml();
-const key=l.map(a=>a.id).join("|");if(!VB||MAPKEY!==key){VB=fitVB(l);MAPKEY=key}
-if(!MAPS[MAPM]||(MAPM==="score"&&!S.rank))MAPM="s24";
-const M=MAPS[MAPM],thr=M[2].map(v=>MAPM==="score"||MAPM==="base"?v:v),cvt=v=>M[3]==="score"?v:sn(v);
-const lab=M[3]==="score"?"score":su();
-return`<div class="mapsel"><label for="mapm">Color by</label><select id="mapm">${Object.keys(MAPS).filter(k=>k!=="score"||S.rank).map(k=>`<option value="${k}" ${k===MAPM?"selected":""}>${MAPS[k][0]}</option>`).join("")}</select></div>
-<div class="mapbox" id="mapbox"><svg id="mapsvg" role="group" aria-label="Map of your areas. Each marker opens that area's page." tabindex="-1"></svg><div class="mapctl"><button id="mzi" aria-label="Zoom in">+</button><button id="mzo" aria-label="Zoom out">−</button><button class="fit" id="mfit" aria-label="Fit all areas">Fit</button></div></div>
+if(!MAPS[MAPM])MAPM="s24";if(!TILES[S.mapStyle])S.mapStyle="map";
+const M=MAPS[MAPM],cvt=v=>M[3]==="score"?v:sn(v);
+return`<div class="mapsel"><label for="mapm">Color by</label><select id="mapm">${Object.keys(MAPS).map(k=>`<option value="${k}" ${k===MAPM?"selected":""}>${MAPS[k][0]}</option>`).join("")}</select>
+<span class="seg" role="group" aria-label="Map style">${Object.entries(TILES).map(([k,t])=>`<button data-seg="mapStyle" data-v="${k}">${t.name}</button>`).join("")}</span></div>
+<div class="mapbox" id="mapbox" tabindex="0" role="group" aria-label="Map of your areas. Drag to move. Arrow keys move the map, plus and minus zoom. Markers open that area's page."></div>
 <div class="legend"><span>● resort</span><span>◆ backcountry zone</span><span>${M[0]}:<span class="scale">${[1,2,3,4,5].map(i=>`<i style="background:var(--s${i})"></i>`).join("")}</span>${M[2].map((v,i)=>i===0?"none":cvt(v)+"+").join(", ")} ${M[3]==="score"?"":su()}</span></div>
-<div class="meta">Simplified state outlines. Drag to move, use the buttons to zoom.</div>
+<div class="meta">Drag to move. Use + and − (or hold Ctrl and scroll) to zoom. Areas that are close together group into a numbered circle; click it to zoom in. Roads, towns and cities come from OpenStreetMap contributors.</div>
 <details class="dt"><summary>View as list</summary>${renderTable(l)}</details>`}
-function drawMap(l){const svg=$("mapsvg");if(!svg||!VB)return;const M=MAPS[MAPM],k=VB.w/VB.w0,r=Math.max(3.5,Math.min(12,8*Math.sqrt(k)))*VB.w/700*1.0;
-const pr=ps=>ps.map(p=>mx(p[0])+","+my(p[1])).join(" ");
-let g=Object.entries(OUT).map(([s,p])=>`<polygon class="st" points="${pr(p)}"/>`).join("");
-const unit=VB.w/700,lbl=l.length<=14||k<.45;
-g+=l.map(a=>{const d=data(a),v=M[1](a,d),c=bucket(v,M[2])+1,x=mx(a.lon),y=my(a.lat),rr=r,aria=`${a.name}, ${M[0]} ${M[3]==="score"?v:sn(v)+" "+su()}`;
-const shape=a.zone?`<path class="pt" data-open="${esc(a.id)}" data-tipid="${esc(a.id)}" tabindex="0" role="button" aria-label="${esc(aria)}" d="M${x} ${y-rr*1.25}L${x+rr*1.25} ${y}L${x} ${y+rr*1.25}L${x-rr*1.25} ${y}Z" style="fill:var(--s${c})"/>`:`<circle class="pt" data-open="${esc(a.id)}" data-tipid="${esc(a.id)}" tabindex="0" role="button" aria-label="${esc(aria)}" cx="${x}" cy="${y}" r="${rr}" style="fill:var(--s${c})"/>`;
-return shape+(lbl?`<text x="${x+rr*1.6}" y="${y+rr*.4}" font-size="${11*unit}">${esc(a.name)}</text>`:"")}).join("");
-svg.setAttribute("viewBox",`${VB.x} ${VB.y} ${VB.w} ${VB.h}`);svg.innerHTML=g}
-function mapEvents(l){const box=$("mapbox");if(!box)return;const svg=$("mapsvg");drawMap(l);
+function mapEvents(l){const host=$("mapbox");if(!host)return;const M=MAPS[MAPM];
+const pts=l.map(a=>{const d=data(a),v=M[1](a,d),c=bucket(v,M[2])+1,txt=M[3]==="score"?v+"":sn(v)+" "+su();return{id:a.id,name:a.name,lat:a.lat,lon:a.lon,zone:a.zone,v,c,short:txt,text:`${a.name}, ${M[0]} ${txt}`}});
 $("mapm").onchange=e=>{MAPM=e.target.value;renderView()};
-const zoom=f=>{const cx=VB.x+VB.w/2,cy=VB.y+VB.h/2;VB.w*=f;VB.h*=f;VB.x=cx-VB.w/2;VB.y=cy-VB.h/2;drawMap(l)};
-$("mzi").onclick=()=>zoom(.6);$("mzo").onclick=()=>zoom(1/.6);$("mfit").onclick=()=>{VB=fitVB(l);drawMap(l)};
-let drag=null;svg.addEventListener("pointerdown",e=>{if(e.target.closest(".pt"))return;drag={x:e.clientX,y:e.clientY,vx:VB.x,vy:VB.y};svg.setPointerCapture(e.pointerId)});
-svg.addEventListener("pointermove",e=>{if(drag){const r=svg.getBoundingClientRect(),k=VB.w/r.width;VB.x=drag.vx-(e.clientX-drag.x)*k;VB.y=drag.vy-(e.clientY-drag.y)*k;svg.setAttribute("viewBox",`${VB.x} ${VB.y} ${VB.w} ${VB.h}`);return}
-const p=e.target.closest&&e.target.closest("[data-tipid]");if(p)tipFor(p,e.clientX,e.clientY);else hideTip()});
-svg.addEventListener("pointerup",()=>{drag=null});svg.addEventListener("pointerleave",hideTip);
-svg.addEventListener("focusin",e=>{const p=e.target.closest("[data-tipid]");if(p){const r=p.getBoundingClientRect();tipFor(p,r.left+r.width/2,r.top)}});svg.addEventListener("focusout",hideTip);
-svg.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.dataset.open){e.preventDefault();openDetail(e.target.dataset.open)}})}
-function tipFor(p,x,y){const a=BY[p.dataset.tipid],d=data(a),M=MAPS[MAPM],v=M[1](a,d);showTip(x,y,a.name,[{key:"dot",color:"var(--blue)",value:M[3]==="score"?v+"":sn(v)+" "+su(),label:M[0]},{key:"dot",color:"var(--mute)",value:sn(d.base)+" "+su(),label:"base depth"}])}
+mountMap(host,pts,{style:S.mapStyle,dark:isDark(),you:S.geo,onOpen:id=>openDetail(id),tipFor:(id,x,y)=>tipFor(id,x,y),
+tipCluster:(m,x,y)=>showTip(x,y,m.length+" areas here (zoom in)",m.slice(0,6).map(p=>({key:"dot",color:"var(--s"+p.c+")",value:p.short,label:p.name})))})}
+function tipFor(id,x,y){const a=BY[id],d=data(a),M=MAPS[MAPM],v=M[1](a,d);showTip(x,y,a.name,[{key:"dot",color:"var(--blue)",value:M[3]==="score"?v+"":sn(v)+" "+su(),label:M[0]},{key:"dot",color:"var(--mute)",value:sn(d.base)+" "+su(),label:"base depth"}])}
  
 /* ---------- news ---------- */
 let NSCOPE="deck",NSRC="all",NMORE=30;
@@ -949,14 +1073,16 @@ ${items.length>shown.length?`<div style="text-align:center;margin-top:12px"><but
 function renderView(){const l=viewList(),v=$("view");
 v.innerHTML=S.layout==="table"?renderTable(l):S.layout==="map"?renderMap(l):S.layout==="planner"?renderPlanner(l):S.layout==="news"?renderNews(l):renderCards(l);
 if(S.layout==="map")mapEvents(l);
-$("hint").textContent=(canReorder()?"Drag cards or use the arrows to set your order. ":"")+"Click any area to open its full page."+(S.pass!=="all"?` Pass filter on: showing ${l.length} of ${sel().length}. Backcountry zones are hidden.`:"")}
+$("hint").textContent=(S.model&&S.model!=="noaa"?`Forecast model: ${(MODELS.find(m=>m[0]===S.model)||MODELS[0])[1]}. `:"")+(canReorder()?"Drag cards or use the arrows to set your order. ":"")+"Click any area to open its full page."+(S.pass!=="all"?` Pass filter on: showing ${l.length} of ${sel().length}. Backcountry zones are hidden.`:"")}
+const msel=$("modelsel");msel.innerHTML=MODELS.map(m=>`<option value="${m[0]}">${m[1]}</option>`).join("");
+msel.onchange=()=>{S.model=msel.value;DC.clear();renderAll()};
 function renderAll(){DC.size;const s=sel();$("n").textContent=s.length;$("count").textContent=`${s.length} of ${AMAX} in this deck`;
 const dk=$("deck");dk.innerHTML=Object.keys(DECKS).map(k=>`<option ${k===ACTIVE?"selected":""}>${esc(k)}</option>`).join("");
 $("deckbar").hidden=!!SHARED;$("toggle").disabled=!!SHARED;
-const so=$("sort");so.innerHTML=SORTS.filter(x=>(x[0]!=="dist"||S.geo)&&(x[0]!=="score"||S.rank)).map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
+const so=$("sort");so.innerHTML=SORTS.filter(x=>x[0]!=="dist"||S.geo).map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
 if(![...so.options].some(o=>o.value===S.sort))S.sort="mine";so.value=S.sort;$("pass").value=S.pass;
 const sb=$("sharebar");if(SHARED){sb.hidden=false;sb.innerHTML=`<span>Shared deck: <b>${esc(SHARED.name)}</b> (${SHARED.ids.length} areas). It is a copy, so your own decks are not changed.</span><span><button class="btn sm primary" id="sbsave">Save as my deck</button> <button class="btn sm" id="sbclose">Close</button></span>`}else sb.hidden=true;
-renderView();renderList();save();if(DET)renderDetail(true);sync();renderAlerts()}
+msel.value=S.model||"noaa";renderView();renderList();save();if(DET)renderDetail(true);sync();renderAlerts()}
  
 /* ---------- decks and sharing ---------- */
 const uniq=n=>{let k=n,i=2;while(DECKS[k])k=n+" "+i++;return k};
@@ -1022,7 +1148,7 @@ counts();
 function theme(){if(S.theme==="auto")delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=S.theme}
 function openD(o){$("drawer").classList.toggle("open",o);$("back").classList.toggle("open",o);$("gear").setAttribute("aria-expanded",o);if(o)$("dclose").focus();else if(!DET)$("gear").focus()}
 $("gear").onclick=()=>openD(true);$("dclose").onclick=$("back").onclick=()=>openD(false);
-const LEGACY=[["rank","Rank mountains","Adds a 0 to 100 score and a Best score sort."],["cond","Estimated snow conditions","Powder, packed powder, slush and so on, guessed from recent snow and temperature."],["wx","Detailed weather","Current temperature, wind, 7-day highs and lows, and rain."]];
+const LEGACY=[["rank","Rank mountains","Shows the 0 to 100 score on cards and in the table. (Sorting and mapping by score always work.)"],["cond","Estimated snow conditions","Powder, packed powder, slush and so on, guessed from recent snow and temperature."],["wx","Detailed weather","Current temperature, wind, 7-day highs and lows, and rain."]];
 const tgl=(g,l)=>l.map(x=>`<label class="sw"><span>${x[1]}</span><input type="checkbox" role="switch" data-tg="${g}" data-key="${x[0]}"></label>`).join("");
 $("cardtog").innerHTML=LEGACY.map(x=>`<label class="sw"><span>${x[1]}<small>${x[2]}</small></span><input type="checkbox" role="switch" data-k="${x[0]}"></label>`).join("")+tgl("card",CARDT);
 $("pagetog").innerHTML=tgl("page",PAGET);
