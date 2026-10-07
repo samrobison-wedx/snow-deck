@@ -1,0 +1,9 @@
+
+[
+  {
+    "id": "Arapahoe Basin",
+    "url": "https://www.arapahoebasin.com/",
+    "lifts": "(\\d+)\\s*/\\s*(\\d+)\\s*Open Lifts",
+    "trails": "(\\d+)\\s*/\\s*(\\d+)\\s*Open Runs"
+  }
+]
