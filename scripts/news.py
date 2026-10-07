@@ -29,12 +29,31 @@ ALIASES = {
     "Vail Pass": [], "Hoosier Pass": [], "Independence Pass": [], "Monarch Pass": [], "Kebler Pass": [], "Red Mountain Pass": [], "Molas Pass": [],
     "Lizard Head Pass": [], "Wolf Creek Pass": [], "Cameron Pass": [], "Rabbit Ears Pass": [], "Buffalo Pass": [], "Rocky Mountain National Park": [],
     "Grand Mesa": [], "Park City Ridgeline": [], "Ogden Mountains": ["Ogden Valley"], "Provo and Timpanogos": ["Timpanogos"], "Mirror Lake Highway": [],
+    "Palisades Tahoe": ["Palisades", "Squaw Valley", "Alpine Meadows"], "Mammoth Mountain": ["Mammoth", "Mammoth Lakes ski"],
+    "Heavenly": ["Heavenly Mountain", "Heavenly Resort"], "Northstar": ["Northstar California"], "Kirkwood": ["Kirkwood Mountain"],
+    "Jackson Hole": ["Jackson Hole Mountain Resort", "JHMR"], "Grand Targhee": ["Targhee"], "Whitefish Mountain": ["Whitefish Mountain Resort", "Big Mountain Whitefish"],
+    "Sun Valley": ["Sun Valley Resort", "Bald Mountain Idaho"], "Mount Bachelor": ["Mt. Bachelor", "Mt Bachelor"],
+    "Mt. Hood Meadows": ["Hood Meadows", "Mt Hood Meadows", "Mount Hood Meadows"], "Timberline": ["Timberline Lodge"],
+    "Mt. Hood Skibowl": ["Skibowl", "Mount Hood Skibowl"], "Cooper Spur": ["Cooper Spur Mountain Resort"], "Summit Ski Area": ["Summit Ski Area Mount Hood"],
+    "Killington": ["Killington Resort"], "Stowe": ["Stowe Mountain Resort"], "Sugarbush": ["Sugarbush Resort"], "Okemo": ["Okemo Mountain"],
+    "Stratton": ["Stratton Mountain"], "Mount Snow": ["Mt. Snow", "Mt Snow"], "Jay Peak": ["Jay Peak Resort"], "Smugglers' Notch": ["Smugglers Notch", "Smuggs"],
+    "Mad River Glen": [], "Mont Tremblant": ["Tremblant"], "Lake Louise": ["Lake Louise Ski Resort", "SkiLouise"], "Sunshine Village": ["Banff Sunshine", "Sunshine Village Banff"],
+    "Revelstoke": ["Revelstoke Mountain Resort"], "Kicking Horse": ["Kicking Horse Mountain Resort"], "Sunday River": [], "Sugarloaf": ["Sugarloaf Mountain"],
+    "Saddleback": ["Saddleback Maine"], "Shawnee Peak": [], "Loon Mountain": ["Loon Mountain Resort", "Loon"], "Cannon Mountain": ["Cannon"],
+    "Attitash": ["Attitash Mountain"], "Wildcat": ["Wildcat Mountain"], "Waterville Valley": [], "Bretton Woods": [], "Mount Sunapee": ["Mt. Sunapee", "Sunapee"],
+    "Gunstock": ["Gunstock Mountain"], "Santa Fe": ["Ski Santa Fe"], "Angel Fire": ["Angel Fire Resort"], "Red River": ["Red River Ski Area"],
+    "Crystal Mountain": ["Crystal Mountain Washington", "Crystal Mountain Resort"], "Stevens Pass": [], "Mt. Baker": ["Mount Baker", "Mt Baker", "Baker Ski Area"],
+    "Wachusett": ["Wachusett Mountain"],
     "Logan Canyon": [], "La Sal Mountains": ["La Sals"], "Abajo Mountains": ["Abajos"],
 }
 # Names that are also ordinary words or places. They only count when the text also has a ski or snow word.
 AMBIGUOUS = {"Alta", "Vail", "Eldora", "Taos", "Sunlight", "Brighton", "Solitude", "Monarch", "Sundance", "Loveland", "Keystone", "Copper",
               "Telluride", "Purgatory", "Beaver Creek", "Big Sky", "Steamboat", "Breckenridge", "Park City", "Deer Valley", "Aspen Snowmass",
-              "Copper Mountain", "Winter Park", "Crested Butte", "Wolf Creek", "Powderhorn", "Hesperus", "Snowbasin", "Snowbird", "Buffalo Pass", "Grand Mesa"}
+              "Copper Mountain", "Winter Park", "Crested Butte", "Wolf Creek", "Powderhorn", "Hesperus", "Snowbasin", "Snowbird", "Buffalo Pass", "Grand Mesa",
+              "Heavenly", "Northstar", "Kirkwood", "Sun Valley", "Mount Bachelor", "Timberline", "Cooper Spur", "Summit Ski Area", "Stowe", "Okemo", "Stratton",
+              "Wildcat", "Attitash", "Gunstock", "Santa Fe", "Red River", "Angel Fire", "Crystal Mountain", "Stevens Pass", "Saddleback", "Wachusett", "Cannon Mountain",
+              "Loon Mountain", "Jackson Hole", "Mammoth Mountain", "Palisades Tahoe", "Killington", "Sugarloaf", "Mount Snow", "Mount Sunapee", "Whitefish Mountain",
+              "Revelstoke", "Kicking Horse", "Lake Louise", "Mont Tremblant", "Shawnee Peak", "Bretton Woods", "Waterville Valley"}
 CONTEXT = re.compile(r"\b(ski|skiing|skier|skiers|snow|snowboard|snowboarder|resort|lift|lifts|slopes|powder|avalanche|backcountry|trail map|gondola|opening day|closing day|season pass|epic pass|ikon pass|terrain|chairlift|snowpack|snowfall)\b", re.I)
  
 def fetch(url, accept="text/html,*/*;q=0.8"):
@@ -173,5 +192,4 @@ def main():
     sys.exit(0 if got else 1)
  
 if __name__ == "__main__":
-    main()
- 
+    
