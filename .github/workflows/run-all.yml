@@ -1,0 +1,19 @@
+name: Run everything now
+on:
+  workflow_dispatch:
+permissions:
+  actions: write
+  contents: read
+jobs:
+  run-all:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Start every Snow Deck workflow
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for wf in update.yml terrain.yml history.yml news.yml; do
+            gh workflow run "$wf" && echo "started $wf" || echo "could not start $wf"
+          done
+ 
