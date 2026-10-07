@@ -2,7 +2,7 @@
 """Snow Deck lift and trail collector. Standard library only.
 Reads terrain-sources.json, fetches each resort's own page, pulls out
 "open / total" numbers with the patterns listed there, and writes data/terrain.json."""
-import html, json, os, re, sys, time, urllib.request, urllib.robotparser
+import html, json, os, re, sys, time, urllib.error, urllib.request, urllib.robotparser
 from datetime import datetime, timezone
 from urllib.parse import urlparse
  
@@ -10,8 +10,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "data", "terrain.json")
 UA = "SnowDeck (https://github.com/%s; personal project)" % os.environ.get("GITHUB_REPOSITORY", "local-test")
  
-def fetch(url):
-    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "text/html"})
+def fetch(url, accept="text/html,application/xhtml+xml,*/*;q=0.8"):
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept, "Accept-Language": "en-US,en;q=0.9"})
     with urllib.request.urlopen(req, timeout=40) as r:
         return r.read().decode("utf-8", "replace")
  
@@ -20,11 +20,20 @@ def allowed(url):
     p = urlparse(url)
     try:
         rp = urllib.robotparser.RobotFileParser()
-        rp.parse(fetch("%s://%s/robots.txt" % (p.scheme, p.netloc)).splitlines())
-        return rp.can_fetch(UA, url)
+        try:
+            rp.parse(fetch("%s://%s/robots.txt" % (p.scheme, p.netloc), "text/plain,*/*;q=0.8").splitlines())
+        except urllib.error.HTTPError as he:
+            if he.code == 404:  # no robots.txt means no stated restrictions
+                return True
+            raise
+        ok = rp.can_fetch(UA, url)
+        if not ok:
+            print("  robots.txt says automated access to this page is not allowed")
+        return ok
     except Exception as e:
         print("  could not read robots.txt:", e)
         return False
+    
  
 def page_text(raw):
     raw = re.sub(r"(?is)<(script|style).*?</\1>", " ", raw)
@@ -54,7 +63,8 @@ def main():
             e = {k: pull(text, s[k]) for k in ("lifts", "trails") if s.get(k)}
             e = {k: v for k, v in e.items() if v}
             if not e:
-                print("  no numbers found (page layout may have changed)")
+                print("  no numbers found (page layout may have changed or the numbers load after the page opens)")
+                print("  page text starts:", text[:300])
                 continue
             e["fetched"] = datetime.now(timezone.utc).isoformat()
             res[s["id"]] = e
