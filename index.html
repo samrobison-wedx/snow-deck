@@ -238,6 +238,41 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 .mapsel{display:flex;gap:10px;align-items:center;margin-bottom:8px;flex-wrap:wrap}
 .distb{font-size:13px;color:var(--mute)}
 @media (max-width:620px){.chart svg text{font-size:17px}.mtn text{font-size:19px}.tile b{font-size:26px}}
+ 
+.bell{position:relative;padding:8px 10px;display:flex}
+.nbadge{position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;border-radius:99px;background:var(--warm);color:#fff;font:700 12px/20px "Source Sans 3",sans-serif;text-align:center;padding:0 5px}
+:root[data-theme="dark"] .nbadge{color:#0F1B21}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .nbadge{color:#0F1B21}}
+.alertpop{position:fixed;z-index:50;top:calc(12px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);width:min(520px,calc(100% - 24px));background:var(--card);border:1px solid var(--line);border-left:6px solid var(--warm);border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.28);padding:12px 14px}
+.alertpop ul{margin:6px 0 8px;padding-left:18px;font-size:14px}
+.acenter{position:fixed;z-index:45;top:70px;right:max(12px,calc(50% - 600px));width:min(460px,calc(100% - 24px));max-height:calc(100vh - 100px);overflow:auto;background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:0 12px 32px rgba(0,0,0,.28);padding:14px 16px}
+.arow{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;border-top:1px solid var(--line);padding:10px 0}
+.arow:first-of-type{border-top:0}
+.arow b{display:block}
+.arow .meta{font-size:13px}
+.drawer.wide{width:min(560px,100%);z-index:41}
+#aback{z-index:40}
+.rule{border-bottom:1px solid var(--line);padding:10px 0}
+.rule .sw{border:0;padding:0}
+.rparams{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:8px;font-size:14px}
+.rparams input[type=number]{width:84px;padding:5px 8px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+.rparams[hidden]{display:none}
+.agroup{margin-top:18px}
+.agroup h3{font-size:17px}
+.tabs{display:flex;gap:6px;margin:10px 0}
+.score-row{display:grid;grid-template-columns:150px 1fr auto;gap:10px;align-items:center;font-size:14px;margin:6px 0}
+.sumcards{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:8px 0 12px}
+.sumcard{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:var(--bg)}
+.sumcard h4{margin:0 0 4px;font:600 14px "Source Sans 3",sans-serif;color:var(--mute)}
+.sumcard .t{font:800 34px/1.1 "Bricolage Grotesque",sans-serif}
+.sumcard .t small{font-size:15px;font-weight:600;color:var(--mute);margin-left:6px}
+.sumcard .state{display:inline-block;margin-top:6px;border-radius:99px;padding:2px 10px;font-weight:600;font-size:13px;border:1px solid var(--line)}
+.state.snow{background:var(--ice);color:var(--blue)}.state.mix{background:#FFF1D6;color:#7A4B00}.state.rain{background:var(--rain);color:var(--bg)}
+:root[data-theme="dark"] .state.mix{background:#3A2E12;color:#F2C46B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .state.mix{background:#3A2E12;color:#F2C46B}}
+.trailwrap iframe{width:100%;height:420px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
+.aspects{display:inline-block;vertical-align:middle}
+@media (max-width:620px){.sumcards{grid-template-columns:1fr}.score-row{grid-template-columns:110px 1fr auto}.acenter{top:64px}}
 </style>
 </head>
 <body>
@@ -248,6 +283,7 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 <h1>Snow Deck</h1>
 </div>
 <div class="btns">
+<button class="btn bell" id="bell" aria-label="Alerts" aria-haspopup="dialog"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="nbadge" id="nbadge" hidden>0</span></button>
 <button class="btn gear" id="gear" aria-label="Open options" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
 <button class="btn primary" id="toggle" aria-expanded="false">Choose areas (<span id="n">0</span>)</button>
 </div>
@@ -255,6 +291,7 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 <p class="sub">Snowfall, forecast, open terrain and avalanche danger for the places you ski. Click any card for the full mountain page.</p>
 <div class="note" id="note">Preview with sample data. Live data appears once the data collector has run.</div>
 <div class="sharebar" id="sharebar" hidden></div>
+<div class="alertpop" id="alertpop" role="status" hidden></div>
  
 <section class="panel" id="panel" aria-label="Choose areas">
 <div id="gwrap"></div><div class="gm" id="gm" aria-live="polite">Pass and region groups are a starting point. Pass memberships change each season, so confirm yours before you buy.</div>
@@ -293,32 +330,26 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 <div class="sec"><h3>Display</h3>
 <div class="sw"><span>Theme</span><span class="seg"><button data-seg="theme" data-v="auto">Auto</button><button data-seg="theme" data-v="light">Light</button><button data-seg="theme" data-v="dark">Dark</button></span></div>
 <div class="sw"><span>Units</span><span class="seg"><button data-seg="units" data-v="imperial">in · °F</button><button data-seg="units" data-v="metric">cm · °C</button></span></div></div>
-<div class="sec"><h3>Cards</h3>
-<label class="sw"><span>Avalanche risk at resorts<small>Not available yet. Backcountry zones always show it.</small></span><input type="checkbox" role="switch" data-k="avalIn" disabled></label>
-<label class="sw"><span>Reported snow conditions<small>Estimated from recent snow and temperature.</small></span><input type="checkbox" role="switch" data-k="cond"></label>
-<label class="sw"><span>Detailed weather<small>Current temperature, wind, 7-day highs and lows, and rain.</small></span><input type="checkbox" role="switch" data-k="wx"></label>
-<label class="sw"><span>Rank mountains<small>Adds a 0 to 100 score and a Best score sort. It blends recent and forecast snow, base depth, open terrain and snow quality, then subtracts for rain, high wind and high avalanche danger.</small></span><input type="checkbox" role="switch" data-k="rank"></label></div>
 <div class="sec"><h3>Distance</h3>
-<label class="sw"><span>Show distance from me<small>Uses your device location once. It stays in your browser and is never sent anywhere.</small></span><input type="checkbox" role="switch" id="geo"></label>
-<div class="meta" id="geomsg"></div></div>
-<div class="sec"><h3>Alerts</h3>
-<label class="sw"><span>Turn on alerts<small>Alerts appear on your cards for now. Push and email delivery are coming.</small></span><input type="checkbox" role="switch" data-k="al.on"></label>
-<div class="sub2">
-<label class="sw"><span>Big storms<small>Notify me when a lot of snow is coming.</small></span><input type="checkbox" role="switch" data-k="al.storm"></label>
-<div class="sw"><span>Storm size<small>Snow in the next 3 days</small></span><select data-k="al.stormIn"><option value="8">8+</option><option value="12">12+</option><option value="18">18+</option><option value="24">24+</option></select></div>
-<label class="sw"><span>Powder days<small>Notify me after a big overnight dump.</small></span><input type="checkbox" role="switch" data-k="al.powder"></label>
-<div class="sw"><span>Powder day size<small>Snow in last 24 hours</small></span><select data-k="al.powderIn"><option value="4">4+</option><option value="6">6+</option><option value="10">10+</option><option value="14">14+</option></select></div>
-<label class="sw"><span>Avalanche danger changes<small>When the danger rating goes up or down.</small></span><input type="checkbox" role="switch" data-k="al.aval"></label>
-<label class="sw"><span>Rain on snow<small>Warm days that could soak the snowpack.</small></span><input type="checkbox" role="switch" data-k="al.rain"></label>
-<label class="sw"><span>High wind<small>Wind that could close lifts.</small></span><input type="checkbox" role="switch" data-k="al.wind"></label>
-</div></div>
+<div class="sw" style="cursor:default"><span>Measure distance from<small id="locnow"></small></span></div>
+<div class="grow" id="locbtns"><button class="btn sm" id="locme">My current location</button><button class="btn sm" id="locoff">Turn off</button></div>
+<div class="grow" style="margin-top:8px"><input type="search" id="locq" placeholder="Search a town or address" aria-label="Search a place" style="min-width:0"><button class="btn sm" id="locgo">Search</button></div>
+<div class="grow" id="locres" style="margin-top:6px"></div>
+<div class="gm" id="geomsg" style="margin:6px 0 0">Your location stays in your browser. Distances are straight-line, not drive time.</div>
+<div class="grow" id="locpre" style="margin-top:6px"></div></div>
+<div class="sec"><h3>Alerts</h3><p class="meta" style="margin:0 0 8px">Pop-ups on the main screen for the decks you choose. Email alerts are not available yet.</p><button class="btn" id="aopen">Open alert settings</button></div>
+<div class="sec"><h3>On a card</h3><p class="meta" style="margin:0 0 4px">Show or hide each part of a card.</p><div id="cardtog"></div></div>
+<div class="sec"><h3>On a mountain page</h3><p class="meta" style="margin:0 0 4px">Show or hide each section of the full page.</p><div id="pagetog"></div></div>
 <div class="sec"><button class="btn" id="reset">Reset all options</button></div>
 </aside>
+<div class="back" id="aback"></div>
+<div class="acenter" id="acenter" role="dialog" aria-label="Alerts" hidden></div>
+<aside class="drawer wide" id="adrawer" role="dialog" aria-label="Alert settings"></aside>
 <div class="tip" id="tip" hidden></div>
 <div class="toast" id="toast" hidden role="status"></div>
 <script>
 "use strict";
-const AREAS=[{"id":"Arapahoe Basin","name":"Arapahoe Basin","state":"CO","zone":false,"lat":39.6426,"lon":-105.8719,"base_ft":10780,"top_ft":13050,"web":"https://www.arapahoebasin.com/","cam":"https://www.arapahoebasin.com/mountain-cams/","st":"CO"},{"id":"Aspen Snowmass","name":"Aspen Snowmass","state":"CO","zone":false,"lat":39.2084,"lon":-106.949,"base_ft":8000,"top_ft":12500,"web":"https://www.aspensnowmass.com/","st":"CO"},{"id":"Beaver Creek","name":"Beaver Creek","state":"CO","zone":false,"lat":39.6042,"lon":-106.5165,"base_ft":8100,"top_ft":11440,"web":"https://www.beavercreek.com/","cam":"https://www.beavercreek.com/the-mountain/mountain-conditions/mountain-cams.aspx","st":"CO"},{"id":"Breckenridge","name":"Breckenridge","state":"CO","zone":false,"lat":39.4817,"lon":-106.0384,"base_ft":9600,"top_ft":12998,"web":"https://www.breckenridge.com/","cam":"https://www.breckenridge.com/the-mountain/mountain-conditions/mountain-cams.aspx","st":"CO"},{"id":"Copper Mountain","name":"Copper Mountain","state":"CO","zone":false,"lat":39.5022,"lon":-106.1497,"base_ft":9712,"top_ft":12313,"web":"https://www.coppercolorado.com/","st":"CO"},{"id":"Crested Butte","name":"Crested Butte","state":"CO","zone":false,"lat":38.8986,"lon":-106.9658,"base_ft":9375,"top_ft":12162,"web":"https://www.skicb.com/","cam":"https://www.skicb.com/the-mountain/mountain-conditions/mountain-cams.aspx","st":"CO"},{"id":"Echo Mountain","name":"Echo Mountain","state":"CO","zone":false,"lat":39.6819,"lon":-105.5036,"base_ft":10000,"top_ft":10600,"st":"CO"},{"id":"Eldora","name":"Eldora","state":"CO","zone":false,"lat":39.9372,"lon":-105.5827,"base_ft":9200,"top_ft":10600,"web":"https://www.eldora.com/","st":"CO"},{"id":"Hesperus","name":"Hesperus","state":"CO","zone":false,"lat":37.2993,"lon":-108.0517,"base_ft":8100,"top_ft":8800,"st":"CO"},{"id":"Howelsen Hill","name":"Howelsen Hill","state":"CO","zone":false,"lat":40.4816,"lon":-106.8312,"base_ft":6700,"top_ft":7140,"st":"CO"},{"id":"Keystone","name":"Keystone","state":"CO","zone":false,"lat":39.605,"lon":-105.954,"base_ft":9280,"top_ft":12408,"web":"https://www.keystoneresort.com/","cam":"https://www.keystoneresort.com/the-mountain/mountain-conditions/mountain-cams.aspx","st":"CO"},{"id":"Loveland","name":"Loveland","state":"CO","zone":false,"lat":39.68,"lon":-105.8979,"base_ft":10800,"top_ft":13010,"web":"https://www.skiloveland.com/","cam":"https://skiloveland.com/webcams","st":"CO"},{"id":"Monarch","name":"Monarch","state":"CO","zone":false,"lat":38.5122,"lon":-106.3322,"base_ft":10790,"top_ft":11952,"web":"https://www.skimonarch.com/","st":"CO"},{"id":"Powderhorn","name":"Powderhorn","state":"CO","zone":false,"lat":39.0694,"lon":-108.15,"base_ft":8200,"top_ft":9850,"web":"https://www.powderhorn.com/","st":"CO"},{"id":"Purgatory","name":"Purgatory","state":"CO","zone":false,"lat":37.6303,"lon":-107.8143,"base_ft":8793,"top_ft":10822,"st":"CO"},{"id":"Silverton Mountain","name":"Silverton Mountain","state":"CO","zone":false,"lat":37.8847,"lon":-107.6663,"base_ft":10400,"top_ft":13487,"web":"https://www.silvertonmountain.com/","st":"CO"},{"id":"Ski Cooper","name":"Ski Cooper","state":"CO","zone":false,"lat":39.3606,"lon":-106.3022,"base_ft":10500,"top_ft":11700,"web":"https://www.skicooper.com/","st":"CO"},{"id":"Steamboat","name":"Steamboat","state":"CO","zone":false,"lat":40.4572,"lon":-106.8045,"base_ft":6900,"top_ft":10568,"web":"https://www.steamboat.com/","st":"CO"},{"id":"Sunlight","name":"Sunlight","state":"CO","zone":false,"lat":39.3989,"lon":-107.3386,"base_ft":7885,"top_ft":9895,"web":"https://www.sunlightmtn.com/","st":"CO"},{"id":"Telluride","name":"Telluride","state":"CO","zone":false,"lat":37.9375,"lon":-107.8123,"base_ft":8750,"top_ft":13150,"web":"https://www.tellurideskiresort.com/","st":"CO"},{"id":"Vail","name":"Vail","state":"CO","zone":false,"lat":39.6061,"lon":-106.355,"base_ft":8120,"top_ft":11570,"web":"https://www.vail.com/","cam":"https://www.vail.com/the-mountain/mountain-conditions/mountain-cams.aspx","st":"CO"},{"id":"Winter Park","name":"Winter Park","state":"CO","zone":false,"lat":39.8868,"lon":-105.7625,"base_ft":9000,"top_ft":12060,"web":"https://www.winterparkresort.com/","st":"CO"},{"id":"Wolf Creek","name":"Wolf Creek","state":"CO","zone":false,"lat":37.4722,"lon":-106.7939,"base_ft":10300,"top_ft":11904,"web":"https://www.wolfcreekski.com/","st":"CO"},{"id":"Alta","name":"Alta","state":"UT","zone":false,"lat":40.5884,"lon":-111.6386,"base_ft":8530,"top_ft":10550,"web":"https://www.alta.com/","cam":"https://www.alta.com/weather","st":"UT"},{"id":"Beaver Mountain","name":"Beaver Mountain","state":"UT","zone":false,"lat":41.9686,"lon":-111.5405,"base_ft":7200,"top_ft":8800,"web":"https://www.beavermountain.com/","st":"UT"},{"id":"Brian Head","name":"Brian Head","state":"UT","zone":false,"lat":37.7018,"lon":-112.8498,"base_ft":9600,"top_ft":10920,"web":"https://www.brianhead.com/","st":"UT"},{"id":"Brighton","name":"Brighton","state":"UT","zone":false,"lat":40.598,"lon":-111.5832,"base_ft":8755,"top_ft":10500,"web":"https://www.brightonresort.com/","st":"UT"},{"id":"Deer Valley","name":"Deer Valley","state":"UT","zone":false,"lat":40.6374,"lon":-111.4783,"base_ft":6570,"top_ft":9570,"web":"https://www.deervalley.com/","st":"UT"},{"id":"Nordic Valley","name":"Nordic Valley","state":"UT","zone":false,"lat":41.307,"lon":-111.859,"base_ft":5400,"top_ft":6400,"web":"https://www.nordicvalley.com/","st":"UT"},{"id":"Park City","name":"Park City","state":"UT","zone":false,"lat":40.6514,"lon":-111.508,"base_ft":6900,"top_ft":10026,"web":"https://www.parkcitymountain.com/","cam":"https://www.parkcitymountain.com/the-mountain/mountain-conditions/mountain-cams.aspx","st":"UT"},{"id":"Powder Mountain","name":"Powder Mountain","state":"UT","zone":false,"lat":41.379,"lon":-111.781,"base_ft":8300,"top_ft":9422,"web":"https://www.powdermountain.com/","st":"UT"},{"id":"Snowbasin","name":"Snowbasin","state":"UT","zone":false,"lat":41.216,"lon":-111.857,"base_ft":6400,"top_ft":9350,"web":"https://www.snowbasin.com/","st":"UT"},{"id":"Snowbird","name":"Snowbird","state":"UT","zone":false,"lat":40.583,"lon":-111.6556,"base_ft":7760,"top_ft":11000,"web":"https://www.snowbird.com/","st":"UT"},{"id":"Solitude","name":"Solitude","state":"UT","zone":false,"lat":40.6199,"lon":-111.5919,"base_ft":7994,"top_ft":10488,"web":"https://www.solitudemountain.com/","st":"UT"},{"id":"Sundance","name":"Sundance","state":"UT","zone":false,"lat":40.3928,"lon":-111.5886,"base_ft":6100,"top_ft":8250,"web":"https://www.sundanceresort.com/","st":"UT"},{"id":"Taos","name":"Taos","state":"NM","zone":false,"lat":36.596,"lon":-105.454,"base_ft":9207,"top_ft":12481,"web":"https://www.skitaos.com/","st":"NM"},{"id":"Bridger Bowl","name":"Bridger Bowl","state":"MT","zone":false,"lat":45.817,"lon":-110.898,"base_ft":6100,"top_ft":8700,"web":"https://www.bridgerbowl.com/","cam":"https://bridgerbowl.com/weather/webcams","st":"MT"},{"id":"Big Sky","name":"Big Sky","state":"MT","zone":false,"lat":45.285,"lon":-111.401,"base_ft":7500,"top_ft":11166,"web":"https://www.bigskyresort.com/","cam":"https://www.bigskyresort.com/current-conditions/webcams","st":"MT"},{"id":"Berthoud Pass","name":"Berthoud Pass","state":"CO","zone":true,"lat":39.7981,"lon":-105.7788,"base_ft":11300,"top_ft":12800,"st":"CO"},{"id":"Loveland Pass","name":"Loveland Pass","state":"CO","zone":true,"lat":39.6637,"lon":-105.88,"base_ft":11990,"top_ft":13000,"st":"CO"},{"id":"Vail Pass","name":"Vail Pass","state":"CO","zone":true,"lat":39.5317,"lon":-106.2175,"base_ft":10660,"top_ft":12000,"st":"CO"},{"id":"Hoosier Pass","name":"Hoosier Pass","state":"CO","zone":true,"lat":39.36,"lon":-106.061,"base_ft":11540,"top_ft":13000,"st":"CO"},{"id":"Independence Pass","name":"Independence Pass","state":"CO","zone":true,"lat":39.1086,"lon":-106.5683,"base_ft":12090,"top_ft":13500,"st":"CO"},{"id":"Monarch Pass","name":"Monarch Pass","state":"CO","zone":true,"lat":38.495,"lon":-106.33,"base_ft":11310,"top_ft":12700,"st":"CO"},{"id":"Kebler Pass","name":"Kebler Pass","state":"CO","zone":true,"lat":38.864,"lon":-107.012,"base_ft":10000,"top_ft":12000,"st":"CO"},{"id":"Red Mountain Pass","name":"Red Mountain Pass","state":"CO","zone":true,"lat":37.8928,"lon":-107.7152,"base_ft":11020,"top_ft":12800,"st":"CO"},{"id":"Molas Pass","name":"Molas Pass","state":"CO","zone":true,"lat":37.736,"lon":-107.687,"base_ft":10910,"top_ft":12500,"st":"CO"},{"id":"Lizard Head Pass","name":"Lizard Head Pass","state":"CO","zone":true,"lat":37.81,"lon":-107.915,"base_ft":10220,"top_ft":12000,"st":"CO"},{"id":"Wolf Creek Pass","name":"Wolf Creek Pass","state":"CO","zone":true,"lat":37.4833,"lon":-106.8017,"base_ft":10860,"top_ft":12200,"st":"CO"},{"id":"Cameron Pass","name":"Cameron Pass","state":"CO","zone":true,"lat":40.519,"lon":-105.8939,"base_ft":10280,"top_ft":12000,"st":"CO"},{"id":"Rabbit Ears Pass","name":"Rabbit Ears Pass","state":"CO","zone":true,"lat":40.372,"lon":-106.637,"base_ft":9430,"top_ft":10800,"st":"CO"},{"id":"Buffalo Pass","name":"Buffalo Pass","state":"CO","zone":true,"lat":40.536,"lon":-106.683,"base_ft":10350,"top_ft":11500,"st":"CO"},{"id":"Rocky Mountain National Park","name":"Rocky Mountain National Park","state":"CO","zone":true,"lat":40.343,"lon":-105.683,"base_ft":9000,"top_ft":12500,"st":"CO"},{"id":"Grand Mesa","name":"Grand Mesa","state":"CO","zone":true,"lat":39.036,"lon":-108.04,"base_ft":10000,"top_ft":11000,"st":"CO"},{"id":"Little Cottonwood Canyon","name":"Little Cottonwood Canyon","state":"UT","zone":true,"lat":40.571,"lon":-111.637,"base_ft":7500,"top_ft":11000,"st":"UT"},{"id":"Big Cottonwood Canyon","name":"Big Cottonwood Canyon","state":"UT","zone":true,"lat":40.62,"lon":-111.61,"base_ft":7500,"top_ft":10500,"st":"UT"},{"id":"Park City Ridgeline","name":"Park City Ridgeline","state":"UT","zone":true,"lat":40.64,"lon":-111.57,"base_ft":7000,"top_ft":10000,"st":"UT"},{"id":"Ogden Mountains","name":"Ogden Mountains","state":"UT","zone":true,"lat":41.2,"lon":-111.88,"base_ft":6000,"top_ft":9500,"st":"UT"},{"id":"Provo and Timpanogos","name":"Provo and Timpanogos","state":"UT","zone":true,"lat":40.3911,"lon":-111.6458,"base_ft":7000,"top_ft":11000,"st":"UT"},{"id":"Mirror Lake Highway","name":"Mirror Lake Highway","state":"UT","zone":true,"lat":40.684,"lon":-110.896,"base_ft":10700,"top_ft":12000,"st":"UT"},{"id":"Logan Canyon","name":"Logan Canyon","state":"UT","zone":true,"lat":41.89,"lon":-111.57,"base_ft":6500,"top_ft":9500,"st":"UT"},{"id":"La Sal Mountains","name":"La Sal Mountains","state":"UT","zone":true,"lat":38.48,"lon":-109.26,"base_ft":8500,"top_ft":12000,"st":"UT"},{"id":"Abajo Mountains","name":"Abajo Mountains","state":"UT","zone":true,"lat":37.85,"lon":-109.46,"base_ft":8000,"top_ft":11000,"st":"UT"}];
+const AREAS=[{"id":"Arapahoe Basin","name":"Arapahoe Basin","state":"CO","zone":false,"lat":39.6426,"lon":-105.8719,"base_ft":10780,"top_ft":13050,"web":"https://www.arapahoebasin.com/","cam":"https://www.arapahoebasin.com/mountain-cams/","trail":"https://www.arapahoebasin.com/trail-maps/","st":"CO"},{"id":"Aspen Snowmass","name":"Aspen Snowmass","state":"CO","zone":false,"lat":39.2084,"lon":-106.949,"base_ft":8000,"top_ft":12500,"web":"https://www.aspensnowmass.com/","trail":"https://www.aspensnowmass.com/our-mountains/snowmass/trail-maps","st":"CO"},{"id":"Beaver Creek","name":"Beaver Creek","state":"CO","zone":false,"lat":39.6042,"lon":-106.5165,"base_ft":8100,"top_ft":11440,"web":"https://www.beavercreek.com/","cam":"https://www.beavercreek.com/the-mountain/mountain-conditions/mountain-cams.aspx","trail":"https://www.beavercreek.com/the-mountain/about-the-mountain/trail-map.aspx","st":"CO"},{"id":"Breckenridge","name":"Breckenridge","state":"CO","zone":false,"lat":39.4817,"lon":-106.0384,"base_ft":9600,"top_ft":12998,"web":"https://www.breckenridge.com/","cam":"https://www.breckenridge.com/the-mountain/mountain-conditions/mountain-cams.aspx","trail":"https://www.breckenridge.com/the-mountain/about-the-mountain/trail-map.aspx","st":"CO"},{"id":"Copper Mountain","name":"Copper Mountain","state":"CO","zone":false,"lat":39.5022,"lon":-106.1497,"base_ft":9712,"top_ft":12313,"web":"https://www.coppercolorado.com/","st":"CO"},{"id":"Crested Butte","name":"Crested Butte","state":"CO","zone":false,"lat":38.8986,"lon":-106.9658,"base_ft":9375,"top_ft":12162,"web":"https://www.skicb.com/","cam":"https://www.skicb.com/the-mountain/mountain-conditions/mountain-cams.aspx","trail":"https://www.skicb.com/the-mountain/about-the-mountain/trail-maps.aspx","st":"CO"},{"id":"Echo Mountain","name":"Echo Mountain","state":"CO","zone":false,"lat":39.6819,"lon":-105.5036,"base_ft":10000,"top_ft":10600,"st":"CO"},{"id":"Eldora","name":"Eldora","state":"CO","zone":false,"lat":39.9372,"lon":-105.5827,"base_ft":9200,"top_ft":10600,"web":"https://www.eldora.com/","trail":"https://www.eldora.com/the-mountain/maps/alpine-trail-map/","st":"CO"},{"id":"Hesperus","name":"Hesperus","state":"CO","zone":false,"lat":37.2993,"lon":-108.0517,"base_ft":8100,"top_ft":8800,"st":"CO"},{"id":"Howelsen Hill","name":"Howelsen Hill","state":"CO","zone":false,"lat":40.4816,"lon":-106.8312,"base_ft":6700,"top_ft":7140,"trail":"https://co-steamboatsprings.civicplus.com/983/Trail-Maps","st":"CO"},{"id":"Keystone","name":"Keystone","state":"CO","zone":false,"lat":39.605,"lon":-105.954,"base_ft":9280,"top_ft":12408,"web":"https://www.keystoneresort.com/","cam":"https://www.keystoneresort.com/the-mountain/mountain-conditions/mountain-cams.aspx","trail":"https://www.keystoneresort.com/the-mountain/about-the-mountain/trail-map.aspx","st":"CO"},{"id":"Loveland","name":"Loveland","state":"CO","zone":false,"lat":39.68,"lon":-105.8979,"base_ft":10800,"top_ft":13010,"web":"https://www.skiloveland.com/","cam":"https://skiloveland.com/webcams","trail":"https://skiloveland.com/the-mountain/trail-map-mountain-stats/","st":"CO"},{"id":"Monarch","name":"Monarch","state":"CO","zone":false,"lat":38.5122,"lon":-106.3322,"base_ft":10790,"top_ft":11952,"web":"https://www.skimonarch.com/","trail":"https://skimonarch.com/mountain-maps/","st":"CO"},{"id":"Powderhorn","name":"Powderhorn","state":"CO","zone":false,"lat":39.0694,"lon":-108.15,"base_ft":8200,"top_ft":9850,"web":"https://www.powderhorn.com/","trail":"https://www.powderhorn.com/winter-trail-map/","st":"CO"},{"id":"Purgatory","name":"Purgatory","state":"CO","zone":false,"lat":37.6303,"lon":-107.8143,"base_ft":8793,"top_ft":10822,"trail":"https://www.purgatory.ski/mountain/purgatory-mountain/trail-maps/","st":"CO"},{"id":"Silverton Mountain","name":"Silverton Mountain","state":"CO","zone":false,"lat":37.8847,"lon":-107.6663,"base_ft":10400,"top_ft":13487,"web":"https://www.silvertonmountain.com/","trail":"https://silvertonmountain.com/mountain/trail-map/","st":"CO"},{"id":"Ski Cooper","name":"Ski Cooper","state":"CO","zone":false,"lat":39.3606,"lon":-106.3022,"base_ft":10500,"top_ft":11700,"web":"https://www.skicooper.com/","trail":"https://www.skicooper.com/mountain-stats-map/","st":"CO"},{"id":"Steamboat","name":"Steamboat","state":"CO","zone":false,"lat":40.4572,"lon":-106.8045,"base_ft":6900,"top_ft":10568,"web":"https://www.steamboat.com/","trail":"https://www.steamboat.com/the-mountain/trail-map/adventure-map","st":"CO"},{"id":"Sunlight","name":"Sunlight","state":"CO","zone":false,"lat":39.3989,"lon":-107.3386,"base_ft":7885,"top_ft":9895,"web":"https://www.sunlightmtn.com/","trail":"https://sunlightmtn.com/explore/trail-maps/","st":"CO"},{"id":"Telluride","name":"Telluride","state":"CO","zone":false,"lat":37.9375,"lon":-107.8123,"base_ft":8750,"top_ft":13150,"web":"https://www.tellurideskiresort.com/","trail":"https://tellurideskiresort.com/mountain/#TRAIL%20MAPS","st":"CO"},{"id":"Vail","name":"Vail","state":"CO","zone":false,"lat":39.6061,"lon":-106.355,"base_ft":8120,"top_ft":11570,"web":"https://www.vail.com/","cam":"https://www.vail.com/the-mountain/mountain-conditions/mountain-cams.aspx","st":"CO"},{"id":"Winter Park","name":"Winter Park","state":"CO","zone":false,"lat":39.8868,"lon":-105.7625,"base_ft":9000,"top_ft":12060,"web":"https://www.winterparkresort.com/","trail":"https://www.playwinterpark.com/article/trails-maps","st":"CO"},{"id":"Wolf Creek","name":"Wolf Creek","state":"CO","zone":false,"lat":37.4722,"lon":-106.7939,"base_ft":10300,"top_ft":11904,"web":"https://www.wolfcreekski.com/","trail":"https://wolfcreekski.com/area-maps/","st":"CO"},{"id":"Alta","name":"Alta","state":"UT","zone":false,"lat":40.5884,"lon":-111.6386,"base_ft":8530,"top_ft":10550,"web":"https://www.alta.com/","cam":"https://www.alta.com/weather","trail":"https://www.alta.com/plan-your-trip#maps","st":"UT"},{"id":"Beaver Mountain","name":"Beaver Mountain","state":"UT","zone":false,"lat":41.9686,"lon":-111.5405,"base_ft":7200,"top_ft":8800,"web":"https://www.beavermountain.com/","st":"UT"},{"id":"Brian Head","name":"Brian Head","state":"UT","zone":false,"lat":37.7018,"lon":-112.8498,"base_ft":9600,"top_ft":10920,"web":"https://www.brianhead.com/","trail":"https://www.brianhead.com/trail-map/","st":"UT"},{"id":"Brighton","name":"Brighton","state":"UT","zone":false,"lat":40.598,"lon":-111.5832,"base_ft":8755,"top_ft":10500,"web":"https://www.brightonresort.com/","st":"UT"},{"id":"Deer Valley","name":"Deer Valley","state":"UT","zone":false,"lat":40.6374,"lon":-111.4783,"base_ft":6570,"top_ft":9570,"web":"https://www.deervalley.com/","trail":"https://www.deervalley.com/explore-the-mountain/interactive-grooming-map","st":"UT"},{"id":"Nordic Valley","name":"Nordic Valley","state":"UT","zone":false,"lat":41.307,"lon":-111.859,"base_ft":5400,"top_ft":6400,"web":"https://www.nordicvalley.com/","trail":"https://nordicmountain.com/mountain-info/trail-maps","st":"UT"},{"id":"Park City","name":"Park City","state":"UT","zone":false,"lat":40.6514,"lon":-111.508,"base_ft":6900,"top_ft":10026,"web":"https://www.parkcitymountain.com/","cam":"https://www.parkcitymountain.com/the-mountain/mountain-conditions/mountain-cams.aspx","trail":"https://www.parkcitymountain.com/the-mountain/about-the-mountain/trail-map.aspx","st":"UT"},{"id":"Powder Mountain","name":"Powder Mountain","state":"UT","zone":false,"lat":41.379,"lon":-111.781,"base_ft":8300,"top_ft":9422,"web":"https://www.powdermountain.com/","trail":"https://powdermountain.com/trail-map","st":"UT"},{"id":"Snowbasin","name":"Snowbasin","state":"UT","zone":false,"lat":41.216,"lon":-111.857,"base_ft":6400,"top_ft":9350,"web":"https://www.snowbasin.com/","trail":"https://www.snowbasin.com/the-mountain/trail-maps/","st":"UT"},{"id":"Snowbird","name":"Snowbird","state":"UT","zone":false,"lat":40.583,"lon":-111.6556,"base_ft":7760,"top_ft":11000,"web":"https://www.snowbird.com/","trail":"https://www.snowbird.com/the-mountain/maps/winter-trail-map/","st":"UT"},{"id":"Solitude","name":"Solitude","state":"UT","zone":false,"lat":40.6199,"lon":-111.5919,"base_ft":7994,"top_ft":10488,"web":"https://www.solitudemountain.com/","trail":"https://www.solitudemountain.com/mountain-and-village/conditions-and-maps","st":"UT"},{"id":"Sundance","name":"Sundance","state":"UT","zone":false,"lat":40.3928,"lon":-111.5886,"base_ft":6100,"top_ft":8250,"web":"https://www.sundanceresort.com/","st":"UT"},{"id":"Taos","name":"Taos","state":"NM","zone":false,"lat":36.596,"lon":-105.454,"base_ft":9207,"top_ft":12481,"web":"https://www.skitaos.com/","st":"NM"},{"id":"Bridger Bowl","name":"Bridger Bowl","state":"MT","zone":false,"lat":45.817,"lon":-110.898,"base_ft":6100,"top_ft":8700,"web":"https://www.bridgerbowl.com/","cam":"https://bridgerbowl.com/weather/webcams","st":"MT"},{"id":"Big Sky","name":"Big Sky","state":"MT","zone":false,"lat":45.285,"lon":-111.401,"base_ft":7500,"top_ft":11166,"web":"https://www.bigskyresort.com/","cam":"https://www.bigskyresort.com/current-conditions/webcams","st":"MT"},{"id":"Berthoud Pass","name":"Berthoud Pass","state":"CO","zone":true,"lat":39.7981,"lon":-105.7788,"base_ft":11300,"top_ft":12800,"st":"CO"},{"id":"Loveland Pass","name":"Loveland Pass","state":"CO","zone":true,"lat":39.6637,"lon":-105.88,"base_ft":11990,"top_ft":13000,"st":"CO"},{"id":"Vail Pass","name":"Vail Pass","state":"CO","zone":true,"lat":39.5317,"lon":-106.2175,"base_ft":10660,"top_ft":12000,"st":"CO"},{"id":"Hoosier Pass","name":"Hoosier Pass","state":"CO","zone":true,"lat":39.36,"lon":-106.061,"base_ft":11540,"top_ft":13000,"st":"CO"},{"id":"Independence Pass","name":"Independence Pass","state":"CO","zone":true,"lat":39.1086,"lon":-106.5683,"base_ft":12090,"top_ft":13500,"st":"CO"},{"id":"Monarch Pass","name":"Monarch Pass","state":"CO","zone":true,"lat":38.495,"lon":-106.33,"base_ft":11310,"top_ft":12700,"st":"CO"},{"id":"Kebler Pass","name":"Kebler Pass","state":"CO","zone":true,"lat":38.864,"lon":-107.012,"base_ft":10000,"top_ft":12000,"st":"CO"},{"id":"Red Mountain Pass","name":"Red Mountain Pass","state":"CO","zone":true,"lat":37.8928,"lon":-107.7152,"base_ft":11020,"top_ft":12800,"st":"CO"},{"id":"Molas Pass","name":"Molas Pass","state":"CO","zone":true,"lat":37.736,"lon":-107.687,"base_ft":10910,"top_ft":12500,"st":"CO"},{"id":"Lizard Head Pass","name":"Lizard Head Pass","state":"CO","zone":true,"lat":37.81,"lon":-107.915,"base_ft":10220,"top_ft":12000,"st":"CO"},{"id":"Wolf Creek Pass","name":"Wolf Creek Pass","state":"CO","zone":true,"lat":37.4833,"lon":-106.8017,"base_ft":10860,"top_ft":12200,"st":"CO"},{"id":"Cameron Pass","name":"Cameron Pass","state":"CO","zone":true,"lat":40.519,"lon":-105.8939,"base_ft":10280,"top_ft":12000,"st":"CO"},{"id":"Rabbit Ears Pass","name":"Rabbit Ears Pass","state":"CO","zone":true,"lat":40.372,"lon":-106.637,"base_ft":9430,"top_ft":10800,"st":"CO"},{"id":"Buffalo Pass","name":"Buffalo Pass","state":"CO","zone":true,"lat":40.536,"lon":-106.683,"base_ft":10350,"top_ft":11500,"st":"CO"},{"id":"Rocky Mountain National Park","name":"Rocky Mountain National Park","state":"CO","zone":true,"lat":40.343,"lon":-105.683,"base_ft":9000,"top_ft":12500,"st":"CO"},{"id":"Grand Mesa","name":"Grand Mesa","state":"CO","zone":true,"lat":39.036,"lon":-108.04,"base_ft":10000,"top_ft":11000,"st":"CO"},{"id":"Little Cottonwood Canyon","name":"Little Cottonwood Canyon","state":"UT","zone":true,"lat":40.571,"lon":-111.637,"base_ft":7500,"top_ft":11000,"st":"UT"},{"id":"Big Cottonwood Canyon","name":"Big Cottonwood Canyon","state":"UT","zone":true,"lat":40.62,"lon":-111.61,"base_ft":7500,"top_ft":10500,"st":"UT"},{"id":"Park City Ridgeline","name":"Park City Ridgeline","state":"UT","zone":true,"lat":40.64,"lon":-111.57,"base_ft":7000,"top_ft":10000,"st":"UT"},{"id":"Ogden Mountains","name":"Ogden Mountains","state":"UT","zone":true,"lat":41.2,"lon":-111.88,"base_ft":6000,"top_ft":9500,"st":"UT"},{"id":"Provo and Timpanogos","name":"Provo and Timpanogos","state":"UT","zone":true,"lat":40.3911,"lon":-111.6458,"base_ft":7000,"top_ft":11000,"st":"UT"},{"id":"Mirror Lake Highway","name":"Mirror Lake Highway","state":"UT","zone":true,"lat":40.684,"lon":-110.896,"base_ft":10700,"top_ft":12000,"st":"UT"},{"id":"Logan Canyon","name":"Logan Canyon","state":"UT","zone":true,"lat":41.89,"lon":-111.57,"base_ft":6500,"top_ft":9500,"st":"UT"},{"id":"La Sal Mountains","name":"La Sal Mountains","state":"UT","zone":true,"lat":38.48,"lon":-109.26,"base_ft":8500,"top_ft":12000,"st":"UT"},{"id":"Abajo Mountains","name":"Abajo Mountains","state":"UT","zone":true,"lat":37.85,"lon":-109.46,"base_ft":8000,"top_ft":11000,"st":"UT"}];
 const L=s=>s.split(","),BY=Object.fromEntries(AREAS.map(a=>[a.id,a]));
 const ST={CO:"Colorado",UT:"Utah",NM:"New Mexico",WY:"Wyoming",MT:"Montana",ID:"Idaho",CA:"California",WA:"Washington",OR:"Oregon",VT:"Vermont"};
 const PASSES=[
@@ -330,11 +361,18 @@ const PASSOF={};PASSES.forEach(p=>p[1].forEach(id=>PASSOF[id]=p[0].split(" ")[0]
 const passOf=a=>a.zone?"":(PASSOF[a.id]||"None");
 const LEVELS=["","Low","Moderate","Considerable","High","Extreme"];
 const MAX=48,$=id=>document.getElementById(id);
-const DEF={theme:"auto",units:"imperial",rank:false,layout:"cards",sort:"mine",pass:"all",avalIn:false,cond:false,wx:false,geo:null,al:{on:false,storm:true,stormIn:12,powder:true,powderIn:6,aval:true,rain:false,wind:false}};
+const CARDT=[["pass","Pass tag"],["dist","Distance"],["score","Skiing score (needs Rank mountains)"],["alerts","Alert chips"],["stats","Snow totals (24 h, 72 h, base)"],["bars","7-day snowfall bars"],["best","Best day line"],["terrain","Lifts and trails"],["aval","Avalanche danger (zones)"]];
+const PAGET=[["tiles","Summary tiles"],["score","Skiing score and breakdown"],["storm","Storm tracker (hourly charts)"],["powder","Powder quality"],["best","Best day this week"],["models","Forecast models compared"],["summit","Base vs summit"],["swe","Snowpack vs history"],["fall","Snowfall vs history"],["hist","Recent snow depth"],["aval","Avalanche forecast (zones)"],["avhist","Avalanche danger vs history (zones)"],["trail","Trail map (resorts)"],["terrain","Lifts and trails (resorts)"],["links","Webcams and links"],["roads","Roads and passes (zones)"]];
+const allOn=l=>Object.fromEntries(l.map(x=>[x[0],true]));
+const DEF={theme:"auto",units:"imperial",rank:false,layout:"cards",sort:"mine",pass:"all",avalIn:false,cond:false,wx:false,geo:null,card:allOn(CARDT),page:allOn(PAGET),
+alerts:{on:false,defMode:"normal",decks:{},cfg:{normal:{},adv:{}},maxDist:0}};
 const clone=o=>JSON.parse(JSON.stringify(o));
+function merge(d,o){if(!o||typeof o!=="object")return d;const r=Array.isArray(d)?d:{...d};for(const k of Object.keys(o)){r[k]=d[k]&&typeof d[k]==="object"&&!Array.isArray(d[k])&&o[k]&&typeof o[k]==="object"?merge(d[k],o[k]):o[k]}return r}
 let S=clone(DEF),DECKS={"My deck":["Aspen Snowmass","Alta","Big Sky","Taos","Berthoud Pass","Little Cottonwood Canyon"]},ACTIVE="My deck",SHARED=null;
 const validIds=ids=>(Array.isArray(ids)?ids:[]).filter(id=>BY[id]).filter((id,i,x)=>x.indexOf(id)===i).slice(0,MAX);
-try{const o=JSON.parse(localStorage.getItem("snowdeck-settings")||"null");if(o)S={...S,...o,al:{...S.al,...(o.al||{})}};
+const CD=k=>S.card[k]!==false,PG=k=>S.page[k]!==false;
+try{const o=JSON.parse(localStorage.getItem("snowdeck-settings")||"null");if(o){const old=o.al;delete o.al;S=merge(S,o);
+if(old&&!o.alerts&&old.on){S.alerts.on=true;S.alerts.cfg.normal={powder:{on:!!old.powder,p:{x:old.powderIn}},storm3:{on:!!old.storm,p:{x:old.stormIn}},avalChange:{on:!!old.aval},rain:{on:!!old.rain},wind:{on:!!old.wind}}}}
 const dk=JSON.parse(localStorage.getItem("snowdeck-decks")||"null");
 if(dk&&typeof dk==="object"&&Object.keys(dk).length){DECKS={};for(const k of Object.keys(dk))DECKS[k]=validIds(dk[k])}
 else{const s=JSON.parse(localStorage.getItem("snowdeck-sel")||"null");if(Array.isArray(s))DECKS["My deck"]=validIds(s)}
@@ -397,7 +435,7 @@ return e}
 /* data access */
 let LIVE=null,TERR=null;const DC=new Map();
 function terr(a){const T=TERR&&TERR.resorts&&TERR.resorts[a.id];return T&&Date.now()-Date.parse(T.fetched)<12*36e5?T:null}
-const T0=a=>{const T=a.zone?null:terr(a);return T&&T.lifts?T.lifts[0]/T.lifts[1]*15:10.5};
+const T0=a=>{const T=a.zone?null:terr(a);return T&&T.lifts?T.lifts[0]/T.lifts[1]*15:0};
 function estCond(d){const h=d.temps[0].hi;return h>=40?"Slushy":h>=34?"Wet snow":d.s24>=6?"Powder":d.s24>=2?"Packed powder":"Variable"}
 function data(a){if(DC.has(a.id))return DC.get(a.id);let Z,live=false,missing=false;
 if(!LIVE)Z=sample(a);else{Z=LIVE.areas[a.id];live=true;if(!Z){missing=true;Z={}}}
@@ -412,9 +450,17 @@ const dlong=(d,i)=>dayOf(d.dates[i]).toLocaleDateString("en-US",{weekday:"long",
 /* derived numbers */
 const f3=d=>d.fc.slice(0,3).reduce((x,y)=>x+y,0),f7=d=>d.fc.reduce((x,y)=>x+y,0);
 const CQ={Powder:15,"Packed powder":10,Groomed:8,Variable:4,Crud:3,Icy:1,"Wet snow":2,Slushy:2};
-function score(a,d){let p=Math.min(1,d.s24/12)*30+Math.min(1,f3(d)/18)*20+Math.min(1,d.s72/24)*10+Math.min(1,d.base/120)*10+T0(a)+(CQ[d.cond]||0);
-if(d.rain.slice(0,3).some(Boolean))p-=10;if(d.wind>=35)p-=8;if(a.zone||S.avalIn)p-=d.aval>=4?10:d.aval===3?4:0;return clamp(Math.round(p),0,100)}
-const grade=n=>n>=80?"Excellent":n>=60?"Good":n>=40?"Fair":"Slim";
+function scoreParts(a,d){const snowy=d.base>=6||d.s72>=.5||f7(d)>=.5;
+if(!snowy)return{total:0,parts:[],notes:["No snow on the ground, none recent and none forecast."]};
+const T=a.zone?null:terr(a),parts=[["Snow, last 24 hours",Math.min(1,d.s24/12)*30,30],["Snow forecast, next 3 days",Math.min(1,f3(d)/18)*20,20],["Snow, last 72 hours",Math.min(1,d.s72/24)*10,10],["Base depth",Math.min(1,d.base/120)*10,10],
+["Open lifts",T&&T.lifts?T.lifts[0]/T.lifts[1]*15:0,15],["Snow quality guess",CQ[d.cond]||0,15]],notes=[];
+if(!(T&&T.lifts)&&!a.zone)notes.push("Lift status is not available for this resort, so open lifts count for nothing.");
+const m=[];if(d.rain.slice(0,3).some(Boolean))m.push(["Rain in the next 3 days",-10]);if(d.wind>=35)m.push(["High wind",-8]);
+if(a.zone||S.avalIn){if(d.aval>=4)m.push(["High avalanche danger",-10]);else if(d.aval===3)m.push(["Considerable avalanche danger",-4])}
+const raw=parts.reduce((x,y)=>x+y[1],0)+m.reduce((x,y)=>x+y[1],0);
+return{total:clamp(Math.round(raw),0,100),parts:parts.map(x=>({label:x[0],pts:Math.round(x[1]*10)/10,max:x[2]})).concat(m.map(x=>({label:x[0],pts:x[1],max:0}))),notes}}
+function score(a,d){return scoreParts(a,d).total}
+const grade=n=>n<=0?"No snow":n>=80?"Excellent":n>=60?"Good":n>=40?"Fair":"Slim";
 /* day score: fresh snow that morning + cold + calm, minus rain/wind */
 function dayScore(d,i){const fresh=i===0?d.s24:d.fc[i-1],t=d.temps[i].hi;
 let p=25+Math.min(1,fresh/10)*55+(t<=28?15:t<=33?8:t>=38?-10:0)-(d.rain[i]?30:0)-(d.windD[i]>=40?20:d.windD[i]>=30?8:0)+(d.fc[i]>=4&&!d.rain[i]?4:0);return clamp(Math.round(p),0,100)}
@@ -437,6 +483,17 @@ const hfmt=ms=>{const d=new Date(ms),h=d.getHours();return d.toLocaleDateString(
 /* distance */
 function dist(a){if(!S.geo)return null;const R=3958.8,r=x=>x*Math.PI/180,dl=r(a.lat-S.geo.lat),dn=r(a.lon-S.geo.lon);
 const h=Math.sin(dl/2)**2+Math.cos(r(S.geo.lat))*Math.cos(r(a.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
+ 
+/* ---------- history (snowpack/snowfall vs past years; avalanche ratings by day) ---------- */
+let HIST=null,AVH=null,AVARC=null;
+function wyStart(){const n=new Date(),y=n.getMonth()>=9?n.getFullYear():n.getFullYear()-1;return new Date(y,9,1)}
+function sampleHist(a){const r=rng("h"+a.id),step=3,n=122,today=Math.floor((Date.now()-wyStart())/864e5/step),mk=(peak,nd)=>{const med=[],lo=[],hi=[],cur=[];
+for(let i=0;i<n;i++){const t=Math.min(1,i*step/200),sh=i*step<220?Math.sin(Math.PI*t):0,m=peak*sh;med.push(+m.toFixed(nd));lo.push(+(m*.55).toFixed(nd));hi.push(+(m*1.5).toFixed(nd));cur.push(i<=today?+(m*(.7+r()*.5)).toFixed(nd):null)}return{med,lo,hi,cur}};
+return{years:30,name:"Sample station",swe:mk(18+r()*10,1),fall:mk(250+r()*200,0)}}
+function sampleAvy(a){const r=rng("v"+a.id),o={},t=wyStart(),days=Math.floor((Date.now()-t)/864e5);let lv=2;for(let i=0;i<=days;i++){if(r()<.25)lv=clamp(lv+(r()<.5?-1:1),1,5);const d=new Date(t);d.setDate(d.getDate()+i);o[iso(d)]=lv}return o}
+function histFor(a){const d=data(a);if(!LIVE)return sampleHist(a);const id=d.snotel&&d.snotel.id;return HIST&&id&&HIST.stations&&HIST.stations[id]||null}
+function avySeries(a){const d=data(a);if(!LIVE)return sampleAvy(a);const o={};const arc=AVARC&&AVARC.areas&&AVARC.areas[a.id],cur=AVH&&AVH.areas&&AVH.areas[a.id];
+if(arc)Object.assign(o,arc);Object.assign(o,d.avHist||{});if(cur)Object.assign(o,cur);return o}
  
 /* ---- tooltip ---- */
 const tipEl=()=>$("tip");
@@ -468,11 +525,11 @@ g+=`<path d="${d}" style="fill:none;stroke:${col};stroke-width:2;stroke-linejoin
 if(s.dots)g+=s.vals.map((v,i)=>v==null?"":`<circle cx="${X(i)}" cy="${Y(v)}" r="4" style="fill:${col};stroke:var(--card);stroke-width:2"/>`).join("")}});
 g+=`<line class="cross" id="${sp.id}x" x1="0" x2="0" y1="${P.t}" y2="${P.t+ih}" style="display:none"/>`;
 return{svg:`<svg viewBox="0 0 ${W} ${H}" role="img" tabindex="0" aria-label="${esc(sp.label)}" id="${sp.id}">${g}</svg>`,X,Y,P,W,H,iw}}
-const legendHtml=ss=>`<div class="lg">${ss.map(s=>`<span><svg viewBox="0 0 22 8" aria-hidden="true">${s.type==="bar"?`<rect x="5" y="0" width="12" height="8" rx="2" style="fill:${s.color}"/>`:`<line x1="0" x2="22" y1="4" y2="4" style="stroke:${s.color};stroke-width:2.5${s.dash?";stroke-dasharray:"+s.dash:""}"/>`}</svg>${esc(s.name)}</span>`).join("")}</div>`;
+const legendHtml=(ss,bd)=>`<div class="lg">${ss.map(s=>`<span><svg viewBox="0 0 22 8" aria-hidden="true">${s.type==="bar"?`<rect x="5" y="0" width="12" height="8" rx="2" style="fill:${s.color}"/>`:`<line x1="0" x2="22" y1="4" y2="4" style="stroke:${s.color};stroke-width:2.5${s.dash?";stroke-dasharray:"+s.dash:""}"/>`}</svg>${esc(s.name)}</span>`).join("")}${bd&&bd.label?`<span><svg viewBox="0 0 22 8" aria-hidden="true"><rect x="0" y="0" width="22" height="8" rx="2" style="fill:${bd.color||'var(--snow)'};fill-opacity:.3"/></svg>${esc(bd.label)}</span>`:""}</div>`;
 function tableHtml(sp){const th=sp.series.map(s=>`<th>${esc(s.name)}</th>`).join("");let rows="";for(let i=0;i<sp.n;i++){if(sp.skip&&sp.skip(i))continue;rows+=`<tr><td>${esc(sp.tl?sp.tl(i):sp.xl(i))}</td>${sp.series.map(s=>`<td class="num">${s.vals[i]==null?"–":esc((s.tf||sp.yFmt||(x=>x))(s.vals[i]))}</td>`).join("")}</tr>`}
 return`<details class="dt"><summary>View as table</summary><div class="tblwrap" style="margin-top:6px"><table class="tbl plain" style="min-width:0"><thead><tr><th>${esc(sp.xh||"")}</th>${th}</tr></thead><tbody>${rows}</tbody></table></div></details>`}
 let CID=0;
-function mountChart(host,sp){sp.id="c"+(++CID);const c=chartSvg(sp);host.innerHTML=(sp.legend===false?"":legendHtml(sp.series))+`<div class="chart">${c.svg}</div>`+(sp.table===false?"":tableHtml(sp));
+function mountChart(host,sp){sp.id="c"+(++CID);const c=chartSvg(sp);host.innerHTML=(sp.legend===false?"":legendHtml(sp.series,sp.band))+`<div class="chart">${c.svg}</div>`+(sp.table===false?"":tableHtml(sp));
 const el=host.querySelector("svg"),cross=host.querySelector(".cross");let cur=-1;
 const at=i=>{i=clamp(i,0,sp.n-1);cur=i;cross.setAttribute("x1",c.X(i));cross.setAttribute("x2",c.X(i));cross.style.display="";const r=el.getBoundingClientRect(),k=r.width/c.W,t=sp.tip(i);showTip(r.left+c.X(i)*k,r.top+c.P.t*k+20,t.title,t.rows)};
 const off=()=>{cross.style.display="none";hideTip();cur=-1};
@@ -483,10 +540,12 @@ el.addEventListener("focus",()=>{if(cur<0)at(0)})}
  
 /* ---------- full-window mountain page ---------- */
 let DET=null;/* {id,range,day} */
+const CENTERS={CAIC:"Colorado Avalanche Information Center (CAIC)",UAC:"Utah Avalanche Center",GNFAC:"Gallatin National Forest Avalanche Center"};
 const lvlPill=n=>n?`<span class="lvl"><i style="background:var(--d${n})"></i>${n} ${LEVELS[n]}</span>`:`<span class="lvl meta">No rating</span>`;
 const fmtT=s=>{const t=Date.parse(s);return isNaN(t)?"":new Date(t).toLocaleString([],{weekday:"short",month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})};
 const roadLinks=a=>a.state==="CO"?[["Colorado road conditions (COtrip)","https://maps.cotrip.org/"]]:a.state==="UT"?[["Utah road conditions (UDOT Traffic)","https://www.udottraffic.utah.gov/"]]:a.state==="NM"?[["New Mexico roads (NMRoads)","https://nmroads.com/"]]:a.state==="MT"?[["Montana roads (511)","https://www.511mt.net/"]]:[];
 const q=s=>encodeURIComponent(s);
+const el=id=>document.getElementById(id);
 function stormHtml(d){const ss=storms(d),now=Date.now();let h="";
 if(!d.hr)return`<p class="meta">Hourly forecast is not available yet.</p>`;
 const up=ss.filter(s=>s.end>now);
@@ -495,94 +554,143 @@ else{const s=up[0],sz=stormSize(s.tot);h=`<p class="big">${s.ongoing||s.start<=n
 <p class="meta">${s.ongoing||s.start<=now?"Started earlier and":`Starts ${hfmt(s.start)},`} heaviest around ${hfmt(s.peak)}, tapering by ${hfmt(s.end)}.</p>`;
 if(up.length>1)h+=up.slice(1).map(x=>`<div class="stormrow"><b>${stormSize(x.tot)} storm</b><span>${sn(x.tot)} ${su()} · ${hfmt(x.start)} to ${hfmt(x.end)}</span></div>`).join("")}
 return h}
-function renderDetail(keep){if(!DET)return;const a=BY[DET.id];if(!a){closeDetail(true);return}const d=data(a),el=$("detail"),y=keep?el.scrollTop:0;
+const sect=(id,title,lede,body,full)=>`<section class="sect${full?" full":""}" aria-labelledby="h-${id}"><h3 id="h-${id}">${title}</h3>${lede?`<p class="lede">${lede}</p>`:""}${body}</section>`;
+ 
+function scoreHtml(a,d){const sp=scoreParts(a,d),g=grade(sp.total);
+const rows=sp.parts.map(p=>p.max?`<div class="score-row"><span>${esc(p.label)}</span><div class="track"><i style="width:${p.pts/p.max*100}%"></i></div><b>${Math.round(p.pts)}/${p.max}</b></div>`:`<div class="score-row"><span>${esc(p.label)}</span><span></span><b style="color:var(--warm)">${p.pts}</b></div>`).join("");
+return sect("score","Skiing score","How good skiing looks right now, from 0 to 100. A Snow Deck estimate.",`<p class="big">${sp.total} · ${g}</p>${rows}${sp.notes.map(n=>`<p class="meta">${esc(n)}</p>`).join("")}`)}
+ 
+function histNotes(h){return h?`${h.years} winters since 1991 at ${esc(h.name||"the nearest SNOTEL station")}`:""}
+function seasonLabel(i){return new Date(wyStart().getTime()+i*3*864e5).toLocaleDateString("en-US",{month:"short",day:"numeric"})}
+function histSection(a,d,key,id,title,lede,unit,fmt){const h=histFor(a),c=PG(key)?"":"";
+if(!h||!h[id==="swe"?"swe":"fall"])return sect(id,title,lede,`<p class="meta">History is not available yet. It is built once a week from SNOTEL records, so run "Update history" in GitHub Actions to start it.</p>`,true);
+return sect(id,title,lede,`<div id="c-${id}"></div><div id="n-${id}"></div>`,true)}
+function mountHist(a,d,id){const h=histFor(a);if(!h)return;const k=id==="swe"?"swe":"fall",H=h[k],host=el("c-"+id);if(!host)return;
+const n=H.med.length,u=su(),conv=v=>v==null?null:id==="swe"?sn(v):snr(v),mo=[0,61,123,182,243,304],mt=mo.map(x=>Math.round(x/3)),mname=["Oct","Dec","Feb","Apr","Jun","Aug"];
+const cur=H.cur.map(conv),med=H.med.map(conv),lo=H.lo.map(conv),hi=H.hi.map(conv);
+const lab=i=>seasonLabel(i),ser=[{name:"This season",color:"var(--m1)",vals:cur,area:false,tf:v=>v},{name:"Median",color:"var(--ink)",dash:"5 3",vals:med,tf:v=>v}];
+const title=id==="swe"?"snowpack (inches of water in the snow)":"snowfall";
+mountChart(host,{n,ticks:mt,xl:i=>mname[mt.indexOf(i)],tl:lab,h:230,yMin:0,yFmt:v=>v,label:`This season's ${title} compared with the median and the driest and wettest years`,xh:"Date",skip:i=>i%2,series:ser,
+band:{lo:lo.map(v=>v==null?null:v),hi:hi.map(v=>v==null?null:v),label:id==="swe"?"Driest to wettest year":"Lowest to highest year",color:"var(--snow)"},
+tip:i=>({title:lab(i),rows:[{key:"line",color:"var(--m1)",value:cur[i]==null?"–":cur[i]+" "+u,label:"this season"},{key:"line",color:"var(--ink)",value:med[i]==null?"–":med[i]+" "+u,label:"median"},{key:"band",color:"var(--snow)",value:lo[i]==null?"–":lo[i]+" to "+hi[i]+" "+u,label:"past years"}]})});
+const di=Math.min(n-1,Math.max(0,Math.floor((Date.now()-wyStart())/864e5/3)));let ci=di;while(ci>0&&H.cur[ci]==null)ci--;
+const pk=Math.max(...H.med.filter(v=>v!=null)),pi=H.med.indexOf(pk),nowv=H.cur[ci],m=H.med[ci],nt=el("n-"+id);
+let t=`<p style="margin-top:8px">`;
+if(nowv!=null&&m!=null&&m>0.4)t+=`<b>${Math.round(nowv/m*100)}% of the median for this date</b> (${conv(nowv)} ${u} vs ${conv(m)} ${u}). `;
+else if(nowv!=null)t+=`This season so far: ${conv(nowv)} ${u}. `;
+t+=`The median season ${id==="swe"?"peaks":"ends"} near ${conv(pk)} ${u}${id==="swe"?" around "+lab(pi):""}.</p><p class="meta">Based on ${histNotes(h)}. ${id==="fall"?"SNOTEL does not measure snowfall directly, so this is estimated from daily gains in snow depth. It runs low on windy or compacting days.":"The shaded band covers every earlier winter in the record."}</p>`;
+nt.innerHTML=t}
+ 
+function avyWeekly(ser){const ws=wyStart().getTime(),by={};Object.entries(ser).forEach(([k,v])=>{const t=dayOf(k),y=t.getMonth()>=9?t.getFullYear()+1:t.getFullYear(),i=Math.floor((t-new Date(y-1,9,1))/864e5/7);if(i<0||i>52)return;(by[y]=by[y]||{})[i]=(by[y][i]||[]).concat(v)});
+const cy=wyStart().getFullYear()+1,avg=a=>a.reduce((x,y)=>x+y,0)/a.length,cur=[],prior=[];const olds=Object.keys(by).filter(y=>+y!==cy);
+for(let i=0;i<53;i++){cur.push(by[cy]&&by[cy][i]?avg(by[cy][i]):null);const v=olds.map(y=>by[y][i]?avg(by[y][i]):null).filter(x=>x!=null);prior.push(v.length?{avg:avg(v),lo:Math.min(...v),hi:Math.max(...v)}:null)}
+return{cur,prior,seasons:olds.length,days:by[cy]?Object.values(by[cy]).reduce((x,y)=>x+y.length,0):0}}
+function mountAvHist(a,d){const host=el("c-avhist");if(!host)return;const ser=avySeries(a),w=avyWeekly(ser),n=53,lab=i=>{const t=new Date(wyStart().getTime()+i*7*864e5);return t.toLocaleDateString("en-US",{month:"short",day:"numeric"})};
+const hasPrior=w.prior.some(x=>x),mt=[0,9,18,26,35,44].map(x=>x),mn=["Oct","Dec","Feb","Apr","Jun","Aug"];
+const r1=v=>v==null?null:Math.round(v*10)/10,tf=v=>v==null?"–":v;
+const ser2=[{name:"This season (weekly average)",color:"var(--m1)",vals:w.cur.map(r1),tf}];
+if(hasPrior)ser2.push({name:"Typical earlier season",color:"var(--ink)",dash:"5 3",vals:w.prior.map(x=>x&&r1(x.avg)),tf});
+mountChart(host,{n,ticks:mt,xl:i=>mn[mt.indexOf(i)],tl:i=>"Week of "+lab(i),h:220,yMin:0,yMax:5,step:1,yFmt:v=>v,label:"Weekly average avalanche danger, this season compared with earlier seasons",xh:"Week",skip:i=>i%2,series:ser2,
+band:hasPrior?{lo:w.prior.map(x=>x&&r1(x.lo)),hi:w.prior.map(x=>x&&r1(x.hi)),label:"Range of earlier seasons",color:"var(--snow)"}:undefined,
+tip:i=>({title:"Week of "+lab(i),rows:[{key:"line",color:"var(--m1)",value:w.cur[i]==null?"–":r1(w.cur[i]),label:"this season"}].concat(w.prior[i]?[{key:"line",color:"var(--ink)",value:r1(w.prior[i].avg),label:"typical (earlier seasons)"},{key:"band",color:"var(--snow)",value:r1(w.prior[i].lo)+" to "+r1(w.prior[i].hi),label:"range"}]:[])})});
+const vals=Object.entries(ser).filter(([k])=>k>=iso(wyStart())).map(x=>x[1]),hi=vals.filter(v=>v>=3).length,wi=Math.min(52,Math.floor((Date.now()-wyStart())/864e5/7));
+let t=vals.length?`<p style="margin-top:8px">This season so far: average danger <b>${r1(vals.reduce((x,y)=>x+y,0)/vals.length)}</b> over ${vals.length} days, with <b>${hi}</b> days at Considerable or higher.${w.prior[wi]&&w.cur[wi]!=null?` This week is ${w.cur[wi]>w.prior[wi].avg+.3?"above":w.cur[wi]<w.prior[wi].avg-.3?"below":"close to"} the typical ${r1(w.prior[wi].avg)} for this time of year.`:""}</p>`:`<p class="meta" style="margin-top:8px">No ratings saved yet for this season.</p>`;
+t+=`<p class="meta">${hasPrior?`Compared with ${w.seasons} earlier season${w.seasons===1?"":"s"}.`:"No earlier seasons are saved yet. Snow Deck saves each day's rating from now on, and the weekly Update history job tries to fetch past seasons, so this comparison builds over time."} Levels run from 1 (Low) to 5 (Extreme).</p>`;
+el("n-avhist").innerHTML=t}
+ 
+/* base vs summit */
+function stateOf(hi,lo){if(hi==null||lo==null)return["","snow"];return lo>32?["Rain likely","rain"]:hi<=32?["Snow","snow"]:["Mix or wet snow","mix"]}
+function drawSummit(a,d){const host=el("summit");if(!host)return;const om=d.om,i=DET.day;
+if(!om||!om.base||!om.top||!om.top.hi||!om.top.hi.length){host.innerHTML=`<p class="meta">Base and summit comparison is not available yet. It appears after the next data update.</p>`;return}
+const B=om.base,T=om.top,fl=om.fl||[],cardH=(t,x,hi,lo,snow)=>{const st=stateOf(hi,lo);return`<div class="sumcard"><h4>${t} · ${ft(x)}</h4><div class="t">${tp(hi)}<small>low ${tp(lo)}</small></div><div>${sn(snow||0)} ${su()} of snow</div><span class="state ${st[1]}">${st[0]}</span></div>`};
+const diff=hi=>T.hi[i]!=null&&B.hi[i]!=null?Math.round(imp()?B.hi[i]-T.hi[i]:(B.hi[i]-T.hi[i])*5/9):null;
+let note=fl[i]!=null?(fl[i]>=a.top_ft?"The freezing level is above the summit, so rain or wet snow is possible everywhere.":fl[i]>a.base_ft?`Snow turns to rain below about ${ft(fl[i])}.`:"The freezing level is below the base, so it should be snow all the way down."):"";
+host.innerHTML=`<div class="sumcards">${cardH("Summit",a.top_ft,T.hi[i],T.lo[i],T.snow[i])}${cardH("Base",a.base_ft,B.hi[i],B.lo[i],B.snow[i])}</div>
+<p>${note} ${diff()!=null?`The summit is about ${Math.abs(diff())}${imp()?"°F":"°C"} colder than the base on ${dname(d,i).toLowerCase()==="today"?"today":dlong(d,i)}.`:""}</p><div id="c-range"></div>`;
+const days=d.dates.map((_,k)=>k).filter(k=>T.hi[k]!=null&&B.hi[k]!=null);
+const all=[...days.map(k=>tv(T.hi[k])),...days.map(k=>tv(T.lo[k])),...days.map(k=>tv(B.hi[k])),...days.map(k=>tv(B.lo[k])),tv(32)],lo=Math.floor(Math.min(...all)/5)*5-2,hi=Math.ceil(Math.max(...all)/5)*5+2;
+const W=640,H=230,P={l:40,r:12,t:12,b:26},iw=W-P.l-P.r,ih=H-P.t-P.b,X=k=>P.l+(k+.5)*iw/7,Y=v=>P.t+ih-(v-lo)/(hi-lo)*ih;let g="";
+for(let v=Math.ceil(lo/10)*10;v<=hi;v+=10)g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:var(--line);stroke-opacity:.7"/><text x="${P.l-6}" y="${Y(v)+4}" text-anchor="end">${v}°</text>`;
+g+=`<rect x="${X(i)-iw/14}" y="${P.t}" width="${iw/7}" height="${ih}" style="fill:var(--ice);opacity:.8"/>`;
+g+=`<line x1="${P.l}" x2="${W-P.r}" y1="${Y(tv(32))}" y2="${Y(tv(32))}" style="stroke:var(--warm);stroke-width:1.5;stroke-dasharray:5 4"/><text x="${W-P.r}" y="${Y(tv(32))-4}" text-anchor="end" style="fill:var(--warm);font-weight:600">${imp()?"32°F":"0°C"} freezing</text>`;
+days.forEach(k=>{[[T,"var(--m1)",-9],[B,"var(--m2)",9]].forEach(([o,c,dx])=>{const y1=Y(tv(o.hi[k])),y2=Y(tv(o.lo[k]));g+=`<rect x="${X(k)+dx-6}" y="${y1}" width="12" height="${Math.max(3,y2-y1)}" rx="5" style="fill:${c}"/>`});g+=`<text x="${X(k)}" y="${H-6}" text-anchor="middle">${esc(dname(d,k))}</text>`});
+g+=`<rect id="rhit" x="${P.l}" y="${P.t}" width="${iw}" height="${ih}" style="fill:transparent"/>`;
+el("c-range").innerHTML=`<div class="lg"><span><svg viewBox="0 0 22 8" aria-hidden="true"><rect x="5" width="12" height="8" rx="4" style="fill:var(--m1)"/></svg>Summit, low to high</span><span><svg viewBox="0 0 22 8" aria-hidden="true"><rect x="5" width="12" height="8" rx="4" style="fill:var(--m2)"/></svg>Base, low to high</span></div><div class="chart"><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Daily temperature range at summit and base compared with freezing">${g}</svg></div>
+<details class="dt"><summary>View as table</summary><div class="tblwrap" style="margin-top:6px"><table class="tbl plain" style="min-width:0"><thead><tr><th>Day</th><th>Summit high / low</th><th>Base high / low</th><th>Rain line</th></tr></thead><tbody>${days.map(k=>`<tr><td>${dname(d,k)}</td><td class="num">${tp(T.hi[k])} / ${tp(T.lo[k])}</td><td class="num">${tp(B.hi[k])} / ${tp(B.lo[k])}</td><td class="num">${fl[k]!=null?ft(fl[k]):"–"}</td></tr>`).join("")}</tbody></table></div></details>`;
+const svg=el("c-range").querySelector("svg"),hit=el("rhit");
+const tipAt=(e)=>{const r=svg.getBoundingClientRect(),x=(e.clientX-r.left)/r.width*W,k=Math.floor((x-P.l)/(iw/7));if(k<0||k>6||T.hi[k]==null)return hideTip();showTip(e.clientX,e.clientY,dlong(d,k),[{key:"band",color:"var(--m1)",value:tp(T.hi[k])+" / "+tp(T.lo[k]),label:"summit high / low"},{key:"band",color:"var(--m2)",value:tp(B.hi[k])+" / "+tp(B.lo[k]),label:"base high / low"}].concat(fl[k]!=null?[{key:"dot",color:"var(--warm)",value:ft(fl[k]),label:"rain line"}]:[]))};
+hit.addEventListener("pointermove",tipAt);hit.addEventListener("pointerleave",hideTip)}
+ 
+function trailSection(a){if(a.zone)return"";const off=a.trail||"https://www.google.com/search?q="+q(a.name+" trail map");
+return sect("trail","Trail map","Official resort map, plus a free community map from OpenStreetMap data.",`<div class="linkrow"><a class="btn primary" href="${esc(off)}" target="_blank" rel="noopener">${a.trail?"Open the official trail map":"Search for the trail map"}</a><button class="btn" id="trailshow">Show community map here</button><a class="btn" href="https://www.openskimap.org/#14/${a.lat}/${a.lon}" target="_blank" rel="noopener">Open OpenSkiMap</a></div>
+${a.trail?"":`<p class="meta">No official map link saved for this resort, so this opens a web search.</p>`}<div class="trailwrap" id="trailbox"></div><p class="meta">Community map: <a href="https://openskimap.org/" target="_blank" rel="noopener">OpenSkiMap</a>, data from OpenStreetMap contributors. Detail varies by resort. It is centered on the resort's listed location.</p>`,true)}
+ 
+function renderDetail(keep){if(!DET)return;const a=BY[DET.id];if(!a){closeDetail(true);return}const d=data(a),box=$("detail"),y=keep?box.scrollTop:0;
 const list=typeof viewList==="function"?viewList().map(x=>x.id):[],ix=list.indexOf(a.id),prev=ix>0?list[ix-1]:null,next=ix>=0&&ix<list.length-1?list[ix+1]:null;
-const sc=score(a,d),bd=bestDay(d),wk=weekend(d),pq=powderQ(d),dsx=dist(a),inDeck=sel().includes(a.id),T=a.zone?null:terr(a);
-const showAv=a.zone||S.avalIn,pass=passOf(a);
+const sc=score(a,d),bd=bestDay(d),wk=weekend(d),pq=powderQ(d),dsx=dist(a),inDeck=sel().includes(a.id),T=a.zone?null:terr(a),pass=passOf(a);
 const tiles=[[sn(d.s24),su(),"Last 24 hours"],[sn(d.s72),su(),"Last 72 hours"],[sn(d.base),su(),"Base depth"],[sn(f3(d)),su(),"Next 3 days"],[sn(f7(d)),su(),"Next 7 days"]];
 if(d.swe&&d.swe.pct!=null)tiles.push([d.swe.pct,"%","Snowpack vs normal"]);
 if(a.zone&&d.aval)tiles.push([d.aval,LEVELS[d.aval],"Avalanche danger"]);
 if(T&&T.lifts)tiles.push([T.lifts[0]+"/"+T.lifts[1],"","Lifts open"]);
-if(S.rank)tiles.push([sc,grade(sc),"Skiing score"]);
-const al=(typeof alerts==="function")?alerts(a,d):"";
+if(PG("score"))tiles.push([sc,grade(sc),"Skiing score"]);
+const al=alerts(a,d),cn=CENTERS[d.avalCenter]||d.avalCenter;
 let h=`<div class="dwrap"><div class="dbar"><button class="btn" id="dback">← Back</button><span class="grow1"></span>
 ${prev?`<button class="btn sm" data-open="${esc(prev)}" aria-label="Previous area">‹ ${esc(BY[prev].name)}</button>`:""}${next?`<button class="btn sm" data-open="${esc(next)}" aria-label="Next area">${esc(BY[next].name)} ›</button>`:""}
 ${inDeck?"":`<button class="btn sm primary" id="dadd">Add to deck</button>`}</div>
-<div class="dhero"><h2>${esc(a.name)}</h2><div class="meta">${esc(ST[a.state]||a.state)} · ${a.zone?"Backcountry zone":"Resort"}${pass&&pass!=="None"?` · ${pass} Pass`:""} · ${ft(a.base_ft)} to ${ft(a.top_ft)}${dsx!=null?` · ${mi(dsx)} from you (straight line)`:""}</div>
+<div class="dhero"><h2>${esc(a.name)}</h2><div class="meta">${esc(ST[a.state]||a.state)} · ${a.zone?"Backcountry zone":"Resort"}${pass&&pass!=="None"?` · ${pass} Pass`:""} · ${ft(a.base_ft)} to ${ft(a.top_ft)}${dsx!=null?` · ${mi(dsx)} from ${esc(S.geo.label||"you")} (straight line)`:""}</div>
 ${d.missing?`<p class="meta">Live data for this area is not available yet.</p>`:""}${d.sample?`<p class="meta">Showing sample numbers until the data collector runs.</p>`:""}
-<div class="tiles">${tiles.map(t=>`<div class="tile"><b>${t[0]}<small>${t[1]}</small></b><span>${t[2]}</span></div>`).join("")}</div>${al?`<div style="margin-top:10px">${al}</div>`:""}</div>
-<div class="dgrid">
-<section class="sect full" aria-labelledby="h-storm"><h3 id="h-storm">Storm tracker</h3><p class="lede">Hour by hour for the next 3 days. Source: National Weather Service.</p>${stormHtml(d)}
-<div id="c-hsnow" style="margin-top:8px"></div><div id="c-htemp"></div></section>
-<section class="sect" aria-labelledby="h-pow"><h3 id="h-pow">Powder quality</h3><p class="lede">Estimated from the temperature while snow is falling.</p>
-${pq?`<p class="big">${pq.label}</p><dl class="kv"><dt>Temperature in storm</dt><dd>${tp(pq.t)}</dd><dt>Snow-to-water ratio</dt><dd>about ${pq.ratio} to 1</dd></dl><p class="meta">Colder storms make lighter, drier snow. This is a rule-of-thumb estimate, not a measurement.${pq.src==="daily"?" Based on daily temperatures because hourly data is missing.":""}</p>`:`<p class="meta">No snow in the forecast, so there is nothing to rate yet.</p>`}</section>
-<section class="sect" aria-labelledby="h-best"><h3 id="h-best">Best day this week</h3><p class="lede">Scores fresh snow, cold, wind and rain for each day.</p>
-<p class="big">${dlong(d,bd.i)}</p>
-<div class="daystrip">${d.dates.map((_,i)=>{const s=dayScore(d,i);return`<div class="daycell${i===bd.i?" best":""}"><span>${dname(d,i)}</span><b>${s}</b><span>${sn(d.fc[i])} ${su()}</span>${d.rain[i]?`<div class="rain">Rain</div>`:""}</div>`}).join("")}</div>
-${wk.length?`<p class="meta" style="margin-top:10px">Weekend: ${wk.map(i=>`${dname(d,i)} ${dayScore(d,i)}`).join(" · ")}.</p>`:""}</section>
-<section class="sect full" aria-labelledby="h-mod"><h3 id="h-mod">Forecast models compared</h3><p class="lede">Daily snowfall from four weather models and the National Weather Service. When lines bunch up, confidence is higher.</p><div id="c-models"></div><div id="modelnote"></div></section>
-<section class="sect full" aria-labelledby="h-prof"><h3 id="h-prof">Base vs summit</h3><p class="lede">The summit gets more snow and colder air. Pick a day.</p><div class="chips" id="daychips" role="group" aria-label="Day"></div><div id="profile"></div></section>
-<section class="sect full" aria-labelledby="h-hist"><h3 id="h-hist">Snowpack and snow history</h3><p class="lede" id="histlede"></p><div class="chips" role="group" aria-label="Range">${[7,14,30].map(n=>`<button class="pchip" data-range="${n}" aria-pressed="${DET.range===n}">${n} days</button>`).join("")}</div><div id="c-hist"></div><div id="histnote"></div></section>`;
-if(a.zone)h+=avalHtml(a,d);
-h+=`<section class="sect" aria-labelledby="h-cam"><h3 id="h-cam">Webcams and links</h3><div class="linkrow"><a class="btn" href="${esc(a.cam||"https://www.google.com/search?q="+q(a.name+(a.zone?" webcam":" ski resort webcam")))}" target="_blank" rel="noopener">${a.cam?"Open webcams":"Search for webcams"}</a>
+${PG("tiles")?`<div class="tiles">${tiles.map(t=>`<div class="tile"><b>${t[0]}<small>${t[1]}</small></b><span>${t[2]}</span></div>`).join("")}</div>`:""}${al?`<div style="margin-top:10px">${al}</div>`:""}</div>
+<div class="dgrid">`;
+if(PG("storm"))h+=sect("storm","Storm tracker","Hour by hour for the next 3 days. Source: National Weather Service.",stormHtml(d)+`<div id="c-hsnow" style="margin-top:8px"></div><div id="c-htemp"></div>`,true);
+if(PG("score"))h+=scoreHtml(a,d);
+if(PG("powder"))h+=sect("pow","Powder quality","Estimated from the temperature while snow is falling.",pq?`<p class="big">${pq.label}</p><dl class="kv"><dt>Temperature in storm</dt><dd>${tp(pq.t)}</dd><dt>Snow-to-water ratio</dt><dd>about ${pq.ratio} to 1</dd></dl><p class="meta">Colder storms make lighter, drier snow. This is a rule-of-thumb estimate, not a measurement.${pq.src==="daily"?" Based on daily temperatures because hourly data is missing.":""}</p>`:`<p class="meta">No snow in the forecast, so there is nothing to rate yet.</p>`);
+if(PG("best"))h+=sect("best","Best day this week","Scores fresh snow, cold, wind and rain for each day.",`<p class="big">${dlong(d,bd.i)}</p><div class="daystrip">${d.dates.map((_,i)=>{const s=dayScore(d,i);return`<div class="daycell${i===bd.i?" best":""}"><span>${dname(d,i)}</span><b>${s}</b><span>${sn(d.fc[i])} ${su()}</span>${d.rain[i]?`<div class="rain">Rain</div>`:""}</div>`}).join("")}</div>${wk.length?`<p class="meta" style="margin-top:10px">Weekend: ${wk.map(i=>`${dname(d,i)} ${dayScore(d,i)}`).join(" · ")}.</p>`:""}`);
+if(PG("models"))h+=sect("mod","Forecast models compared","Daily snowfall from four weather models and the National Weather Service. When lines bunch up, confidence is higher.",`<div id="c-models"></div><div id="modelnote"></div>`,true);
+if(PG("summit"))h+=sect("prof","Base vs summit","How much colder and snowier it is up top. Pick a day.",`<div class="chips" id="daychips" role="group" aria-label="Day"></div><div id="summit"></div>`,true);
+if(PG("swe"))h+=histSection(a,d,"swe","swe","Snowpack vs history","Water held in the snow this season compared with every winter since 1991. The full season is shown, including the part still ahead.","in");
+if(PG("fall"))h+=histSection(a,d,"fall","fall","Snowfall vs history (estimated)","Snow added this season compared with earlier winters. The full season is shown.","in");
+if(PG("hist"))h+=sect("hist","Recent snow depth","",`<p class="lede" id="histlede"></p><div class="chips" role="group" aria-label="Range">${[7,14,30].map(n=>`<button class="pchip" data-range="${n}" aria-pressed="${DET.range===n}">${n} days</button>`).join("")}</div><div id="c-hist"></div><div id="histnote"></div>`,true);
+if(a.zone&&PG("aval"))h+=avalHtml(a,d,cn);
+if(a.zone&&PG("avhist"))h+=sect("avh","Avalanche danger vs history","How this season's danger ratings compare with earlier seasons, week by week.",`<div id="c-avhist"></div><div id="n-avhist"></div>`,true);
+if(!a.zone&&PG("trail"))h+=trailSection(a);
+if(PG("links"))h+=sect("cam","Webcams and links","",`<div class="linkrow"><a class="btn" href="${esc(a.cam||"https://www.google.com/search?q="+q(a.name+(a.zone?" webcam":" ski resort webcam")))}" target="_blank" rel="noopener">${a.cam?"Open webcams":"Search for webcams"}</a>
 ${a.web?`<a class="btn" href="${esc(a.web)}" target="_blank" rel="noopener">${a.zone?"Website":"Resort website"}</a>`:""}
 <a class="btn" href="https://forecast.weather.gov/MapClick.php?lat=${a.lat}&lon=${a.lon}" target="_blank" rel="noopener">NWS forecast</a>
-<a class="btn" href="https://www.google.com/maps/search/?api=1&query=${a.lat},${a.lon}" target="_blank" rel="noopener">Map</a></div>${a.cam?"":`<p class="meta">No direct webcam page saved for this area, so this opens a web search.</p>`}</section>`;
-if(a.zone){const rl=roadLinks(a);h+=`<section class="sect" aria-labelledby="h-road"><h3 id="h-road">Roads and passes</h3><p class="lede">Snow Deck does not read live road data. These official pages do.</p><div class="linkrow">${rl.map(r=>`<a class="btn" href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a>`).join("")}</div></section>`}
-if(!a.zone&&T)h+=`<section class="sect" aria-labelledby="h-ter"><h3 id="h-ter">Lifts and trails</h3>${terrainHtml(a)}</section>`;
-h+=`</div><p class="foot">${d.live&&!d.missing?`Snow depth: ${d.snotel?esc(d.snotel.name)+" SNOTEL station, "+mi(d.snotel.km/1.609)+" away, at "+ft(d.snotel.elev):"no nearby SNOTEL station"}. `:""}Hourly and daily forecast: National Weather Service. Model comparison and summit/base temperatures: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0). Elevations are approximate. Powder quality, storm size and day scores are Snow Deck estimates. This is not a substitute for official avalanche forecasts or your own judgment.</p></div>`;
-el.innerHTML=h;mountDetailCharts(a,d);el.scrollTop=y}
+<a class="btn" href="https://www.google.com/maps/search/?api=1&query=${a.lat},${a.lon}" target="_blank" rel="noopener">Map</a></div>${a.cam?"":`<p class="meta">No direct webcam page saved for this area, so this opens a web search.</p>`}`);
+if(a.zone&&PG("roads")){const rl=roadLinks(a);h+=sect("road","Roads and passes","Snow Deck does not read live road data. These official pages do.",`<div class="linkrow">${rl.map(r=>`<a class="btn" href="${r[1]}" target="_blank" rel="noopener">${r[0]}</a>`).join("")}</div>`)}
+if(!a.zone&&T&&PG("terrain"))h+=sect("ter","Lifts and trails","",terrainHtml(a));
+h+=`</div><p class="foot">${d.live&&!d.missing?`Snow depth: ${d.snotel?esc(d.snotel.name)+" SNOTEL station, "+mi(d.snotel.km/1.609)+" away, at "+ft(d.snotel.elev):"no nearby SNOTEL station"}. `:""}Hourly and daily forecast: National Weather Service. Model comparison and summit/base temperatures: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo</a> (CC BY 4.0). Snow history: NRCS SNOTEL.${a.zone?" Avalanche forecasts: "+esc(cn||"the local avalanche center")+", via avalanche.org.":""} Elevations are approximate. Powder quality, storm size, scores and history comparisons are Snow Deck estimates. This is not a substitute for official avalanche forecasts or your own judgment.</p></div>`;
+box.innerHTML=h;mountDetailCharts(a,d);box.scrollTop=y}
+ 
 function mountDetailCharts(a,d){const hr=d.hr,u=su();
-if(hr&&hr.snow&&hr.t){const t0=Date.parse(hr.t),n=hr.snow.length,hl=i=>hfmt(t0+i*36e5),ticks=[];for(let i=0;i<n;i+=12)ticks.push(i);
-mountChart($("c-hsnow"),{n,bars:true,ticks,xl:hl,yFmt:v=>v,yMin:0,h:170,label:`Hourly snowfall for the next ${n} hours`,xh:"Hour",tl:hl,skip:i=>i%3,
+if(el("c-hsnow")){if(hr&&hr.snow&&hr.t){const t0=Date.parse(hr.t),n=hr.snow.length,hl=i=>hfmt(t0+i*36e5),ticks=[];for(let i=0;i<n;i+=12)ticks.push(i);
+mountChart(el("c-hsnow"),{n,bars:true,ticks,xl:hl,yFmt:v=>v,yMin:0,h:170,label:`Hourly snowfall for the next ${n} hours`,xh:"Hour",tl:hl,skip:i=>i%3,
 series:[{name:`Snow per hour (${u})`,type:"bar",color:"var(--snow)",vals:hr.snow.map(v=>sn(v||0)),tf:v=>v}],
 tip:i=>({title:hl(i),rows:[{key:"tick",color:"var(--snow)",value:sn(hr.snow[i]||0)+" "+u,label:"snow"},{key:"dot",color:"var(--mute)",value:hr.pop&&hr.pop[i]!=null?hr.pop[i]+"%":"–",label:"chance of precip"},{key:"dot",color:"var(--mute)",value:wd(hr.wind&&hr.wind[i]||0),label:"wind"}]})});
-const fz=tv(32);mountChart($("c-htemp"),{n,ticks,xl:hl,h:150,yFmt:v=>Math.round(v)+"°",label:`Hourly temperature for the next ${n} hours`,xh:"Hour",tl:hl,skip:i=>i%3,
+const fz=tv(32);mountChart(el("c-htemp"),{n,ticks,xl:hl,h:150,yFmt:v=>Math.round(v)+"°",label:`Hourly temperature for the next ${n} hours`,xh:"Hour",tl:hl,skip:i=>i%3,
 series:[{name:"Temperature",color:"var(--m1)",vals:hr.temp.map(v=>v==null?null:Math.round(tv(v))),tf:v=>v+"°"},{name:"Freezing",color:"var(--mute)",dash:"4 3",vals:Array(n).fill(Math.round(fz)),tf:v=>v+"°"}],
-tip:i=>({title:hl(i),rows:[{key:"line",color:"var(--m1)",value:tp(hr.temp[i]),label:"temperature"}]})})}
-else{$("c-hsnow").innerHTML="";$("c-htemp").innerHTML=""}
-/* models */
-const om=d.om,M=om&&om.models?om.models:null,cols=["var(--m1)","var(--m2)","var(--m3)","var(--m4)"],dashes=["","6 3","2 3","8 3 2 3"];
+tip:i=>({title:hl(i),rows:[{key:"line",color:"var(--m1)",value:tp(hr.temp[i]),label:"temperature"}]})})}else{el("c-hsnow").innerHTML="";el("c-htemp").innerHTML=""}}
+if(el("c-models")){const om=d.om,M=om&&om.models?om.models:null,cols=["var(--m1)","var(--m2)","var(--m3)","var(--m4)"],dashes=["","6 3","2 3","8 3 2 3"];
 if(M&&Object.keys(M).length){const names=Object.keys(M),ser=names.map((k,i)=>({name:k,color:cols[i%4],dash:dashes[i%4],vals:M[k].map(sn),dots:true,tf:v=>v}));
 ser.push({name:"NWS",color:"var(--ink)",vals:d.fc.map(sn),tf:v=>v});
 const lo=[],hi=[];for(let i=0;i<7;i++){const v=names.map(k=>M[k][i]).filter(x=>x!=null);lo.push(sn(Math.min(...v)));hi.push(sn(Math.max(...v)))}
-mountChart($("c-models"),{n:7,ticks:[0,1,2,3,4,5,6],xl:i=>dname(d,i),h:230,yMin:0,yFmt:v=>v,label:"Seven-day snowfall by forecast model",xh:"Day",series:ser,band:{lo,hi},
+mountChart(el("c-models"),{n:7,ticks:[0,1,2,3,4,5,6],xl:i=>dname(d,i),h:230,yMin:0,yFmt:v=>v,label:"Seven-day snowfall by forecast model",xh:"Day",series:ser,band:{lo,hi},
 tip:i=>({title:dlong(d,i),rows:ser.map(s=>({key:"line",color:s.color,value:s.vals[i]+" "+u,label:s.name}))})});
 const tot=names.map(k=>M[k].reduce((x,y)=>x+y,0)),mx=Math.max(...tot),mn=Math.min(...tot),av=tot.reduce((x,y)=>x+y,0)/tot.length;
-$("modelnote").innerHTML=`<p class="meta" style="margin-top:8px">7-day totals: ${names.map((k,i)=>`${esc(k)} ${sn(tot[i])} ${u}`).join(" · ")}. ${mx-mn>Math.max(3,av*.5)?`<b>The models disagree</b> (${sn(mn)} to ${sn(mx)} ${u}), so treat the total as uncertain.`:`<b>The models mostly agree</b> (${sn(mn)} to ${sn(mx)} ${u}).`}</p>`}
-else{$("c-models").innerHTML=`<p class="meta">Model comparison is not available yet. It appears after the next data update.</p>`}
-/* profile */
-const chips=$("daychips");chips.innerHTML=d.dates.map((_,i)=>`<button class="pchip" data-day="${i}" aria-pressed="${DET.day===i}">${dname(d,i)}</button>`).join("");drawProfile(a,d);
-/* history */
-const hs=d.hist||[],rg=DET.range,sl=hs.slice(-rg);
-if(sl.length>1){const lab=i=>{const t=dayOf(sl[i][0]);return t.toLocaleDateString("en-US",{month:"short",day:"numeric"})},tk=[0,Math.floor((sl.length-1)/2),sl.length-1];
-mountChart($("c-hist"),{n:sl.length,ticks:tk,xl:lab,h:190,yMin:0,yFmt:v=>v,label:`Snow depth over the last ${sl.length} days`,xh:"Date",skip:i=>sl.length>16&&i%2,
+el("modelnote").innerHTML=`<p class="meta" style="margin-top:8px">7-day totals: ${names.map((k,i)=>`${esc(k)} ${sn(tot[i])} ${u}`).join(" · ")}. ${mx-mn>Math.max(3,av*.5)?`<b>The models disagree</b> (${sn(mn)} to ${sn(mx)} ${u}), so treat the total as uncertain.`:`<b>The models mostly agree</b> (${sn(mn)} to ${sn(mx)} ${u}).`}</p>`}
+else{el("c-models").innerHTML=`<p class="meta">Model comparison is not available yet. It appears after the next data update.</p>`}}
+if(el("daychips")){el("daychips").innerHTML=d.dates.map((_,i)=>`<button class="pchip" data-day="${i}" aria-pressed="${DET.day===i}">${dname(d,i)}</button>`).join("");drawSummit(a,d)}
+mountHist(a,d,"swe");mountHist(a,d,"fall");
+if(el("c-hist")){const hs=d.hist||[],rg=DET.range,sl=hs.slice(-rg);
+if(sl.length>1){const lab=i=>dayOf(sl[i][0]).toLocaleDateString("en-US",{month:"short",day:"numeric"}),tk=[0,Math.floor((sl.length-1)/2),sl.length-1];
+mountChart(el("c-hist"),{n:sl.length,ticks:tk,xl:lab,h:190,yMin:0,yFmt:v=>v,label:`Snow depth over the last ${sl.length} days`,xh:"Date",skip:i=>sl.length>16&&i%2,
 series:[{name:`Snow depth (${u})`,color:"var(--m1)",area:true,vals:sl.map(x=>sn(x[1])),tf:v=>v}],tip:i=>({title:lab(i),rows:[{key:"line",color:"var(--m1)",value:sn(sl[i][1])+" "+u,label:"snow depth"}]})});
-const ch=sl[sl.length-1][1]-sl[0][1];$("histlede").textContent=`Snow depth at the nearest SNOTEL station${d.snotel?` (${d.snotel.name})`:""}. ${ch>=0?"Up":"Down"} ${sn(Math.abs(ch))} ${u} over ${sl.length} days.`}
-else{$("c-hist").innerHTML=`<p class="meta">Snow history is not available yet.</p>`;$("histlede").textContent="Snow depth at the nearest SNOTEL station."}
-if(d.swe&&d.swe.pct!=null){const p=d.swe.pct,w=p>=110?"above normal":p>=90?"near normal":p>=70?"below normal":"well below normal";$("histnote").innerHTML=`<p style="margin-top:8px"><b>Snowpack is ${w}: ${p}% of the median</b> for this date. Water held in the snow is ${sn(d.swe.now)} ${u} compared with a typical ${sn(d.swe.med)} ${u}.</p>`}
-else $("histnote").innerHTML=`<p class="meta" style="margin-top:8px">Snowpack vs normal is not available for this station right now.</p>`;
-/* danger trend */
-if(a.zone&&$("c-trend")){const hh=d.avHist?Object.entries(d.avHist):[];if(hh.length>1){const lab=i=>dayOf(hh[i][0]).toLocaleDateString("en-US",{month:"short",day:"numeric"});
-mountChart($("c-trend"),{n:hh.length,bars:true,ticks:hh.map((_,i)=>i),xl:lab,h:150,yMin:0,yMax:5,step:1,yFmt:v=>v,label:"Highest avalanche danger rating by day",xh:"Date",
-series:[{name:"Danger level",type:"bar",color:"var(--d2)",cols:hh.map(x=>`var(--d${clamp(x[1],1,5)})`),vals:hh.map(x=>x[1]),tf:v=>v+" "+LEVELS[v]}],legend:false,
-tip:i=>({title:lab(i),rows:[{key:"tick",color:`var(--d${clamp(hh[i][1],1,5)})`,value:hh[i][1]+" "+LEVELS[hh[i][1]],label:"danger"}]})});
-const df=hh[hh.length-1][1]-hh[0][1];$("trendnote").textContent=`Danger is ${df>0?"higher than":df<0?"lower than":"unchanged from"} ${hh.length-1} days ago.`}
-else{$("c-trend").innerHTML=`<p class="meta">The trend builds up as Snow Deck saves each day's rating. Check back after a few days.</p>`}}}
-function drawProfile(a,d){const host=$("profile"),om=d.om,i=DET.day;
-if(!om||!om.base||!om.top){host.innerHTML=`<p class="meta">Base and summit comparison is not available yet. It appears after the next data update.</p>`;return}
-const bh=om.base.hi[i],bl=om.base.lo[i],th=om.top.hi[i],tl=om.top.lo[i],bs=om.base.snow[i]||0,ts=om.top.snow[i]||0,fl=om.fl?om.fl[i]:null,b=a.base_ft,t=a.top_ft;
-const e0=Math.min(b,fl!=null?fl:b)-700,e1=Math.max(t,fl!=null?fl:t)+700,Y=e=>20+(e1-e)/(e1-e0)*180;
-const peak=`M40 ${Y(e0)}L170 ${Y(b+(t-b)*.45)}L240 ${Y(b+(t-b)*.6)}L330 ${Y(t)}L430 ${Y(b+(t-b)*.5)}L500 ${Y(b+(t-b)*.3)}L560 ${Y(e0)}Z`,fy=fl!=null?Y(fl):null;
-let note="";if(fl!=null)note=fl>=t?"The freezing level is above the summit, so rain or wet snow is possible everywhere.":fl>b?`The freezing level is near ${ft(fl)}. Expect rain or wet snow below it and snow above it.`:"The freezing level is below the base, so it should be snow all the way down.";
-const row=(l,x,y,z)=>`<div class="dband"><span>${l}</span><b>${x}</b><b>${y}</b><span class="meta">${z}</span></div>`,df=(x,y)=>x==null||y==null?"":(imp()?Math.round(y-x):Math.round((y-x)*5/9))+"° colder up top";
-host.innerHTML=`<svg class="mtn" viewBox="0 0 600 220" role="img" aria-label="Mountain profile with the freezing level"><defs><clipPath id="mc"><path d="${peak}"/></clipPath></defs>
-<path d="${peak}" style="fill:var(--ice)"/>${fy!=null?`<g clip-path="url(#mc)"><rect x="0" y="0" width="600" height="${fy}" style="fill:var(--band);opacity:.7"/><rect x="0" y="${fy}" width="600" height="220" style="fill:var(--rain);opacity:.35"/></g><line x1="20" x2="580" y1="${fy}" y2="${fy}" style="stroke:var(--warm);stroke-width:2;stroke-dasharray:6 4"/><text x="582" y="${fy+4}" text-anchor="start" style="fill:var(--warm);font-weight:600" font-size="11">0°</text><text x="24" y="${fy-6}" style="fill:var(--warm);font-weight:600">Freezing level ${ft(fl)}</text>`:""}
-<path d="${peak}" style="fill:none;stroke:var(--blue);stroke-width:2"/><line x1="40" x2="140" y1="${Y(b)}" y2="${Y(b)}" style="stroke:var(--mute);stroke-dasharray:3 3"/><text x="44" y="${Y(b)-5}">Base ${ft(b)}</text><text x="334" y="${Y(t)-6}">Summit ${ft(t)}</text></svg>
-<div class="dband"><span class="h"></span><span class="h">Summit</span><span class="h">Base</span><span class="h"></span></div>
-${row("High",tp(th),tp(bh),df(th,bh))}${row("Low",tp(tl),tp(bl),df(tl,bl))}${row("Snow",sn(ts)+" "+su(),sn(bs)+" "+su(),ts>bs?"more up top":"")}
-<p class="meta" style="margin-top:8px">${note} ${dlong(d,i)}. Temperatures are model estimates at each elevation.</p>`}
-function avalHtml(a,d){const av=d.av,lk=(av&&av.link)||"https://avalanche.org/";let h=`<section class="sect full" aria-labelledby="h-av"><h3 id="h-av">Avalanche forecast</h3><p class="lede">${esc(d.avalZone||"Zone not matched")}${d.avalCenter?" · "+esc(d.avalCenter):""}${d.off?" · off-season":""}. Always read the full forecast from the avalanche center.</p>`;
+const ch=sl[sl.length-1][1]-sl[0][1];el("histlede").textContent=`Snow depth at the nearest SNOTEL station${d.snotel?` (${d.snotel.name})`:""}. ${ch>=0?"Up":"Down"} ${sn(Math.abs(ch))} ${u} over ${sl.length} days.`}
+else{el("c-hist").innerHTML=`<p class="meta">Snow depth history is not available yet.</p>`;el("histlede").textContent="Snow depth at the nearest SNOTEL station."}
+el("histnote").innerHTML=d.swe&&d.swe.pct!=null?`<p style="margin-top:8px"><b>Snowpack is ${d.swe.pct>=110?"above normal":d.swe.pct>=90?"near normal":d.swe.pct>=70?"below normal":"well below normal"}: ${d.swe.pct}% of the median</b> for this date.</p>`:""}
+if(el("c-avhist"))mountAvHist(a,d)}
+ 
+function avalHtml(a,d,cn){const av=d.av,lk=(av&&av.link)||"https://avalanche.org/";let h=`<section class="sect full" aria-labelledby="h-av"><h3 id="h-av">Avalanche forecast</h3><p class="lede">${esc(d.avalZone||"Zone not matched")}${cn?" · "+esc(cn):""}${d.off?" · off-season":""}. Always read the full forecast from the avalanche center.</p>`;
 if(!av){h+=`<p>${d.off?"The avalanche center is not issuing forecasts right now.":"Detailed forecast is not available right now."}</p>`}
 else{const c=av.danger&&av.danger.current||{},tm=av.danger&&av.danger.tomorrow||{};
 h+=`<div class="dband"><span class="h"></span><span class="h">Above treeline</span><span class="h">Near treeline</span><span class="h">Below treeline</span></div>
@@ -591,11 +699,11 @@ h+=`<div class="dband"><span class="h"></span><span class="h">Above treeline</sp
 ${av.bottom?`<p style="margin-top:10px"><b>Bottom line:</b> ${esc(av.bottom)}</p>`:""}
 ${(av.problems||[]).map(p=>`<div class="prob"><b>${esc(p.name)}</b><div class="meta">${[p.likelihood&&"Likelihood: "+esc(p.likelihood),p.size&&"Size: "+esc(p.size),p.where&&p.where.length&&"Aspects: "+esc([].concat(p.where).join(", "))].filter(Boolean).join(" · ")}</div>${p.note?`<p>${esc(p.note)}</p>`:""}</div>`).join("")}
 ${av.published?`<p class="meta">Issued ${esc(fmtT(av.published))}${av.expires?" · expires "+esc(fmtT(av.expires)):""}.</p>`:""}${av.advice?`<p class="meta">${esc(av.advice)}</p>`:""}`}
-h+=`<h3 style="margin-top:14px;font-size:16px">Danger trend</h3><div id="c-trend"></div><p class="meta" id="trendnote"></p><div class="linkrow"><a class="btn primary" href="${esc(lk)}" target="_blank" rel="noopener">Read the full forecast</a></div></section>`;return h}
+h+=`<div class="linkrow"><a class="btn primary" href="${esc(lk)}" target="_blank" rel="noopener">Read the full ${d.avalCenter==="CAIC"?"CAIC ":""}forecast</a></div></section>`;return h}
  
 let LASTFOCUS=null;
 function openDetailUI(id){const first=!DET;if(first){LASTFOCUS=document.activeElement}
-const a=BY[id];if(!a)return;const bd=bestDay(data(a));DET={id,range:30,day:0};
+const a=BY[id];if(!a)return;DET={id,range:30,day:0};
 $("detail").hidden=false;$("main").inert=true;document.body.style.overflow="hidden";renderDetail(false);$("detail").scrollTop=0;$("dback").focus({preventScroll:true})}
 function closeDetail(silent){if(!DET)return;DET=null;hideTip();$("detail").hidden=true;$("detail").innerHTML="";$("main").inert=false;document.body.style.overflow="";
 if(LASTFOCUS&&document.contains(LASTFOCUS))LASTFOCUS.focus({preventScroll:true});LASTFOCUS=null;if(!silent&&location.hash.indexOf("#area=")===0)history.replaceState(null,"",location.pathname+location.search)}
@@ -606,8 +714,102 @@ $("detail").addEventListener("click",e=>{const t=e.target;
 if(t.closest("#dback"))return backFromDetail();
 const o=t.closest("[data-open]");if(o){CAME=true;history.replaceState(null,"","#area="+encodeURIComponent(o.dataset.open));DET={id:o.dataset.open,range:30,day:0};renderDetail(false);$("detail").scrollTop=0;return}
 if(t.closest("#dadd")){const s=sel();if(s.length>=MAX)return toast("Your deck is full");if(SHARED){toast("Save the shared deck first");return}s.push(DET.id);save();renderDetail(true);renderAll();return}
+if(t.closest("#trailshow")){const a=BY[DET.id];el("trailbox").innerHTML=`<iframe loading="lazy" title="${esc(a.name)} community trail map" src="https://www.openskimap.org/#14/${a.lat}/${a.lon}"></iframe>`;t.closest("#trailshow").hidden=true;return}
 const r=t.closest("[data-range]");if(r){DET.range=+r.dataset.range;renderDetail(true);return}
-const dy=t.closest("[data-day]");if(dy){DET.day=+dy.dataset.day;document.querySelectorAll("[data-day]").forEach(b=>b.setAttribute("aria-pressed",b===dy));drawProfile(BY[DET.id],data(BY[DET.id]))}});
+const dy=t.closest("[data-day]");if(dy){DET.day=+dy.dataset.day;document.querySelectorAll("[data-day]").forEach(b=>b.setAttribute("aria-pressed",b===dy));drawSummit(BY[DET.id],data(BY[DET.id]))}});
+ 
+/* ---------- alerts: pop-ups on the main screen, per deck, normal and advanced ---------- */
+const PCONV={in:{to:v=>imp()?v:Math.round(v*2.54*10)/10,from:v=>imp()?v:v/2.54,u:()=>su()},F:{to:v=>imp()?v:Math.round((v-32)*5/9),from:v=>imp()?v:v*9/5+32,u:()=>imp()?"°F":"°C"},
+mph:{to:v=>imp()?v:Math.round(v*1.61),from:v=>imp()?v:v/1.61,u:()=>imp()?"mph":"km/h"},"":{to:v=>v,from:v=>v,u:()=>""},hr:{to:v=>v,from:v=>v,u:()=>"hours"},pct:{to:v=>v,from:v=>v,u:()=>"%"},lvl:{to:v=>v,from:v=>v,u:()=>"(1 to 5)"},ft:{to:v=>imp()?v:Math.round(v*.3048),from:v=>imp()?v:v/.3048,u:()=>imp()?"ft":"m"}};
+const PROBS=["Persistent Slab","Wind Slab","Storm Slab","Wet Loose","Wet Slab","Loose Dry","Cornice","Deep Persistent Slab","Glide"];
+const maxHr=d=>d.hr&&d.hr.snow?Math.max(0,...d.hr.snow.slice(0,24).map(v=>v||0)):0;
+const RULES=[
+{id:"powder",g:"Snow",n:1,on:1,label:"Powder day",desc:"A lot of snow fell in the last 24 hours.",p:[{k:"x",l:"at least",t:"in",def:6}],test:(a,d,p)=>d.s24>=p.x?`Powder day: ${sn(d.s24)} ${su()} in 24 hours`:null},
+{id:"storm3",g:"Snow",n:1,on:1,label:"Big storm coming",desc:"A lot of snow in the forecast for the next 3 days.",p:[{k:"x",l:"at least",t:"in",def:12}],test:(a,d,p)=>f3(d)>=p.x?`Big storm: ${sn(f3(d))} ${su()} in the next 3 days`:null},
+{id:"storm7",g:"Snow",label:"Big week",desc:"A lot of snow forecast over 7 days.",p:[{k:"x",l:"at least",t:"in",def:24}],test:(a,d,p)=>f7(d)>=p.x?`Big week: ${sn(f7(d))} ${su()} forecast over 7 days`:null},
+{id:"soon",g:"Snow",label:"Storm starts soon",desc:"A storm of a certain size is about to start.",p:[{k:"h",l:"starts within",t:"hr",def:24},{k:"x",l:"and brings at least",t:"in",def:4}],test:(a,d,p)=>{const s=storms(d).find(s=>s.end>Date.now()&&s.start<=Date.now()+p.h*36e5&&s.tot>=p.x);return s?`Storm ${s.start<=Date.now()?"underway":"starting "+hfmt(s.start)}: about ${sn(s.tot)} ${su()}`:null}},
+{id:"rate",g:"Snow",label:"Heavy snowfall rate",desc:"Snow falling fast in the next 24 hours.",p:[{k:"x",l:"at least",t:"in",def:1}],test:(a,d,p)=>maxHr(d)>=p.x?`Heavy snow: up to ${sn(maxHr(d))} ${su()} per hour`:null},
+{id:"s72",g:"Snow",label:"Big 72-hour total",desc:"Snow added over the last 3 days.",p:[{k:"x",l:"at least",t:"in",def:12}],test:(a,d,p)=>d.s72>=p.x?`${sn(d.s72)} ${su()} in the last 72 hours`:null},
+{id:"base",g:"Snow",label:"Deep base",desc:"The snow on the ground is deep.",p:[{k:"x",l:"at least",t:"in",def:60}],test:(a,d,p)=>d.base>=p.x?`Base depth ${sn(d.base)} ${su()}`:null},
+{id:"models",g:"Snow",label:"Models agree on a big week",desc:"Even the driest of the four forecast models shows a lot of snow.",p:[{k:"x",l:"every model at least",t:"in",def:6}],test:(a,d,p)=>{const M=d.om&&d.om.models;if(!M)return null;const t=Object.values(M).map(v=>v.reduce((x,y)=>x+y,0));return t.length>=3&&Math.min(...t)>=p.x?`All ${t.length} models show at least ${sn(Math.min(...t))} ${su()} this week`:null}},
+{id:"cold",g:"Conditions",label:"Very cold",desc:"Today's high is low.",p:[{k:"x",l:"high at or below",t:"F",def:10}],test:(a,d,p)=>d.temps[0].hi<=p.x?`Very cold: high of ${tp(d.temps[0].hi)} today`:null},
+{id:"warm",g:"Conditions",label:"Warm day",desc:"Today's high is warm, which can soften snow.",p:[{k:"x",l:"high at or above",t:"F",def:40}],test:(a,d,p)=>d.temps[0].hi>=p.x?`Warm: high of ${tp(d.temps[0].hi)} today`:null},
+{id:"smoke",g:"Conditions",label:"Cold smoke",desc:"Light, dry powder is likely.",p:[{k:"x",l:"snow-to-water ratio at least",t:"",def:16}],test:(a,d,p)=>{const q=powderQ(d);return q&&q.ratio>=p.x&&f3(d)>=2?`Light, dry snow likely (about ${q.ratio} to 1)`:null}},
+{id:"rain",g:"Conditions",n:1,label:"Rain on snow",desc:"Warm days that could soak the snowpack.",p:[],test:(a,d)=>d.rain.slice(0,3).some(Boolean)?"Rain on snow possible in the next 3 days":null},
+{id:"wind",g:"Conditions",n:1,label:"High wind",desc:"Wind that could close lifts.",p:[{k:"x",l:"at least",t:"mph",def:35}],test:(a,d,p)=>{const w=Math.max(d.wind,...d.windD.slice(0,2));return w>=p.x?`High wind: up to ${wd(w)}`:null}},
+{id:"freeze",g:"Conditions",label:"Freezing level above the base",desc:"Rain is possible at the base in the next 3 days.",p:[],test:(a,d)=>{const f=d.om&&d.om.fl;return f&&f.slice(0,3).some(v=>v!=null&&v>a.base_ft+500)?"Freezing level above the base: rain possible low down":null}},
+{id:"score",g:"Scores",label:"Great skiing right now",desc:"The skiing score is high.",p:[{k:"x",l:"score at least",t:"",def:70}],test:(a,d,p)=>{const s=score(a,d);return s>=p.x?`Skiing score ${s} (${grade(s)})`:null}},
+{id:"bestday",g:"Scores",label:"Great day this week",desc:"One day this week scores very well.",p:[{k:"x",l:"score at least",t:"",def:75}],test:(a,d,p)=>{const b=bestDay(d);return b.score>=p.x?`Great day ahead: ${dname(d,b.i)} (score ${b.score})`:null}},
+{id:"weekend",g:"Scores",label:"Great weekend day",desc:"Saturday or Sunday looks very good.",p:[{k:"x",l:"score at least",t:"",def:70}],test:(a,d,p)=>{const w=weekend(d).map(i=>[i,dayScore(d,i)]).sort((x,y)=>y[1]-x[1])[0];return w&&w[1]>=p.x?`Good weekend: ${dname(d,w[0])} scores ${w[1]}`:null}},
+{id:"sweHigh",g:"Snowpack",label:"Snowpack above normal",desc:"Snowpack compared with the median for this date.",p:[{k:"x",l:"at least",t:"pct",def:120}],test:(a,d,p)=>d.swe&&d.swe.pct!=null&&d.swe.pct>=p.x?`Snowpack ${d.swe.pct}% of normal`:null},
+{id:"sweLow",g:"Snowpack",label:"Snowpack below normal",desc:"Snowpack compared with the median for this date.",p:[{k:"x",l:"at or below",t:"pct",def:70}],test:(a,d,p)=>d.swe&&d.swe.pct!=null&&d.swe.pct<=p.x?`Snowpack only ${d.swe.pct}% of normal`:null},
+{id:"avalChange",g:"Avalanche",n:1,on:1,zone:1,label:"Danger rating changed",desc:"The overall danger went up or down.",p:[],test:(a,d)=>d.aval&&d.prev&&d.aval!==d.prev?`Avalanche danger ${d.aval>d.prev?"up":"down"}: ${LEVELS[d.prev]} to ${LEVELS[d.aval]}`:null},
+{id:"avalHigh",g:"Avalanche",zone:1,label:"High danger",desc:"The danger rating is high.",p:[{k:"x",l:"level at least",t:"lvl",def:4}],test:(a,d,p)=>d.aval>=p.x?`Avalanche danger ${d.aval} ${LEVELS[d.aval]}`:null},
+{id:"avalProblem",g:"Avalanche",zone:1,label:"Avalanche problem present",desc:"A specific problem is in today's forecast.",p:[{k:"s",l:"problem",t:"sel",def:"Persistent Slab"}],test:(a,d,p)=>{const m=((d.av&&d.av.problems)||[]).find(x=>String(x.name).toLowerCase().includes(String(p.s).toLowerCase()));return m?`${m.name} in the forecast${m.likelihood?" ("+m.likelihood+")":""}`:null}},
+{id:"lifts",g:"Resort",resort:1,label:"Lifts open",desc:"Share of lifts running (only where lift status is available).",p:[{k:"x",l:"at least",t:"pct",def:60}],test:(a,d,p)=>{const T=terr(a);return T&&T.lifts&&T.lifts[0]/T.lifts[1]*100>=p.x?`${T.lifts[0]} of ${T.lifts[1]} lifts open`:null}}];
+const RBY=Object.fromEntries(RULES.map(r=>[r.id,r]));
+function cfgOf(mode,r){const c=(S.alerts.cfg[mode]||{})[r.id]||{},p={};r.p.forEach(x=>p[x.k]=c.p&&c.p[x.k]!=null?c.p[x.k]:x.def);return{on:c.on!=null?c.on:!!r.on,p}}
+const deckMode=n=>S.alerts.decks[n]||S.alerts.defMode;
+let AL=[],SHOWN=new Set(),DATAREADY=false;
+function dismissed(){try{return JSON.parse(localStorage.getItem("snowdeck-dismissed")||"{}")}catch(e){return{}}}
+const stamp=()=>iso(new Date());
+function setDismissed(o){const t=stamp(),k={};Object.keys(o).forEach(x=>{if(o[x]===t)k[x]=t});try{localStorage.setItem("snowdeck-dismissed",JSON.stringify(k))}catch(e){}}
+function computeAlerts(){if(!S.alerts.on)return[];const map=new Map();
+for(const[name,ids]of Object.entries(DECKS)){const mode=deckMode(name);if(mode==="off")continue;
+ids.forEach(id=>{const a=BY[id];if(!a)return;const d=data(a);if(d.missing)return;if(S.alerts.maxDist&&S.geo&&dist(a)>S.alerts.maxDist)return;
+RULES.forEach(r=>{if(mode==="normal"&&!r.n)return;if(r.zone&&!(a.zone||S.avalIn))return;if(r.resort&&a.zone)return;const c=cfgOf(mode,r);if(!c.on)return;let t=null;try{t=r.test(a,d,c.p)}catch(e){}
+if(t){const key=id+"|"+r.id,e=map.get(key)||{key,id,rid:r.id,text:t,decks:[]};if(!e.decks.includes(name))e.decks.push(name);map.set(key,e)}})})}
+return[...map.values()].sort((x,y)=>BY[x.id].name.localeCompare(BY[y.id].name))}
+const alertsFor=a=>AL.filter(x=>x.id===a.id);
+function alerts(a,d){if(!CD("alerts"))return"";const l=alertsFor(a);return l.length?`<div class="alerts">${l.map(x=>`<span class="al">${esc(x.text)}</span>`).join("")}</div>`:""}
+function visAlerts(){const dm=dismissed(),t=stamp();return AL.filter(x=>dm[x.key+"|"+t]!==t)}
+function renderAlerts(){AL=computeAlerts();const v=visAlerts(),b=$("nbadge");b.hidden=!v.length;b.textContent=v.length;$("bell").setAttribute("aria-label",v.length?`Alerts, ${v.length} new`:"Alerts");
+if(!$("acenter").hidden)drawCenter();
+if(!DATAREADY)return;const fresh=v.filter(x=>!SHOWN.has(x.key+"|"+x.text));
+if(fresh.length&&$("acenter").hidden&&!$("adrawer").classList.contains("open")){fresh.forEach(x=>SHOWN.add(x.key+"|"+x.text));const p=$("alertpop");
+p.innerHTML=`<b>${fresh.length} new alert${fresh.length===1?"":"s"}</b><ul>${fresh.slice(0,4).map(x=>`<li><b>${esc(BY[x.id].name)}:</b> ${esc(x.text)}</li>`).join("")}${fresh.length>4?`<li>and ${fresh.length-4} more</li>`:""}</ul><div class="grow"><button class="btn sm primary" data-aact="view">View alerts</button><button class="btn sm" data-aact="close">Dismiss</button></div>`;p.hidden=false}
+else if(!v.length)$("alertpop").hidden=true}
+function drawCenter(){const v=visAlerts(),c=$("acenter"),hid=AL.length-v.length;
+c.innerHTML=`<div class="dh" style="margin-bottom:4px"><h2 style="font-size:22px">Alerts</h2><span><button class="btn sm" data-aact="settings">Alert settings</button> <button class="x" data-aact="close" aria-label="Close alerts">×</button></span></div>
+${!S.alerts.on?`<p class="meta">Alerts are off. Turn them on in Alert settings.</p>`:v.length?v.map(x=>`<div class="arow"><div><b><button class="cardlink" data-open="${esc(x.id)}" data-aact="close">${esc(BY[x.id].name)}</button></b><span>${esc(x.text)}</span><div class="meta">${x.decks.map(esc).join(", ")}</div></div><button class="btn sm" data-dis="${esc(x.key)}">Dismiss</button></div>`).join("")+`<div class="grow" style="margin-top:8px"><button class="btn sm" data-aact="disall">Dismiss all for today</button></div>`:`<p class="meta">No alerts right now.</p>`}
+${hid>0?`<p class="meta">${hid} dismissed today. <button class="sbtn" data-aact="restore">Show again</button></p>`:""}`}
+function openCenter(o){$("acenter").hidden=!o;$("bell").setAttribute("aria-expanded",o);if(o){$("alertpop").hidden=true;drawCenter();const f=$("acenter").querySelector("button");f&&f.focus()}}
+$("bell").onclick=()=>openCenter($("acenter").hidden);
+document.addEventListener("click",e=>{const t=e.target.closest("[data-aact],[data-dis]");
+if(!t){if(!$("acenter").hidden&&!e.target.closest("#acenter,#bell"))openCenter(false);return}
+if(t.dataset.dis){const o=dismissed();o[t.dataset.dis+"|"+stamp()]=stamp();setDismissed(o);renderAlerts();return}
+const a=t.dataset.aact;if(t.dataset.open)openDetail(t.dataset.open);if(a==="view")openCenter(true);else if(a==="close"){$("alertpop").hidden=true;openCenter(false)}
+else if(a==="settings"){openCenter(false);openAS(true)}
+else if(a==="disall"){const o=dismissed();visAlerts().forEach(x=>o[x.key+"|"+stamp()]=stamp());setDismissed(o);renderAlerts()}
+else if(a==="restore"){setDismissed({});SHOWN.clear();renderAlerts();openCenter(true)}});
+/* settings drawer */
+function ruleHtml(mode,r){const c=cfgOf(mode,r),pid=`${mode}-${r.id}`;
+const ps=r.p.map(x=>x.t==="sel"?`<label>${x.l} <select data-m="${mode}" data-r="${r.id}" data-pk="${x.k}">${PROBS.map(o=>`<option ${o===c.p[x.k]?"selected":""}>${o}</option>`).join("")}</select></label>`:`<label>${x.l} <input type="number" step="any" data-m="${mode}" data-r="${r.id}" data-pk="${x.k}" data-t="${x.t}" value="${PCONV[x.t].to(c.p[x.k])}"> ${PCONV[x.t].u()}</label>`).join("");
+return`<div class="rule"><label class="sw"><span>${r.label}<small>${r.desc}</small></span><input type="checkbox" role="switch" data-m="${mode}" data-r="${r.id}" data-on ${c.on?"checked":""}></label>${r.p.length?`<div class="rparams" ${c.on?"":"hidden"}>${ps}</div>`:""}</div>`}
+function drawAS(){const A=S.alerts,dn=Object.keys(DECKS),gs=[...new Set(RULES.map(r=>r.g))];
+const modeSel=(cur,k)=>`<select data-deck="${esc(k)}" aria-label="Alert level for ${esc(k)}">${[["off","Off"],["normal","Normal"],["advanced","Advanced"]].map(o=>`<option value="${o[0]}" ${cur===o[0]?"selected":""}>${o[1]}</option>`).join("")}</select>`;
+$("adrawer").innerHTML=`<div class="dh"><h2>Alert settings</h2><button class="x" data-aclose aria-label="Close alert settings">×</button></div>
+<p class="meta" style="margin:0">Alerts pop up on the main screen when the data updates, and collect under the bell. They cover the decks you pick below. Email alerts are not available yet.</p>
+<label class="sw"><span>Turn on alerts</span><input type="checkbox" role="switch" id="aon" ${A.on?"checked":""}></label>
+<div class="agroup"><h3>Which decks</h3><p class="meta" style="margin:0 0 6px">Normal uses a short list of simple alerts. Advanced uses the full list below. Each deck can have its own level.</p>
+<div class="sw" style="cursor:default"><span>New decks start at</span>${modeSel(A.defMode==="off"?"off":A.defMode,"*")}</div>
+${dn.map(k=>`<div class="sw" style="cursor:default"><span>${esc(k)}<small>${DECKS[k].length} areas</small></span>${modeSel(deckMode(k),k)}</div>`).join("")}</div>
+<div class="agroup"><h3>Only near me</h3><div class="rparams"><label>Ignore areas farther than <input type="number" min="0" step="10" id="amax" value="${A.maxDist?(imp()?Math.round(A.maxDist):Math.round(A.maxDist*1.609)):0}"> ${imp()?"mi":"km"}</label> <span class="meta">0 means no limit. ${S.geo?"Measured from "+esc(S.geo.label||"your location")+".":"Needs a distance location in Options."}</span></div></div>
+<div class="agroup"><h3>Normal alerts</h3>${RULES.filter(r=>r.n).map(r=>ruleHtml("normal",r)).join("")}</div>
+<div class="agroup"><h3>Advanced alerts</h3><p class="meta" style="margin:0">Turn on any of these for decks set to Advanced. Thresholds follow your chosen units.</p>
+${gs.map(g=>`<details class="dt" ${g==="Snow"?"open":""}><summary>${g}</summary>${RULES.filter(r=>r.g===g).map(r=>ruleHtml("adv",r)).join("")}</details>`).join("")}</div>
+<div class="agroup"><button class="btn" id="atest">Show current alerts now</button></div>`}
+function openAS(o){const d=$("adrawer");if(o)drawAS();d.classList.toggle("open",o);$("aback").classList.toggle("open",o);if(o){const f=d.querySelector("button");f&&f.focus()}else renderAlerts()}
+$("aback").onclick=()=>openAS(false);
+$("adrawer").addEventListener("click",e=>{if(e.target.closest("[data-aclose]"))openAS(false);if(e.target.id==="atest"){SHOWN.clear();DATAREADY=true;openAS(false);renderAlerts();if(!visAlerts().length)toast("No alerts match right now")}});
+$("adrawer").addEventListener("change",e=>{const t=e.target,A=S.alerts;
+if(t.id==="aon"){A.on=t.checked;save();renderAlerts();return}
+if(t.id==="amax"){const v=Math.max(0,+t.value||0);A.maxDist=imp()?v:v/1.609;save();renderAlerts();return}
+if(t.dataset.deck!=null){if(t.dataset.deck==="*")A.defMode=t.value;else A.decks[t.dataset.deck]=t.value;save();renderAlerts();return}
+const r=RBY[t.dataset.r];if(!r)return;const m=t.dataset.m;A.cfg[m]=A.cfg[m]||{};const c=A.cfg[m][r.id]=A.cfg[m][r.id]||{};
+if(t.hasAttribute("data-on")){c.on=t.checked;const pr=t.closest(".rule").querySelector(".rparams");if(pr)pr.hidden=!t.checked}
+else if(t.dataset.pk){c.p=c.p||{};c.p[t.dataset.pk]=t.tagName==="SELECT"?t.value:PCONV[t.dataset.t].from(+t.value)}
+save();SHOWN.clear();renderAlerts()});
  
 const AMAX=MAX;
 /* ---------- shared bits ---------- */
@@ -615,14 +817,6 @@ function terrainHtml(a){const T=terr(a);if(!T)return`<div class="zone">Lift and 
 const row=(n,v)=>v?`<div class="row"><span>${n}</span><div class="track"><i style="width:${v[0]/v[1]*100}%"></i></div><b>${v[0]}/${v[1]}</b></div>`:"";
 return`<div class="prog">${row("Lifts",T.lifts)}${row("Trails",T.trails)}</div><div class="meta" style="font-size:12px">From the resort's website, ${new Date(T.fetched).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</div>`}
 const ladder=n=>`<span class="ladder" aria-hidden="true">${[1,2,3,4,5].map(i=>`<i style="${i<=n?`background:var(--d${n})`:""}"></i>`).join("")}</span>`;
-function alerts(a,d){const A=S.al;if(!A.on)return"";const c=[];
-if(A.storm&&f3(d)>=A.stormIn)c.push(`Big storm: ${snr(f3(d))} ${su()} in 3 days`);
-if(A.powder&&d.s24>=A.powderIn)c.push(`Powder day: ${snr(d.s24)} ${su()} overnight`);
-if(A.aval&&(a.zone||S.avalIn)&&d.aval!==d.prev)c.push(`Avalanche danger ${d.aval>d.prev?"up":"down"}: ${LEVELS[d.prev]} to ${LEVELS[d.aval]}`);
-if(A.rain&&d.rain.some(Boolean))c.push("Rain on snow possible");
-if(A.wind&&d.wind>=35)c.push(`High wind: ${wd(d.wind)}`);
-return c.length?`<div class="alerts">${c.map(x=>`<span class="al">${esc(x)}</span>`).join("")}</div>`:""}
- 
 /* ---------- list, filter, sort ---------- */
 const SORTS=[["mine","My order"],["name","Name"],["s24","Most snow, last 24 hours"],["s72","Most snow, last 72 hours"],["base","Deepest base"],["f3","Most snow, next 3 days"],["f7","Most snow, next 7 days"],["dist","Closest to me"],["score","Best score"]];
 const KEY={s24:(a,d)=>d.s24,s72:(a,d)=>d.s72,base:(a,d)=>d.base,f3:(a,d)=>f3(d),f7:(a,d)=>f7(d),score:(a,d)=>score(a,d),dist:a=>dist(a)};
@@ -638,19 +832,19 @@ const canReorder=()=>S.sort==="mine"&&S.layout==="cards"&&!SHARED&&S.pass==="all
 /* ---------- cards ---------- */
 function card(a,i,n,ro){const d=data(a),mx=Math.max(8,...d.fc);
 const bars=d.fc.map((v,k)=>`<div class="bar"><em>${sn(v)}</em><i style="height:${Math.max(3,v/mx*58)}px"></i><span>${dname(d,k)}</span></div>`).join("");
-const terrain=a.zone?`<div class="zone">Backcountry zone. No lifts, so check the avalanche forecast before you go.</div>`:terrainHtml(a);
-const showAv=a.zone||S.avalIn;
+const terrain=!CD("terrain")?"":a.zone?`<div class="zone">Backcountry zone. No lifts, so check the avalanche forecast before you go.</div>`:terrainHtml(a);
+const showAv=(a.zone||S.avalIn)&&CD("aval");
 const av=showAv?`<div class="av">${ladder(d.aval)}<strong>${d.aval?`Avalanche danger: ${d.aval} ${LEVELS[d.aval]}`:"No avalanche rating right now"}</strong></div>`+(d.live&&d.avalZone?`<div class="zone" style="margin-top:-6px">${esc(d.avalZone)}${d.off?" · off-season":""}</div>`:""):"";
 const cond=S.cond?`<div><span class="meta">Estimated conditions: </span><span class="cond">${d.cond}</span></div>`:"";
 const wx=S.wx?`<div class="wx"><div class="wxn"><span>Now <b>${tp(d.now)}</b></span><span>Wind <b>${wd(d.wind)}</b></span></div>
 <div class="wxd">${d.temps.map((t,k)=>`<div>${dname(d,k).slice(0,3)}<b>${tp(t.hi)}</b>${tp(t.lo)}${d.rain[k]?`<div class="rain">Rain</div>`:""}</div>`).join("")}</div></div>`:"";
 const sc=score(a,d),bd=bestDay(d),ds=dist(a),pass=passOf(a);
-return`<article class="card" ${ro?'draggable="true"':""} data-id="${esc(a.id)}"><div class="ch"><div><h2><button class="cardlink" data-open="${esc(a.id)}">${S.sort==="score"&&S.rank?"#"+(i+1)+" ":""}${esc(a.name)}</button></h2><div class="meta">${a.st} · ${a.zone?"Backcountry zone":"Resort"}${pass&&pass!=="None"?` · <span class="tag">${pass}</span>`:""}${ds!=null?` · ${mi(ds)}`:""}</div></div>
+return`<article class="card" ${ro?'draggable="true"':""} data-id="${esc(a.id)}"><div class="ch"><div><h2><button class="cardlink" data-open="${esc(a.id)}">${S.sort==="score"&&S.rank?"#"+(i+1)+" ":""}${esc(a.name)}</button></h2><div class="meta">${a.st} · ${a.zone?"Backcountry zone":"Resort"}${CD("pass")&&pass&&pass!=="None"?` · <span class="tag">${pass}</span>`:""}${CD("dist")&&ds!=null?` · ${mi(ds)}`:""}</div></div>
 <div class="ctl">${ro?`<button class="x" data-mv="-1" data-id="${esc(a.id)}" aria-label="Move ${esc(a.name)} earlier" ${i===0?"disabled":""}>‹</button><button class="x" data-mv="1" data-id="${esc(a.id)}" aria-label="Move ${esc(a.name)} later" ${i===n-1?"disabled":""}>›</button>`:""}${SHARED?"":`<button class="x" data-rm="${esc(a.id)}" aria-label="Remove ${esc(a.name)}">×</button>`}</div></div>
-${S.rank?`<div class="scr"><b>${sc}</b><span>${grade(sc)} for skiing now</span></div>`:""}
+${S.rank&&CD("score")?`<div class="scr"><b>${sc}</b><span>${grade(sc)} for skiing now</span></div>`:""}
 ${alerts(a,d)}
-<div class="stats"><div class="stat"><b>${sn(d.s24)}<small>${su()}</small></b><span>Last 24 hours</span></div><div class="stat"><b>${sn(d.s72)}<small>${su()}</small></b><span>Last 72 hours</span></div><div class="stat"><b>${sn(d.base)}<small>${su()}</small></b><span>Base depth</span></div></div>
-${cond}<div class="fc"><h3>7-day snowfall forecast (${su()})</h3><div class="bars">${bars}</div></div><div class="meta">Best day: <b>${dname(d,bd.i)}</b> (${bd.score})</div>${wx}${terrain}${av}${d.missing?`<div class="zone">Live data for this area is not available yet.</div>`:""}</article>`}
+${CD("stats")?`<div class="stats"><div class="stat"><b>${sn(d.s24)}<small>${su()}</small></b><span>Last 24 hours</span></div><div class="stat"><b>${sn(d.s72)}<small>${su()}</small></b><span>Last 72 hours</span></div><div class="stat"><b>${sn(d.base)}<small>${su()}</small></b><span>Base depth</span></div></div>`:""}
+${cond}${CD("bars")?`<div class="fc"><h3>7-day snowfall forecast (${su()})</h3><div class="bars">${bars}</div></div>`:""}${CD("best")?`<div class="meta">Best day: <b>${dname(d,bd.i)}</b> (${bd.score})</div>`:""}${wx}${terrain}${av}${d.missing?`<div class="zone">Live data for this area is not available yet.</div>`:""}</article>`}
 function renderCards(l){const ro=canReorder();return`<div class="grid">${l.length?l.map((a,i)=>card(a,i,l.length,ro)).join(""):emptyHtml()}</div>`}
 function emptyHtml(){return sel().length?`<div class="empty"><h2>Nothing matches</h2><p>Your pass filter hides everything in this deck.</p></div>`:`<div class="empty"><h2>No areas yet</h2><p>Choose mountains or backcountry zones to start your deck. You can add up to ${AMAX}.</p></div>`}
  
@@ -727,7 +921,7 @@ $("deckbar").hidden=!!SHARED;$("toggle").disabled=!!SHARED;
 const so=$("sort");so.innerHTML=SORTS.filter(x=>(x[0]!=="dist"||S.geo)&&(x[0]!=="score"||S.rank)).map(x=>`<option value="${x[0]}">${x[1]}</option>`).join("");
 if(![...so.options].some(o=>o.value===S.sort))S.sort="mine";so.value=S.sort;$("pass").value=S.pass;
 const sb=$("sharebar");if(SHARED){sb.hidden=false;sb.innerHTML=`<span>Shared deck: <b>${esc(SHARED.name)}</b> (${SHARED.ids.length} areas). It is a copy, so your own decks are not changed.</span><span><button class="btn sm primary" id="sbsave">Save as my deck</button> <button class="btn sm" id="sbclose">Close</button></span>`}else sb.hidden=true;
-renderView();renderList();save();if(DET)renderDetail(true);sync()}
+renderView();renderList();save();if(DET)renderDetail(true);sync();renderAlerts()}
  
 /* ---------- decks and sharing ---------- */
 const uniq=n=>{let k=n,i=2;while(DECKS[k])k=n+" "+i++;return k};
@@ -790,18 +984,36 @@ counts();
 function theme(){if(S.theme==="auto")delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=S.theme}
 function openD(o){$("drawer").classList.toggle("open",o);$("back").classList.toggle("open",o);$("gear").setAttribute("aria-expanded",o);if(o)$("dclose").focus();else if(!DET)$("gear").focus()}
 $("gear").onclick=()=>openD(true);$("dclose").onclick=$("back").onclick=()=>openD(false);
+const LEGACY=[["rank","Rank mountains","Adds a 0 to 100 score and a Best score sort."],["cond","Estimated snow conditions","Powder, packed powder, slush and so on, guessed from recent snow and temperature."],["wx","Detailed weather","Current temperature, wind, 7-day highs and lows, and rain."]];
+const tgl=(g,l)=>l.map(x=>`<label class="sw"><span>${x[1]}</span><input type="checkbox" role="switch" data-tg="${g}" data-key="${x[0]}"></label>`).join("");
+$("cardtog").innerHTML=LEGACY.map(x=>`<label class="sw"><span>${x[1]}<small>${x[2]}</small></span><input type="checkbox" role="switch" data-k="${x[0]}"></label>`).join("")+tgl("card",CARDT);
+$("pagetog").innerHTML=tgl("page",PAGET);
 function sync(){document.querySelectorAll("[data-k]").forEach(el=>{const k=el.dataset.k.split("."),v=k.length>1?S[k[0]][k[1]]:S[k[0]];if(el.type==="checkbox")el.checked=!!v;else el.value=v});
+document.querySelectorAll("[data-tg]").forEach(el=>el.checked=el.dataset.tg==="card"?CD(el.dataset.key):PG(el.dataset.key));
 document.querySelectorAll("[data-seg]").forEach(b=>b.setAttribute("aria-pressed",S[b.dataset.seg]===b.dataset.v));
-document.querySelectorAll(".sub2 input[type=checkbox],.sub2 select").forEach(el=>el.disabled=!S.al.on);$("geo").checked=!!S.geo}
-$("drawer").addEventListener("change",e=>{const el=e.target;if(!el.dataset.k)return;const k=el.dataset.k.split("."),v=el.type==="checkbox"?el.checked:isNaN(el.value)?el.value:+el.value;
+$("locnow").textContent=S.geo?"Now: "+(S.geo.label||"your location"):"Off. No distances are shown.";$("locoff").disabled=!S.geo}
+$("drawer").addEventListener("change",e=>{const el=e.target;
+if(el.dataset.tg){S[el.dataset.tg==="card"?"card":"page"][el.dataset.key]=el.checked;renderAll();return}
+if(!el.dataset.k)return;const k=el.dataset.k.split("."),v=el.type==="checkbox"?el.checked:isNaN(el.value)?el.value:+el.value;
 if(k.length>1)S[k[0]][k[1]]=v;else S[k[0]]=v;renderAll()});
 document.addEventListener("click",e=>{const b=e.target.closest("[data-seg]");if(b){S[b.dataset.seg]=b.dataset.v;theme();renderAll()}});
-$("geo").addEventListener("change",e=>{const m=$("geomsg");
-if(!e.target.checked){S.geo=null;m.textContent="";renderAll();return}
-if(!navigator.geolocation){e.target.checked=false;m.textContent="This browser cannot share location.";return}
+/* distance location */
+const PRESETS=[["Denver",39.74,-104.99],["Boulder",40.01,-105.27],["Fort Collins",40.59,-105.08],["Colorado Springs",38.83,-104.82],["Grand Junction",39.06,-108.55],["Durango",37.27,-107.88],["Salt Lake City",40.76,-111.89],["Park City",40.65,-111.5],["Ogden",41.22,-111.97],["Provo",40.23,-111.66],["Albuquerque",35.08,-106.65],["Bozeman",45.68,-111.04]];
+const setGeo=(lat,lon,label)=>{S.geo={lat:+(+lat).toFixed(3),lon:+(+lon).toFixed(3),label};$("locres").innerHTML="";renderAll()};
+$("locpre").innerHTML=`<span class="meta" style="width:100%">Quick picks</span>`+PRESETS.map((p,i)=>`<button class="chip" data-pre="${i}">${p[0]}</button>`).join("");
+$("locpre").addEventListener("click",e=>{const b=e.target.closest("[data-pre]");if(b){const p=PRESETS[+b.dataset.pre];setGeo(p[1],p[2],p[0]);$("geomsg").textContent="Distances are straight-line, not drive time."}});
+$("locoff").onclick=()=>{S.geo=null;$("geomsg").textContent="";renderAll()};
+$("locme").onclick=()=>{const m=$("geomsg");if(!navigator.geolocation){m.textContent="This browser cannot share location.";return}
 m.textContent="Waiting for your browser to share location...";
-navigator.geolocation.getCurrentPosition(p=>{S.geo={lat:+p.coords.latitude.toFixed(2),lon:+p.coords.longitude.toFixed(2)};m.textContent="Distances are straight-line, not drive time.";renderAll()},
-()=>{S.geo=null;e.target.checked=false;m.textContent="Location was not shared. You can turn it on in your browser settings.";renderAll()},{timeout:10000,maximumAge:36e5})});
+navigator.geolocation.getCurrentPosition(p=>{setGeo(p.coords.latitude,p.coords.longitude,"your location");m.textContent="Distances are straight-line, not drive time."},()=>{m.textContent="Location was not shared. You can allow it in your browser settings, or pick a place below."},{timeout:10000,maximumAge:36e5})};
+async function placeSearch(){const q=$("locq").value.trim(),m=$("geomsg"),r=$("locres");if(!q)return;r.innerHTML="";m.textContent="Searching...";
+try{const j=await (await fetch("https://geocoding-api.open-meteo.com/v1/search?count=6&language=en&format=json&name="+encodeURIComponent(q))).json();const l=(j.results||[]).filter(x=>x.latitude!=null);
+if(!l.length){m.textContent="No places found. Try a nearby town, or use a quick pick.";return}m.textContent="Pick a place:";
+r.innerHTML=l.map((x,i)=>`<button class="chip" data-res="${i}">${esc(x.name)}${x.admin1?", "+esc(x.admin1):""}${x.country_code?" "+esc(x.country_code):""}</button>`).join("");
+r.onclick=e=>{const b=e.target.closest("[data-res]");if(b){const x=l[+b.dataset.res];setGeo(x.latitude,x.longitude,x.name);m.textContent="Distances are straight-line, not drive time."}}}
+catch(e){m.textContent="Place search is not available right now. Use a quick pick, or your current location."}}
+$("locgo").onclick=placeSearch;$("locq").addEventListener("keydown",e=>{if(e.key==="Enter")placeSearch()});
+$("aopen").onclick=()=>{openD(false);openAS(true)};
 $("reset").onclick=()=>{S=clone(DEF);theme();renderAll()};
  
 /* ---------- routing and keys ---------- */
@@ -810,14 +1022,16 @@ if(h.indexOf("#area=")===0){let id="";try{id=decodeURIComponent(h.slice(6))}catc
 else if(h.indexOf("#share=")===0){const s=parseShare(h);if(s){SHARED=s;try{sessionStorage.setItem("snowdeck-share",JSON.stringify(s))}catch(e){}}history.replaceState(null,"",location.pathname+location.search);renderAll();return}
 closeDetail(true)}
 window.addEventListener("hashchange",route);
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if($("drawer").classList.contains("open"))openD(false);else if(DET)backFromDetail()});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if($("adrawer").classList.contains("open"))openAS(false);else if(!$("acenter").hidden)openCenter(false);else if($("drawer").classList.contains("open"))openD(false);else if(DET)backFromDetail()});
  
 /* ---------- start ---------- */
 theme();
 try{const s=JSON.parse(sessionStorage.getItem("snowdeck-share")||"null");if(s&&s.ids){const ids=validIds(s.ids);if(ids.length)SHARED={name:String(s.name||"Shared deck").slice(0,40),ids}}}catch(e){}
 renderAll();route();
 fetch("data/conditions.json?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.areas)return;LIVE=j;DC.clear();
-$("note").textContent="Live data, updated "+new Date(j.updated).toLocaleString()+". Lift and trail status is available for a few resorts so far."+(j.schema>=2?"":" Some new features need the newest data update.");renderAll()}).catch(()=>{});
+$("note").textContent="Live data, updated "+new Date(j.updated).toLocaleString()+". Lift and trail status is available for a few resorts so far."+(j.schema>=3?"":" Some new features need the newest data update.");renderAll()}).catch(()=>{}).finally(()=>{DATAREADY=true;renderAlerts()});
+const jf=(u,f)=>fetch(u+"?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j){f(j);renderAll()}}).catch(()=>{});
+jf("data/history.json",j=>HIST=j);jf("data/avy-history.json",j=>AVH=j);jf("data/avy-archive.json",j=>AVARC=j);
 fetch("data/terrain.json?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.resorts){TERR=j;renderAll()}}).catch(()=>{});
  
 </script>
