@@ -233,6 +233,11 @@ def main():
     feats = (get(AV + "/products/map-layer") or {}).get("features", [])
     print("  %d zones" % len(feats))
     avcache = {}
+    AVH = os.path.join(ROOT, "data", "avy-history.json")
+    try:
+        avy_hist = json.load(open(AVH)).get("areas", {})
+    except Exception:
+        avy_hist = {}
     result, ok = {}, 0
     for a in areas:
         print(a["id"])
@@ -244,7 +249,7 @@ def main():
             if a["id"] in pick:
                 dist, st = pick[a["id"]]
                 e.update(snow_from(sdata.get(st["stationTriplet"], {})))
-                e["snotel"] = {"name": st.get("name"), "km": round(dist, 1), "elev": st.get("elevation")}
+                e["snotel"] = {"id": st["stationTriplet"], "name": st.get("name"), "km": round(dist, 1), "elev": st.get("elevation")}
             try:
                 om = open_meteo(a)
                 if om:
@@ -255,6 +260,12 @@ def main():
                 z = avalanche_zone(a["lat"], a["lon"], feats)
                 zid, link, advice = z.pop("_zid"), z.pop("_link"), z.pop("_advice")
                 e.update(z)
+                if a["state"] == "CO":
+                    # Colorado forecasts are written by CAIC; avalanche.org republishes them.
+                    e["avalCenter"] = "CAIC"
+                    link = link or "https://avalanche.state.co.us/"
+                    if z.get("avalCenter") not in (None, "CAIC"):
+                        print("  note: Colorado zone matched center %s, not CAIC" % z.get("avalCenter"))
                 if zid and z["avalCenter"]:
                     try:
                         det = av_detail(z["avalCenter"], zid, avcache)
@@ -271,10 +282,14 @@ def main():
                 else:
                     e["prev"] = e["aval"]
                 hist = dict(prev_e.get("avHist") or {})
+                ah = avy_hist.setdefault(a["id"], {})
                 cur = (e.get("av", {}).get("danger") or {}).get("current") or {}
                 top = e["aval"] or max([v for v in cur.values() if v] or [0]) or None
                 if top:
                     hist[NOW.date().isoformat()] = top
+                    ah[NOW.date().isoformat()] = top
+                    for k in sorted(ah)[:-900]:
+                        del ah[k]
                 e["avHist"] = dict(sorted(hist.items())[-8:])
             result[a["id"]] = e
             ok += 1
@@ -284,7 +299,8 @@ def main():
                 result[a["id"]] = dict(old[a["id"]], stale=True)
         time.sleep(0.4)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    json.dump({"schema": 2, "updated": datetime.now(timezone.utc).isoformat(), "areas": result}, open(OUT, "w"), separators=(",", ":"))
+    json.dump({"schema": 3, "updated": datetime.now(timezone.utc).isoformat(), "areas": result}, open(OUT, "w"), separators=(",", ":"))
+    json.dump({"schema": 1, "areas": avy_hist}, open(AVH, "w"), separators=(",", ":"))
     print("Done: %d of %d areas updated" % (ok, len(areas)))
     sys.exit(0 if ok else 1)
  
