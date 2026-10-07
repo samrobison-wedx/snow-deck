@@ -15,9 +15,16 @@ def fetch(url, accept="text/html,application/xhtml+xml,*/*;q=0.8"):
     with urllib.request.urlopen(req, timeout=40) as r:
         return r.read().decode("utf-8", "replace")
  
+_robots = {}
 def allowed(url):
-    """Respect robots.txt. If it can't be read, skip the resort to be safe."""
+    """Respect robots.txt. If it can't be read, skip the resort to be safe. Answers are remembered per site."""
     p = urlparse(url)
+    key = (p.scheme, p.netloc, p.path)
+    if key not in _robots:
+        _robots[key] = _allowed(url, p)
+    return _robots[key]
+ 
+def _allowed(url, p):
     try:
         rp = urllib.robotparser.RobotFileParser()
         try:
@@ -39,12 +46,30 @@ def page_text(raw):
     raw = re.sub(r"(?is)<(script|style).*?</\1>", " ", raw)
     return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw)))
  
-def pull(text, pattern):
-    m = re.search(pattern, text, re.I)
-    if not m:
-        return None
-    o, t = int(m.group(1)), int(m.group(2))
-    return [o, t] if 0 <= o <= t and t > 0 else None
+# Common ways resorts write "open / total". Used when a source has no patterns of its own.
+# Each pattern must capture (open, total) in that order.
+NEXT = r"(?!\s*(?:open)?\s*:?\s*\d+\s*(?:/|of|out of)\s*\d)"  # not followed by another "n / m" (then it is the next label, not ours)
+DEFAULTS = {
+    "lifts": [r"(\d+)\s*(?:/|of|out of)\s*(\d+)\s*lifts?\b" + NEXT,
+              r"\blifts?(?:\s*open)?\s*:?\s*(\d+)\s*(?:/|of|out of)\s*(\d+)",
+              r"\bopen lifts?\s*:?\s*(\d+)\s*(?:/|of|out of)\s*(\d+)"],
+    "trails": [r"(\d+)\s*(?:/|of|out of)\s*(\d+)\s*(?:trails?|runs?)\b" + NEXT,
+               r"\b(?:trails?|runs?)(?:\s*open)?\s*:?\s*(\d+)\s*(?:/|of|out of)\s*(\d+)",
+               r"\bopen (?:trails?|runs?)\s*:?\s*(\d+)\s*(?:/|of|out of)\s*(\d+)"],
+}
+LIMIT = {"lifts": 60, "trails": 500}  # a bigger total is almost certainly a misread
+ 
+def pull(text, patterns, kind="lifts"):
+    if isinstance(patterns, str):
+        patterns = [patterns]
+    for pat in patterns:
+        m = re.search(pat, text, re.I)
+        if not m:
+            continue
+        o, t = int(m.group(1)), int(m.group(2))
+        if 0 <= o <= t and 0 < t <= LIMIT.get(kind, 500):
+            return [o, t]
+    return None
  
 def main():
     sources = json.load(open(os.path.join(ROOT, "terrain-sources.json")))
@@ -52,29 +77,40 @@ def main():
         res = json.load(open(OUT)).get("resorts", {})
     except Exception:
         res = {}
-    ok = 0
+    ok, good, bad = 0, [], []
     for s in sources:
         print(s["id"])
         try:
+            if s.get("enabled") is False:
+                continue
             if not allowed(s["url"]):
                 print("  skipped: robots.txt does not allow it, or could not be read")
+                bad.append((s["id"], "robots.txt"))
                 continue
             text = page_text(fetch(s["url"]))
-            e = {k: pull(text, s[k]) for k in ("lifts", "trails") if s.get(k)}
+            e = {k: pull(text, s.get(k) or DEFAULTS[k], k) for k in ("lifts", "trails")}
             e = {k: v for k, v in e.items() if v}
             if not e:
                 print("  no numbers found (page layout may have changed or the numbers load after the page opens)")
                 print("  page text starts:", text[:300])
+                bad.append((s["id"], "no numbers found"))
                 continue
             e["fetched"] = datetime.now(timezone.utc).isoformat()
             res[s["id"]] = e
             ok += 1
+            good.append(s["id"])
             print("  ", e)
         except Exception as ex:
             print("  failed:", ex)
+            bad.append((s["id"], "error: %s" % str(ex)[:80]))
         time.sleep(2)
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump({"updated": datetime.now(timezone.utc).isoformat(), "resorts": res}, open(OUT, "w"), separators=(",", ":"))
+    print("\n=== SUMMARY ===")
+    print("Working (%d): %s" % (len(good), ", ".join(good) or "none"))
+    print("Needs attention (%d):" % len(bad))
+    for n, why in bad:
+        print("  - %s: %s" % (n, why))
     print("Done: %d of %d resorts updated" % (ok, len(sources)))
  
 if __name__ == "__main__":
