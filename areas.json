@@ -9,7 +9,8 @@
     "base_ft": 10780,
     "top_ft": 13050,
     "web": "https://www.arapahoebasin.com/",
-    "cam": "https://www.arapahoebasin.com/mountain-cams/"
+    "cam": "https://www.arapahoebasin.com/mountain-cams/",
+    "trail": "https://www.arapahoebasin.com/trail-maps/"
   },
   {
     "id": "Aspen Snowmass",
@@ -20,7 +21,8 @@
     "lon": -106.949,
     "base_ft": 8000,
     "top_ft": 12500,
-    "web": "https://www.aspensnowmass.com/"
+    "web": "https://www.aspensnowmass.com/",
+    "trail": "https://www.aspensnowmass.com/our-mountains/snowmass/trail-maps"
   },
   {
     "id": "Beaver Creek",
@@ -32,7 +34,8 @@
     "base_ft": 8100,
     "top_ft": 11440,
     "web": "https://www.beavercreek.com/",
-    "cam": "https://www.beavercreek.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+    "cam": "https://www.beavercreek.com/the-mountain/mountain-conditions/mountain-cams.aspx",
+    "trail": "https://www.beavercreek.com/the-mountain/about-the-mountain/trail-map.aspx"
   },
   {
     "id": "Breckenridge",
@@ -44,7 +47,8 @@
     "base_ft": 9600,
     "top_ft": 12998,
     "web": "https://www.breckenridge.com/",
-    "cam": "https://www.breckenridge.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+    "cam": "https://www.breckenridge.com/the-mountain/mountain-conditions/mountain-cams.aspx",
+    "trail": "https://www.breckenridge.com/the-mountain/about-the-mountain/trail-map.aspx"
   },
   {
     "id": "Copper Mountain",
@@ -67,7 +71,8 @@
     "base_ft": 9375,
     "top_ft": 12162,
     "web": "https://www.skicb.com/",
-    "cam": "https://www.skicb.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+    "cam": "https://www.skicb.com/the-mountain/mountain-conditions/mountain-cams.aspx",
+    "trail": "https://www.skicb.com/the-mountain/about-the-mountain/trail-maps.aspx"
   },
   {
     "id": "Echo Mountain",
@@ -88,7 +93,8 @@
     "lon": -105.5827,
     "base_ft": 9200,
     "top_ft": 10600,
-    "web": "https://www.eldora.com/"
+    "web": "https://www.eldora.com/",
+    "trail": "https://www.eldora.com/the-mountain/maps/alpine-trail-map/"
   },
   {
     "id": "Hesperus",
@@ -108,7 +114,8 @@
     "lat": 40.4816,
     "lon": -106.8312,
     "base_ft": 6700,
-    "top_ft": 7140
+    "top_ft": 7140,
+    "trail": "https://co-steamboatsprings.civicplus.com/983/Trail-Maps"
   },
   {
     "id": "Keystone",
@@ -120,7 +127,8 @@
     "base_ft": 9280,
     "top_ft": 12408,
     "web": "https://www.keystoneresort.com/",
-    "cam": "https://www.keystoneresort.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+    "cam": "https://www.keystoneresort.com/the-mountain/mountain-conditions/mountain-cams.aspx",
+    "trail": "https://www.keystoneresort.com/the-mountain/about-the-mountain/trail-map.aspx"
   },
   {
     "id": "Loveland",
@@ -132,7 +140,8 @@
     "base_ft": 10800,
     "top_ft": 13010,
     "web": "https://www.skiloveland.com/",
-    "cam": "https://skiloveland.com/webcams"
+    "cam": "https://skiloveland.com/webcams",
+    "trail": "https://skiloveland.com/the-mountain/trail-map-mountain-stats/"
   },
   {
     "id": "Monarch",
@@ -143,7 +152,8 @@
     "lon": -106.3322,
     "base_ft": 10790,
     "top_ft": 11952,
-    "web": "https://www.skimonarch.com/"
+    "web": "https://www.skimonarch.com/",
+    "trail": "https://skimonarch.com/mountain-maps/"
   },
   {
     "id": "Powderhorn",
@@ -154,7 +164,8 @@
     "lon": -108.15,
     "base_ft": 8200,
     "top_ft": 9850,
-    "web": "https://www.powderhorn.com/"
+    "web": "https://www.powderhorn.com/",
+    "trail": "https://www.powderhorn.com/winter-trail-map/"
   },
   {
     "id": "Purgatory",
@@ -164,7 +175,8 @@
     "lat": 37.6303,
     "lon": -107.8143,
     "base_ft": 8793,
-    "top_ft": 10822
+    "top_ft": 10822,
+    "trail": "https://www.purgatory.ski/mountain/purgatory-mountain/trail-maps/"
   },
   {
     "id": "Silverton Mountain",
@@ -175,7 +187,8 @@
     "lon": -107.6663,
     "base_ft": 10400,
     "top_ft": 13487,
-    "web": "https://www.silvertonmountain.com/"
+    "web": "https://www.silvertonmountain.com/",
+    "trail": "https://silvertonmountain.com/mountain/trail-map/"
   },
   {
     "id": "Ski Cooper",
@@ -186,7 +199,8 @@
     "lon": -106.3022,
     "base_ft": 10500,
     "top_ft": 11700,
-    "web": "https://www.skicooper.com/"
+    "web": "https://www.skicooper.com/",
+    "trail": "https://www.skicooper.com/mountain-stats-map/"
   },
   {
     "id": "Steamboat",
@@ -197,7 +211,8 @@
     "lon": -106.8045,
     "base_ft": 6900,
     "top_ft": 10568,
-    "web": "https://www.steamboat.com/"
+    "web": "https://www.steamboat.com/",
+    "trail": "https://www.steamboat.com/the-mountain/trail-map/adventure-map"
   },
   {
     "id": "Sunlight",
@@ -208,7 +223,8 @@
     "lon": -107.3386,
     "base_ft": 7885,
     "top_ft": 9895,
-    "web": "https://www.sunlightmtn.com/"
+    "web": "https://www.sunlightmtn.com/",
+    "trail": "https://sunlightmtn.com/explore/trail-maps/"
   },
   {
     "id": "Telluride",
@@ -219,7 +235,8 @@
     "lon": -107.8123,
     "base_ft": 8750,
     "top_ft": 13150,
-    "web": "https://www.tellurideskiresort.com/"
+    "web": "https://www.tellurideskiresort.com/",
+    "trail": "https://tellurideskiresort.com/mountain/#TRAIL%20MAPS"
   },
   {
     "id": "Vail",
@@ -242,7 +259,8 @@
     "lon": -105.7625,
     "base_ft": 9000,
     "top_ft": 12060,
-    "web": "https://www.winterparkresort.com/"
+    "web": "https://www.winterparkresort.com/",
+    "trail": "https://www.playwinterpark.com/article/trails-maps"
   },
   {
     "id": "Wolf Creek",
@@ -253,7 +271,8 @@
     "lon": -106.7939,
     "base_ft": 10300,
     "top_ft": 11904,
-    "web": "https://www.wolfcreekski.com/"
+    "web": "https://www.wolfcreekski.com/",
+    "trail": "https://wolfcreekski.com/area-maps/"
   },
   {
     "id": "Alta",
@@ -265,7 +284,8 @@
     "base_ft": 8530,
     "top_ft": 10550,
     "web": "https://www.alta.com/",
-    "cam": "https://www.alta.com/weather"
+    "cam": "https://www.alta.com/weather",
+    "trail": "https://www.alta.com/plan-your-trip#maps"
   },
   {
     "id": "Beaver Mountain",
@@ -287,7 +307,8 @@
     "lon": -112.8498,
     "base_ft": 9600,
     "top_ft": 10920,
-    "web": "https://www.brianhead.com/"
+    "web": "https://www.brianhead.com/",
+    "trail": "https://www.brianhead.com/trail-map/"
   },
   {
     "id": "Brighton",
@@ -309,7 +330,8 @@
     "lon": -111.4783,
     "base_ft": 6570,
     "top_ft": 9570,
-    "web": "https://www.deervalley.com/"
+    "web": "https://www.deervalley.com/",
+    "trail": "https://www.deervalley.com/explore-the-mountain/interactive-grooming-map"
   },
   {
     "id": "Nordic Valley",
@@ -320,7 +342,8 @@
     "lon": -111.859,
     "base_ft": 5400,
     "top_ft": 6400,
-    "web": "https://www.nordicvalley.com/"
+    "web": "https://www.nordicvalley.com/",
+    "trail": "https://nordicmountain.com/mountain-info/trail-maps"
   },
   {
     "id": "Park City",
@@ -332,7 +355,8 @@
     "base_ft": 6900,
     "top_ft": 10026,
     "web": "https://www.parkcitymountain.com/",
-    "cam": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+    "cam": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/mountain-cams.aspx",
+    "trail": "https://www.parkcitymountain.com/the-mountain/about-the-mountain/trail-map.aspx"
   },
   {
     "id": "Powder Mountain",
@@ -343,7 +367,8 @@
     "lon": -111.781,
     "base_ft": 8300,
     "top_ft": 9422,
-    "web": "https://www.powdermountain.com/"
+    "web": "https://www.powdermountain.com/",
+    "trail": "https://powdermountain.com/trail-map"
   },
   {
     "id": "Snowbasin",
@@ -354,7 +379,8 @@
     "lon": -111.857,
     "base_ft": 6400,
     "top_ft": 9350,
-    "web": "https://www.snowbasin.com/"
+    "web": "https://www.snowbasin.com/",
+    "trail": "https://www.snowbasin.com/the-mountain/trail-maps/"
   },
   {
     "id": "Snowbird",
@@ -365,7 +391,8 @@
     "lon": -111.6556,
     "base_ft": 7760,
     "top_ft": 11000,
-    "web": "https://www.snowbird.com/"
+    "web": "https://www.snowbird.com/",
+    "trail": "https://www.snowbird.com/the-mountain/maps/winter-trail-map/"
   },
   {
     "id": "Solitude",
@@ -376,7 +403,8 @@
     "lon": -111.5919,
     "base_ft": 7994,
     "top_ft": 10488,
-    "web": "https://www.solitudemountain.com/"
+    "web": "https://www.solitudemountain.com/",
+    "trail": "https://www.solitudemountain.com/mountain-and-village/conditions-and-maps"
   },
   {
     "id": "Sundance",
