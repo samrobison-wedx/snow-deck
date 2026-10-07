@@ -134,7 +134,7 @@ select{font:inherit;padding:5px 8px;border-radius:8px;border:1px solid var(--lin
 </header>
 <p class="sub">Snowfall, forecast, open terrain and avalanche danger for the places you ski.</p>
 <div class="note">Preview with sample data. Live data appears once the data collector has run.</div>
-
+ 
 <section class="panel" id="panel" aria-label="Choose areas">
 <div id="gwrap"></div><div class="gm" id="gm" aria-live="polite">Pass and region groups are a starting point. Pass memberships change each season, so confirm yours before you buy.</div>
 <div class="panel-top">
@@ -144,11 +144,11 @@ select{font:inherit;padding:5px 8px;border-radius:8px;border:1px solid var(--lin
 </div>
 <div class="list" id="list"></div>
 </section>
-
+ 
 <div class="toolbar"><span class="meta">Drag cards or use the arrows to set your order.</span><span class="seg" id="tseg"><button data-seg="view" data-v="mine">My order</button><button data-seg="view" data-v="rank">Best score</button></span></div>
 <main class="grid" id="grid"></main>
 </div>
-
+ 
 <div class="back" id="back"></div>
 <aside class="drawer" id="drawer" role="dialog" aria-label="Options">
 <div class="dh"><h2>Options</h2><button class="x" id="dclose" aria-label="Close options">×</button></div>
@@ -193,7 +193,7 @@ const imp=()=>S.units==="imperial";
 const sn=v=>imp()?v:Math.round(v*2.54),su=()=>imp()?"in":"cm";
 const tp=f=>(imp()?Math.round(f):Math.round((f-32)*5/9))+"°";
 const wd=m=>imp()?m+" mph":Math.round(m*1.61)+" km/h";
-
+ 
 function rng(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}
 return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);h^=h>>>16;return(h>>>0)/4294967296}}
 function sample(a){const r=rng(a.id);const s24=Math.round(r()*r()*18),s72=s24+Math.round(r()*16),base=40+Math.round(r()*85);
@@ -203,14 +203,19 @@ const aval=1+Math.min(4,Math.floor(r()*r()*5.5)),prev=Math.max(1,Math.min(5,aval
 const lo=0,to=0,bands=[Math.min(5,aval+(r()>.6?1:0)),aval,Math.max(1,aval-(r()>.5?1:0))];
 const hi0=temps[0].hi,pool=hi0>=38?["Slushy","Wet snow","Variable"]:s24>=6?["Powder","Packed powder"]:hi0<=22?["Packed powder","Icy","Groomed"]:["Groomed","Variable","Icy","Crud"];
 return{s24,s72,base,fc,aval,prev,lo,to,bands,now,temps,rain,wind:Math.round(5+r()*r()*45),cond:pool[Math.floor(r()*pool.length)]}}
-let LIVE=null;
+let LIVE=null,TERR=null;
+function terr(a){const T=TERR&&TERR.resorts&&TERR.resorts[a.id];return T&&Date.now()-Date.parse(T.fetched)<12*36e5?T:null}
+const T0=a=>{const T=a.zone?null:terr(a);return T&&T.lifts?T.lifts[0]/T.lifts[1]*15:10.5};
+function terrainHtml(a){const T=terr(a);if(!T)return`<div class="zone">Lift and trail status: not reported yet.</div>`;
+const row=(n,v)=>v?`<div class="row"><span>${n}</span><div class="track"><i style="width:${v[0]/v[1]*100}%"></i></div><b>${v[0]}/${v[1]}</b></div>`:"";
+return`<div class="prog">${row("Lifts",T.lifts)}${row("Trails",T.trails)}</div><div class="meta" style="font-size:12px">From the resort's website, ${new Date(T.fetched).toLocaleString([],{month:"short",day:"numeric",hour:"numeric",minute:"2-digit"})}</div>`}
 function estCond(d){const h=d.temps[0].hi;return h>=40?"Slushy":h>=34?"Wet snow":d.s24>=6?"Powder":d.s24>=2?"Packed powder":"Variable"}
 function data(a){if(!LIVE)return sample(a);const Z=LIVE.areas[a.id];
 if(!Z)return{s24:0,s72:0,base:0,fc:[0,0,0,0,0,0,0],temps:Array(7).fill({hi:32,lo:20}),rain:Array(7).fill(false),wind:0,now:32,aval:0,prev:0,bands:[0,0,0],cond:"Variable",live:true,missing:true};
 return{...Z,aval:Z.aval||0,prev:Z.prev||Z.aval||0,bands:[0,0,0],live:true,off:Z.offSeason,cond:estCond(Z)}}
 const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()+i);return i===0?"Today":d.toLocaleDateString("en-US",{weekday:"short"})});
 const ladder=n=>`<span class="ladder" aria-hidden="true">${[1,2,3,4,5].map(i=>`<i style="${i<=n?`background:var(--d${n})`:""}"></i>`).join("")}</span>`;
-
+ 
 function alerts(a,d){const A=S.al;if(!A.on)return"";const c=[];
 const st=d.fc.slice(0,3).reduce((x,y)=>x+y,0);
 if(A.storm&&st>=A.stormIn)c.push(`Big storm: ${sn(st)} ${su()} in 3 days`);
@@ -219,14 +224,14 @@ if(A.aval&&(a.zone||S.avalIn)&&d.aval!==d.prev)c.push(`Avalanche danger ${d.aval
 if(A.rain&&d.rain.some(Boolean))c.push("Rain on snow possible");
 if(A.wind&&d.wind>=35)c.push(`High wind: ${wd(d.wind)}`);
 return c.length?`<div class="alerts">${c.map(x=>`<span class="al">${x}</span>`).join("")}</div>`:""}
-
+ 
 const CQ={Powder:15,"Packed powder":10,Groomed:8,Variable:4,Crud:3,Icy:1,"Wet snow":2,Slushy:2};
-function score(a,d){const f3=d.fc.slice(0,3).reduce((x,y)=>x+y,0);let p=Math.min(1,d.s24/12)*30+Math.min(1,f3/18)*20+Math.min(1,d.s72/24)*10+Math.min(1,d.base/120)*10+10.5+(CQ[d.cond]||0);
+function score(a,d){const f3=d.fc.slice(0,3).reduce((x,y)=>x+y,0);let p=Math.min(1,d.s24/12)*30+Math.min(1,f3/18)*20+Math.min(1,d.s72/24)*10+Math.min(1,d.base/120)*10+T0(a)+(CQ[d.cond]||0);
 if(d.rain.slice(0,3).some(Boolean))p-=10;if(d.wind>=35)p-=8;if(a.zone||S.avalIn)p-=d.aval>=4?10:d.aval===3?4:0;return Math.max(0,Math.min(100,Math.round(p)))}
 const grade=n=>n>=80?"Excellent":n>=60?"Good":n>=40?"Fair":"Slim";
 function card(a,i,rk,n){const d=data(a),mx=Math.max(8,...d.fc);
 const bars=d.fc.map((v,i)=>`<div class="bar"><em>${sn(v)}</em><i style="height:${Math.max(3,v/mx*58)}px"></i><span>${days[i]}</span></div>`).join("");
-const terrain=a.zone?`<div class="zone">Backcountry zone. No lifts, so check the avalanche forecast before you go.</div>`:`<div class="zone">Lift and trail status: coming soon.</div>`;
+const terrain=a.zone?`<div class="zone">Backcountry zone. No lifts, so check the avalanche forecast before you go.</div>`:terrainHtml(a);
 const showAv=a.zone||S.avalIn;
 const av=showAv?`<div class="av">${ladder(d.aval)}<strong>${d.aval?`Avalanche danger: ${d.aval} ${LEVELS[d.aval]}`:"No avalanche rating right now"}</strong></div>`+(d.live&&d.avalZone?`<div class="zone" style="margin-top:-6px">${d.avalZone}${d.off?" · off-season":""}</div>`:""):"";
 const cond=S.cond?`<div><span class="meta">${a.zone?"Estimated conditions":"Estimated conditions"}: </span><span class="cond">${d.cond}</span></div>`:"";
@@ -238,7 +243,7 @@ ${S.rank?`<div class="scr"><b>${sc}</b><span>${grade(sc)} for skiing now</span><
 ${alerts(a,d)}
 <div class="stats"><div class="stat"><b>${sn(d.s24)}<small>${su()}</small></b><span>Last 24 hours</span></div><div class="stat"><b>${sn(d.s72)}<small>${su()}</small></b><span>Last 72 hours</span></div><div class="stat"><b>${sn(d.base)}<small>${su()}</small></b><span>Base depth</span></div></div>
 ${cond}<div class="fc"><h3>7-day snowfall forecast (${su()})</h3><div class="bars">${bars}</div></div>${wx}${terrain}${av}${d.missing?`<div class="zone">Live data for this area is not available yet.</div>`:""}${d.live&&!d.missing?`<div class="meta" style="font-size:12px">Snow: ${d.snotel?d.snotel.name+" SNOTEL, "+Math.round(d.snotel.km)+" km away":"no nearby station"}. Forecast: National Weather Service.</div>`:""}</article>`}
-
+ 
 function render(){const rk=S.rank&&S.view==="rank";let list=sel.map(id=>BY[id]);
 if(rk)list=list.map(a=>[a,score(a,data(a))]).sort((x,y)=>y[1]-x[1]).map(x=>x[0]);
 $("grid").innerHTML=list.length?list.map((a,i)=>card(a,i,rk,list.length)).join(""):`<div class="empty"><h2>No areas yet</h2><p>Choose mountains or backcountry zones to start your deck. You can add up to ${MAX}.</p></div>`;
@@ -248,7 +253,7 @@ for(const z of [false,true]){const items=AREAS.filter(a=>a.zone===z&&(a.name+a.s
 h+=`<h3>${z?"Backcountry zones":"Resorts"}</h3>`;
 for(const a of items){const on=sel.includes(a.id),dis=!on&&sel.length>=MAX;h+=`<label class="opt${dis?" dis":""}"><input type="checkbox" data-id="${a.id}" ${on?"checked":""} ${dis?"disabled":""}>${a.name} <small>${a.st}</small></label>`}}
 $("list").innerHTML=h||`<p class="meta">No matches.</p>`}
-
+ 
 const picks={pass:new Set(),res:new Set(),bc:new Set()};
 const pick=(k,a)=>!picks[k].size||picks[k].has(a.st);
 const stList=bc=>[...new Set(AREAS.filter(a=>a.zone===bc).map(a=>a.st))].sort((x,y)=>ST[x].localeCompare(ST[y]));
@@ -279,7 +284,7 @@ $("grid").addEventListener("click",e=>{const id=e.target.dataset.rm;if(id){sel=s
 $("q").addEventListener("input",renderList);
 $("clear").onclick=()=>{sel=[];$("gm").textContent="";render()};
 $("toggle").onclick=()=>{const o=$("panel").classList.toggle("open");$("toggle").setAttribute("aria-expanded",o)};
-
+ 
 // options drawer
 function theme(){if(S.theme==="auto")delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=S.theme}
 function openD(o){$("drawer").classList.toggle("open",o);$("back").classList.toggle("open",o);$("gear").setAttribute("aria-expanded",o);if(o)$("dclose").focus()}
@@ -294,7 +299,9 @@ document.addEventListener("click",e=>{const b=e.target.closest("[data-seg]");if(
 $("reset").onclick=()=>{S=JSON.parse(JSON.stringify(DEF));theme();sync();render()};
 S.avalIn=false;theme();sync();render();
 fetch("data/conditions.json?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.areas)return;LIVE=j;
-document.querySelector(".note").textContent="Live data, updated "+new Date(j.updated).toLocaleString()+". Forecasts: National Weather Service. Snow: SNOTEL. Avalanche: avalanche.org. Lift and trail status is not available yet.";render()}).catch(()=>{});
+document.querySelector(".note").textContent="Live data, updated "+new Date(j.updated).toLocaleString()+". Forecasts: National Weather Service. Snow: SNOTEL. Avalanche: avalanche.org. Lift and trail status is available for a few resorts so far.";render()}).catch(()=>{});
+fetch("data/terrain.json?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.resorts){TERR=j;render()}}).catch(()=>{});
 </script>
 </body>
 </html>
+ 
