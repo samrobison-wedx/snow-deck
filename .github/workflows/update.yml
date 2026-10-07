@@ -1,3 +1,4 @@
+
 name: Update snow data
 on:
   schedule:
@@ -22,20 +23,19 @@ jobs:
         run: |
           git config user.name "snow-deck-bot"
           git config user.email "snow-deck-bot@users.noreply.github.com"
+          FILES="data/conditions.json data/avy-history.json"
           mkdir -p data
-          git add data/conditions.json
-          git diff --cached --quiet && exit 0
-          git commit -m "Update snow data"
           for i in 1 2 3 4 5; do
-            git push && exit 0
-            git fetch origin main
-            cp data/conditions.json "$RUNNER_TEMP/keep.json"
-            git reset --hard origin/main
-            mkdir -p data
-            cp "$RUNNER_TEMP/keep.json" data/conditions.json
-            git add data/conditions.json
+            for f in $FILES; do [ -f "$f" ] && git add "$f"; done
             git diff --cached --quiet && exit 0
             git commit -m "Update snow data"
+            git push && exit 0
+            git fetch origin main
+            mkdir -p "$RUNNER_TEMP/keep"
+            for f in $FILES; do [ -f "$f" ] && cp "$f" "$RUNNER_TEMP/keep/$(basename $f)"; done
+            git reset --hard origin/main
+            mkdir -p data
+            for f in $FILES; do [ -f "$RUNNER_TEMP/keep/$(basename $f)" ] && cp "$RUNNER_TEMP/keep/$(basename $f)" "$f"; done
           done
           exit 1
  
