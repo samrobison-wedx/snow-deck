@@ -273,6 +273,18 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 .trailwrap iframe{width:100%;height:420px;border:1px solid var(--line);border-radius:12px;background:var(--bg)}
 .aspects{display:inline-block;vertical-align:middle}
 @media (max-width:620px){.sumcards{grid-template-columns:1fr}.score-row{grid-template-columns:110px 1fr auto}.acenter{top:64px}}
+ 
+.newsbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.newslist{display:grid;gap:10px}
+.news{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 16px}
+.news a.nt{font:700 18px/1.25 "Bricolage Grotesque",system-ui,sans-serif;color:var(--ink);text-decoration:none}
+.news a.nt:hover{text-decoration:underline;color:var(--blue)}
+.news p{margin:6px 0 0;font-size:15px}
+.news .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.news .tags button{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:1px 10px;font-size:13px;color:var(--ink)}
+.news .tags button:hover{background:var(--ice)}
+.srcgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:4px 14px;font-size:14px;margin:8px 0}
+.srcgrid .bad{color:var(--mute)}
 </style>
 </head>
 <body>
@@ -311,7 +323,7 @@ details.dt summary{cursor:pointer;color:var(--blue);font-weight:600}
 </div>
 <div class="toolbar">
 <div class="tgroup">
-<span class="seg" id="lseg" role="group" aria-label="Layout"><button data-seg="layout" data-v="cards">Cards</button><button data-seg="layout" data-v="table">Table</button><button data-seg="layout" data-v="map">Map</button><button data-seg="layout" data-v="planner">Planner</button></span>
+<span class="seg" id="lseg" role="group" aria-label="Layout"><button data-seg="layout" data-v="cards">Cards</button><button data-seg="layout" data-v="table">Table</button><button data-seg="layout" data-v="map">Map</button><button data-seg="layout" data-v="planner">Planner</button><button data-seg="layout" data-v="news">News</button></span>
 </div>
 <div class="tgroup">
 <label class="meta" for="pass">Pass</label><select id="pass"><option value="all">All passes</option><option value="Epic">Epic</option><option value="Ikon">Ikon</option><option value="Indie">Indie</option><option value="None">No pass</option></select>
@@ -362,7 +374,7 @@ const passOf=a=>a.zone?"":(PASSOF[a.id]||"None");
 const LEVELS=["","Low","Moderate","Considerable","High","Extreme"];
 const MAX=48,$=id=>document.getElementById(id);
 const CARDT=[["pass","Pass tag"],["dist","Distance"],["score","Skiing score (needs Rank mountains)"],["alerts","Alert chips"],["stats","Snow totals (24 h, 72 h, base)"],["bars","7-day snowfall bars"],["best","Best day line"],["terrain","Lifts and trails"],["aval","Avalanche danger (zones)"]];
-const PAGET=[["tiles","Summary tiles"],["score","Skiing score and breakdown"],["storm","Storm tracker (hourly charts)"],["powder","Powder quality"],["best","Best day this week"],["models","Forecast models compared"],["summit","Base vs summit"],["swe","Snowpack vs history"],["fall","Snowfall vs history"],["hist","Recent snow depth"],["aval","Avalanche forecast (zones)"],["avhist","Avalanche danger vs history (zones)"],["trail","Trail map (resorts)"],["terrain","Lifts and trails (resorts)"],["links","Webcams and links"],["roads","Roads and passes (zones)"]];
+const PAGET=[["tiles","Summary tiles"],["score","Skiing score and breakdown"],["storm","Storm tracker (hourly charts)"],["powder","Powder quality"],["best","Best day this week"],["models","Forecast models compared"],["summit","Base vs summit"],["swe","Snowpack vs history"],["fall","Snowfall vs history"],["hist","Recent snow depth"],["aval","Avalanche forecast (zones)"],["avhist","Avalanche danger vs history (zones)"],["trail","Trail map (resorts)"],["terrain","Lifts and trails (resorts)"],["news","Recent news"],["links","Webcams and links"],["roads","Roads and passes (zones)"]];
 const allOn=l=>Object.fromEntries(l.map(x=>[x[0],true]));
 const DEF={theme:"auto",units:"imperial",rank:false,layout:"cards",sort:"mine",pass:"all",avalIn:false,cond:false,wx:false,geo:null,card:allOn(CARDT),page:allOn(PAGET),
 alerts:{on:false,defMode:"normal",decks:{},cfg:{normal:{},adv:{}},maxDist:0}};
@@ -485,7 +497,7 @@ function dist(a){if(!S.geo)return null;const R=3958.8,r=x=>x*Math.PI/180,dl=r(a.
 const h=Math.sin(dl/2)**2+Math.cos(r(S.geo.lat))*Math.cos(r(a.lat))*Math.sin(dn/2)**2;return 2*R*Math.asin(Math.sqrt(h))}
  
 /* ---------- history (snowpack/snowfall vs past years; avalanche ratings by day) ---------- */
-let HIST=null,AVH=null,AVARC=null;
+let HIST=null,AVH=null,AVARC=null,NEWS=null;
 function wyStart(){const n=new Date(),y=n.getMonth()>=9?n.getFullYear():n.getFullYear()-1;return new Date(y,9,1)}
 function sampleHist(a){const r=rng("h"+a.id),step=3,n=122,today=Math.floor((Date.now()-wyStart())/864e5/step),mk=(peak,nd)=>{const med=[],lo=[],hi=[],cur=[];
 for(let i=0;i<n;i++){const t=Math.min(1,i*step/200),sh=i*step<220?Math.sin(Math.PI*t):0,m=peak*sh;med.push(+m.toFixed(nd));lo.push(+(m*.55).toFixed(nd));hi.push(+(m*1.5).toFixed(nd));cur.push(i<=today?+(m*(.7+r()*.5)).toFixed(nd):null)}return{med,lo,hi,cur}};
@@ -494,6 +506,13 @@ function sampleAvy(a){const r=rng("v"+a.id),o={},t=wyStart(),days=Math.floor((Da
 function histFor(a){const d=data(a);if(!LIVE)return sampleHist(a);const id=d.snotel&&d.snotel.id;return HIST&&id&&HIST.stations&&HIST.stations[id]||null}
 function avySeries(a){const d=data(a);if(!LIVE)return sampleAvy(a);const o={};const arc=AVARC&&AVARC.areas&&AVARC.areas[a.id],cur=AVH&&AVH.areas&&AVH.areas[a.id];
 if(arc)Object.assign(o,arc);Object.assign(o,d.avHist||{});if(cur)Object.assign(o,cur);return o}
+ 
+/* ---------- news ---------- */
+const ago=iso=>{const m=Math.round((Date.now()-Date.parse(iso))/6e4);if(isNaN(m))return"";if(m<2)return"just now";if(m<60)return m+" min ago";const h=Math.round(m/60);if(h<24)return h+" hr ago";const d=Math.round(h/24);if(d<14)return d+(d===1?" day ago":" days ago");return new Date(iso).toLocaleDateString("en-US",{month:"short",day:"numeric"})};
+const newsFor=id=>NEWS&&NEWS.items?NEWS.items.filter(x=>x.areas&&x.areas.includes(id)):[];
+const srcName=id=>NEWS&&NEWS.sources&&NEWS.sources[id]?NEWS.sources[id].name:id;
+function newsItem(x,ids){const tags=(x.areas||[]).filter(i=>!ids||ids.includes(i)).slice(0,4);
+return`<article class="news"><a class="nt" href="${esc(x.link)}" target="_blank" rel="noopener noreferrer">${esc(x.title)}</a><div class="meta">${esc(srcName(x.src))} · ${esc(ago(x.date))}</div>${x.summary?`<p>${esc(x.summary)}</p>`:""}${tags.length?`<div class="tags">${tags.map(i=>BY[i]?`<button data-open="${esc(i)}">${esc(BY[i].name)}</button>`:"").join("")}</div>`:""}</article>`}
  
 /* ---- tooltip ---- */
 const tipEl=()=>$("tip");
@@ -653,6 +672,7 @@ if(PG("hist"))h+=sect("hist","Recent snow depth","",`<p class="lede" id="histled
 if(a.zone&&PG("aval"))h+=avalHtml(a,d,cn);
 if(a.zone&&PG("avhist"))h+=sect("avh","Avalanche danger vs history","How this season's danger ratings compare with earlier seasons, week by week.",`<div id="c-avhist"></div><div id="n-avhist"></div>`,true);
 if(!a.zone&&PG("trail"))h+=trailSection(a);
+if(PG("news")){const nl=newsFor(a.id).slice(0,6);h+=sect("news","Recent news","Headlines from ski and local news sources. Each opens the original article.",!NEWS?`<p class="meta">News has not been collected yet. Run "Update news" in GitHub Actions to start it.</p>`:nl.length?`<div class="newslist">${nl.map(x=>newsItem(x,[a.id])).join("")}</div>`:`<p class="meta">No recent articles mention ${esc(a.name)}.</p>`,true)}
 if(PG("links"))h+=sect("cam","Webcams and links","",`<div class="linkrow"><a class="btn" href="${esc(a.cam||"https://www.google.com/search?q="+q(a.name+(a.zone?" webcam":" ski resort webcam")))}" target="_blank" rel="noopener">${a.cam?"Open webcams":"Search for webcams"}</a>
 ${a.web?`<a class="btn" href="${esc(a.web)}" target="_blank" rel="noopener">${a.zone?"Website":"Resort website"}</a>`:""}
 <a class="btn" href="https://forecast.weather.gov/MapClick.php?lat=${a.lat}&lon=${a.lon}" target="_blank" rel="noopener">NWS forecast</a>
@@ -910,9 +930,24 @@ svg.addEventListener("focusin",e=>{const p=e.target.closest("[data-tipid]");if(p
 svg.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.dataset.open){e.preventDefault();openDetail(e.target.dataset.open)}})}
 function tipFor(p,x,y){const a=BY[p.dataset.tipid],d=data(a),M=MAPS[MAPM],v=M[1](a,d);showTip(x,y,a.name,[{key:"dot",color:"var(--blue)",value:M[3]==="score"?v+"":sn(v)+" "+su(),label:M[0]},{key:"dot",color:"var(--mute)",value:sn(d.base)+" "+su(),label:"base depth"}])}
  
+/* ---------- news ---------- */
+let NSCOPE="deck",NSRC="all",NMORE=30;
+function renderNews(l){if(!NEWS)return`<div class="empty"><h2>No news yet</h2><p>News is collected by its own scheduled job. Run "Update news" in GitHub Actions once, then refresh.</p></div>`;
+const ids=l.map(a=>a.id),srcs=NEWS.sources||{};let items=NEWS.items||[];
+if(NSCOPE==="deck")items=items.filter(x=>x.areas&&x.areas.some(i=>ids.includes(i)));
+if(NSRC!=="all")items=items.filter(x=>x.src===NSRC);
+const shown=items.slice(0,NMORE);
+const so=Object.entries(srcs).filter(([k,v])=>v.ok).map(([k,v])=>`<option value="${esc(k)}" ${k===NSRC?"selected":""}>${esc(v.name)}</option>`).join("");
+const bad=Object.entries(srcs).filter(([k,v])=>!v.ok);
+return`<div class="newsbar"><span class="seg" role="group" aria-label="Which news"><button data-nscope="deck" aria-pressed="${NSCOPE==="deck"}">About my deck</button><button data-nscope="all" aria-pressed="${NSCOPE==="all"}">All ski news</button></span>
+<label class="meta" for="nsrc">Source</label><select id="nsrc"><option value="all">All sources</option>${so}</select><span class="meta">${items.length} article${items.length===1?"":"s"} · updated ${esc(ago(NEWS.updated))}</span></div>
+<div class="newslist">${shown.length?shown.map(x=>newsItem(x,ids)).join(""):`<div class="empty" style="grid-column:auto"><h2>No articles found</h2><p>${NSCOPE==="deck"?"Nothing recent mentions the areas in this deck. Try All ski news.":"Nothing from this source yet."}</p></div>`}</div>
+${items.length>shown.length?`<div style="text-align:center;margin-top:12px"><button class="btn" id="nmore">Show more</button></div>`:""}
+<details class="dt" style="margin-top:14px"><summary>News sources (${Object.keys(srcs).length})</summary><div class="srcgrid">${Object.entries(srcs).map(([k,v])=>`<div class="${v.ok?"":"bad"}">${v.ok?"✓":"✗"} ${esc(v.name)} <span class="meta">${v.ok?v.count+" recent":esc(v.note||"not available")}</span></div>`).join("")}</div><p class="meta">Sources are listed in <code>news-sources.json</code> in your repo. Add or remove a line there to change them. Sources whose website does not allow automated access are skipped.</p></details>`}
+ 
 /* ---------- main render ---------- */
 function renderView(){const l=viewList(),v=$("view");
-v.innerHTML=S.layout==="table"?renderTable(l):S.layout==="map"?renderMap(l):S.layout==="planner"?renderPlanner(l):renderCards(l);
+v.innerHTML=S.layout==="table"?renderTable(l):S.layout==="map"?renderMap(l):S.layout==="planner"?renderPlanner(l):S.layout==="news"?renderNews(l):renderCards(l);
 if(S.layout==="map")mapEvents(l);
 $("hint").textContent=(canReorder()?"Drag cards or use the arrows to set your order. ":"")+"Click any area to open its full page."+(S.pass!=="all"?` Pass filter on: showing ${l.length} of ${sel().length}. Backcountry zones are hidden.`:"")}
 function renderAll(){DC.size;const s=sel();$("n").textContent=s.length;$("count").textContent=`${s.length} of ${AMAX} in this deck`;
@@ -939,6 +974,8 @@ function parseShare(h){const p=h.replace(/^#share=/,"").split("~").map(x=>{try{r
 $("view").addEventListener("click",e=>{const t=e.target;
 const m=t.closest("[data-mv]");if(m){const id=m.dataset.id,l=viewList().map(a=>a.id),i=l.indexOf(id),nb=l[i+ +m.dataset.mv];if(nb==null)return;const s=sel(),p=s.indexOf(id),q2=s.indexOf(nb);[s[p],s[q2]]=[s[q2],s[p]];renderAll();return}
 const rm=t.closest("[data-rm]");if(rm){setSel(sel().filter(x=>x!==rm.dataset.rm));renderAll();return}
+const ns=t.closest("[data-nscope]");if(ns){NSCOPE=ns.dataset.nscope;NMORE=30;renderView();return}
+if(t.closest("#nmore")){NMORE+=30;renderView();return}
 const sc=t.closest("[data-sortcol]");if(sc){S.sort=sc.dataset.sortcol;renderAll();return}
 const o=t.closest("[data-open]");if(o){openDetail(o.dataset.open);return}
 const c=t.closest(".card");if(c&&!t.closest("button"))openDetail(c.dataset.id)});
@@ -948,6 +985,7 @@ $("view").addEventListener("dragover",e=>{if(dragId!==null)e.preventDefault()});
 $("view").addEventListener("drop",e=>{const c=e.target.closest(".card");if(dragId===null||!c||c.dataset.id===dragId)return;e.preventDefault();const s=sel(),from=s.indexOf(dragId),to=s.indexOf(c.dataset.id);s.splice(from,1);s.splice(to,0,dragId);dragId=null;renderAll()});
 $("view").addEventListener("dragend",()=>{dragId=null;document.querySelectorAll(".card.drag").forEach(c=>c.classList.remove("drag"))});
 $("view").addEventListener("keydown",e=>{if(e.key==="Enter"){const r=e.target.closest("tr[data-open]");if(r&&e.target===r)openDetail(r.dataset.open)}});
+$("view").addEventListener("change",e=>{if(e.target.id==="nsrc"){NSRC=e.target.value;NMORE=30;renderView()}});
 $("sort").onchange=e=>{S.sort=e.target.value;renderAll()};$("pass").onchange=e=>{S.pass=e.target.value;renderAll()};
  
 /* ---------- choose areas panel ---------- */
@@ -1031,7 +1069,7 @@ renderAll();route();
 fetch("data/conditions.json?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.areas)return;LIVE=j;DC.clear();
 $("note").textContent="Live data, updated "+new Date(j.updated).toLocaleString()+". Lift and trail status is available for a few resorts so far."+(j.schema>=3?"":" Some new features need the newest data update.");renderAll()}).catch(()=>{}).finally(()=>{DATAREADY=true;renderAlerts()});
 const jf=(u,f)=>fetch(u+"?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j){f(j);renderAll()}}).catch(()=>{});
-jf("data/history.json",j=>HIST=j);jf("data/avy-history.json",j=>AVH=j);jf("data/avy-archive.json",j=>AVARC=j);
+jf("data/history.json",j=>HIST=j);jf("data/news.json",j=>NEWS=j);jf("data/avy-history.json",j=>AVH=j);jf("data/avy-archive.json",j=>AVARC=j);
 fetch("data/terrain.json?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(j&&j.resorts){TERR=j;renderAll()}}).catch(()=>{});
  
 </script>
