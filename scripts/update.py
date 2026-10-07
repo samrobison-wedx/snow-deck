@@ -164,6 +164,13 @@ def open_meteo(a, tz=TZ):
             cols = [d[k] for k in d if k.startswith(key + "_") and any(x is not None for x in d[k])]
             return [round(sum(c[i] for c in cols if c[i] is not None) / max(1, len([c for c in cols if c[i] is not None]))) for i in range(len(d["time"]))] if cols else []
         out["models"] = models
+        mt = {}
+        for m, label in MODELS.items():
+            h_, l_ = d.get("temperature_2m_max_" + m), d.get("temperature_2m_min_" + m)
+            if label in models and h_ and l_ and all(x is not None for x in h_ + l_):
+                mt[label] = {"hi": [round(x) for x in h_], "lo": [round(x) for x in l_]}
+        if mt:
+            out["mt"] = mt
         out["base"] = {"ft": a["base_ft"], "hi": avg("temperature_2m_max"), "lo": avg("temperature_2m_min"),
                        "snow": [round(sum(m[i] for m in models.values()) / len(models), 1) for i in range(len(d["time"]))] if models else []}
         out["dates"] = d["time"]
