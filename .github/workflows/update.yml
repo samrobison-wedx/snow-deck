@@ -5,6 +5,9 @@ on:
   workflow_dispatch:
 permissions:
   contents: write
+concurrency:
+  group: save-data-conditions
+  cancel-in-progress: false
 jobs:
   update:
     runs-on: ubuntu-latest
@@ -19,6 +22,20 @@ jobs:
         run: |
           git config user.name "snow-deck-bot"
           git config user.email "snow-deck-bot@users.noreply.github.com"
+          mkdir -p data
           git add data/conditions.json
-          git diff --cached --quiet || (git commit -m "Update snow data" && git push)
+          git diff --cached --quiet && exit 0
+          git commit -m "Update snow data"
+          for i in 1 2 3 4 5; do
+            git push && exit 0
+            git fetch origin main
+            cp data/conditions.json "$RUNNER_TEMP/keep.json"
+            git reset --hard origin/main
+            mkdir -p data
+            cp "$RUNNER_TEMP/keep.json" data/conditions.json
+            git add data/conditions.json
+            git diff --cached --quiet && exit 0
+            git commit -m "Update snow data"
+          done
+          exit 1
  
