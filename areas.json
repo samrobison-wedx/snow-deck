@@ -1,506 +1,677 @@
-[
- {
-  "id": "Arapahoe Basin",
-  "name": "Arapahoe Basin",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.6426,
-  "lon": -105.8719
- },
- {
-  "id": "Aspen Snowmass",
-  "name": "Aspen Snowmass",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.2084,
-  "lon": -106.949
- },
- {
-  "id": "Beaver Creek",
-  "name": "Beaver Creek",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.6042,
-  "lon": -106.5165
- },
- {
-  "id": "Breckenridge",
-  "name": "Breckenridge",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.4817,
-  "lon": -106.0384
- },
- {
-  "id": "Copper Mountain",
-  "name": "Copper Mountain",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.5022,
-  "lon": -106.1497
- },
- {
-  "id": "Crested Butte",
-  "name": "Crested Butte",
-  "state": "CO",
-  "zone": false,
-  "lat": 38.8986,
-  "lon": -106.9658
- },
- {
-  "id": "Echo Mountain",
-  "name": "Echo Mountain",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.6819,
-  "lon": -105.5036
- },
- {
-  "id": "Eldora",
-  "name": "Eldora",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.9372,
-  "lon": -105.5827
- },
- {
-  "id": "Hesperus",
-  "name": "Hesperus",
-  "state": "CO",
-  "zone": false,
-  "lat": 37.2993,
-  "lon": -108.0517
- },
- {
-  "id": "Howelsen Hill",
-  "name": "Howelsen Hill",
-  "state": "CO",
-  "zone": false,
-  "lat": 40.4816,
-  "lon": -106.8312
- },
- {
-  "id": "Keystone",
-  "name": "Keystone",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.605,
-  "lon": -105.954
- },
- {
-  "id": "Loveland",
-  "name": "Loveland",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.68,
-  "lon": -105.8979
- },
- {
-  "id": "Monarch",
-  "name": "Monarch",
-  "state": "CO",
-  "zone": false,
-  "lat": 38.5122,
-  "lon": -106.3322
- },
- {
-  "id": "Powderhorn",
-  "name": "Powderhorn",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.0694,
-  "lon": -108.15
- },
- {
-  "id": "Purgatory",
-  "name": "Purgatory",
-  "state": "CO",
-  "zone": false,
-  "lat": 37.6303,
-  "lon": -107.8143
- },
- {
-  "id": "Silverton Mountain",
-  "name": "Silverton Mountain",
-  "state": "CO",
-  "zone": false,
-  "lat": 37.8847,
-  "lon": -107.6663
- },
- {
-  "id": "Ski Cooper",
-  "name": "Ski Cooper",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.3606,
-  "lon": -106.3022
- },
- {
-  "id": "Steamboat",
-  "name": "Steamboat",
-  "state": "CO",
-  "zone": false,
-  "lat": 40.4572,
-  "lon": -106.8045
- },
- {
-  "id": "Sunlight",
-  "name": "Sunlight",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.3989,
-  "lon": -107.3386
- },
- {
-  "id": "Telluride",
-  "name": "Telluride",
-  "state": "CO",
-  "zone": false,
-  "lat": 37.9375,
-  "lon": -107.8123
- },
- {
-  "id": "Vail",
-  "name": "Vail",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.6061,
-  "lon": -106.355
- },
- {
-  "id": "Winter Park",
-  "name": "Winter Park",
-  "state": "CO",
-  "zone": false,
-  "lat": 39.8868,
-  "lon": -105.7625
- },
- {
-  "id": "Wolf Creek",
-  "name": "Wolf Creek",
-  "state": "CO",
-  "zone": false,
-  "lat": 37.4722,
-  "lon": -106.7939
- },
- {
-  "id": "Alta",
-  "name": "Alta",
-  "state": "UT",
-  "zone": false,
-  "lat": 40.5884,
-  "lon": -111.6386
- },
- {
-  "id": "Beaver Mountain",
-  "name": "Beaver Mountain",
-  "state": "UT",
-  "zone": false,
-  "lat": 41.9686,
-  "lon": -111.5405
- },
- {
-  "id": "Brian Head",
-  "name": "Brian Head",
-  "state": "UT",
-  "zone": false,
-  "lat": 37.7018,
-  "lon": -112.8498
- },
- {
-  "id": "Brighton",
-  "name": "Brighton",
-  "state": "UT",
-  "zone": false,
-  "lat": 40.598,
-  "lon": -111.5832
- },
- {
-  "id": "Deer Valley",
-  "name": "Deer Valley",
-  "state": "UT",
-  "zone": false,
-  "lat": 40.6374,
-  "lon": -111.4783
- },
- {
-  "id": "Nordic Valley",
-  "name": "Nordic Valley",
-  "state": "UT",
-  "zone": false,
-  "lat": 41.307,
-  "lon": -111.859
- },
- {
-  "id": "Park City",
-  "name": "Park City",
-  "state": "UT",
-  "zone": false,
-  "lat": 40.6514,
-  "lon": -111.508
- },
- {
-  "id": "Powder Mountain",
-  "name": "Powder Mountain",
-  "state": "UT",
-  "zone": false,
-  "lat": 41.379,
-  "lon": -111.781
- },
- {
-  "id": "Snowbasin",
-  "name": "Snowbasin",
-  "state": "UT",
-  "zone": false,
-  "lat": 41.216,
-  "lon": -111.857
- },
- {
-  "id": "Snowbird",
-  "name": "Snowbird",
-  "state": "UT",
-  "zone": false,
-  "lat": 40.583,
-  "lon": -111.6556
- },
- {
-  "id": "Solitude",
-  "name": "Solitude",
-  "state": "UT",
-  "zone": false,
-  "lat": 40.6199,
-  "lon": -111.5919
- },
- {
-  "id": "Sundance",
-  "name": "Sundance",
-  "state": "UT",
-  "zone": false,
-  "lat": 40.3928,
-  "lon": -111.5886
- },
- {
-  "id": "Taos",
-  "name": "Taos",
-  "state": "NM",
-  "zone": false,
-  "lat": 36.596,
-  "lon": -105.454
- },
- {
-  "id": "Bridger Bowl",
-  "name": "Bridger Bowl",
-  "state": "MT",
-  "zone": false,
-  "lat": 45.817,
-  "lon": -110.898
- },
- {
-  "id": "Big Sky",
-  "name": "Big Sky",
-  "state": "MT",
-  "zone": false,
-  "lat": 45.285,
-  "lon": -111.401
- },
- {
-  "id": "Berthoud Pass",
-  "name": "Berthoud Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 39.7981,
-  "lon": -105.7788
- },
- {
-  "id": "Loveland Pass",
-  "name": "Loveland Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 39.6637,
-  "lon": -105.88
- },
- {
-  "id": "Vail Pass",
-  "name": "Vail Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 39.5317,
-  "lon": -106.2175
- },
- {
-  "id": "Hoosier Pass",
-  "name": "Hoosier Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 39.36,
-  "lon": -106.061
- },
- {
-  "id": "Independence Pass",
-  "name": "Independence Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 39.1086,
-  "lon": -106.5683
- },
- {
-  "id": "Monarch Pass",
-  "name": "Monarch Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 38.495,
-  "lon": -106.33
- },
- {
-  "id": "Kebler Pass",
-  "name": "Kebler Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 38.864,
-  "lon": -107.012
- },
- {
-  "id": "Red Mountain Pass",
-  "name": "Red Mountain Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 37.8928,
-  "lon": -107.7152
- },
- {
-  "id": "Molas Pass",
-  "name": "Molas Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 37.736,
-  "lon": -107.687
- },
- {
-  "id": "Lizard Head Pass",
-  "name": "Lizard Head Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 37.81,
-  "lon": -107.915
- },
- {
-  "id": "Wolf Creek Pass",
-  "name": "Wolf Creek Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 37.4833,
-  "lon": -106.8017
- },
- {
-  "id": "Cameron Pass",
-  "name": "Cameron Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 40.519,
-  "lon": -105.8939
- },
- {
-  "id": "Rabbit Ears Pass",
-  "name": "Rabbit Ears Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 40.372,
-  "lon": -106.637
- },
- {
-  "id": "Buffalo Pass",
-  "name": "Buffalo Pass",
-  "state": "CO",
-  "zone": true,
-  "lat": 40.536,
-  "lon": -106.683
- },
- {
-  "id": "Rocky Mountain National Park",
-  "name": "Rocky Mountain National Park",
-  "state": "CO",
-  "zone": true,
-  "lat": 40.343,
-  "lon": -105.683
- },
- {
-  "id": "Grand Mesa",
-  "name": "Grand Mesa",
-  "state": "CO",
-  "zone": true,
-  "lat": 39.036,
-  "lon": -108.04
- },
- {
-  "id": "Little Cottonwood Canyon",
-  "name": "Little Cottonwood Canyon",
-  "state": "UT",
-  "zone": true,
-  "lat": 40.571,
-  "lon": -111.637
- },
- {
-  "id": "Big Cottonwood Canyon",
-  "name": "Big Cottonwood Canyon",
-  "state": "UT",
-  "zone": true,
-  "lat": 40.62,
-  "lon": -111.61
- },
- {
-  "id": "Park City Ridgeline",
-  "name": "Park City Ridgeline",
-  "state": "UT",
-  "zone": true,
-  "lat": 40.64,
-  "lon": -111.57
- },
- {
-  "id": "Ogden Mountains",
-  "name": "Ogden Mountains",
-  "state": "UT",
-  "zone": true,
-  "lat": 41.2,
-  "lon": -111.88
- },
- {
-  "id": "Provo and Timpanogos",
-  "name": "Provo and Timpanogos",
-  "state": "UT",
-  "zone": true,
-  "lat": 40.3911,
-  "lon": -111.6458
- },
- {
-  "id": "Mirror Lake Highway",
-  "name": "Mirror Lake Highway",
-  "state": "UT",
-  "zone": true,
-  "lat": 40.684,
-  "lon": -110.896
- },
- {
-  "id": "Logan Canyon",
-  "name": "Logan Canyon",
-  "state": "UT",
-  "zone": true,
-  "lat": 41.89,
-  "lon": -111.57
- },
- {
-  "id": "La Sal Mountains",
-  "name": "La Sal Mountains",
-  "state": "UT",
-  "zone": true,
-  "lat": 38.48,
-  "lon": -109.26
- },
- {
-  "id": "Abajo Mountains",
-  "name": "Abajo Mountains",
-  "state": "UT",
-  "zone": true,
-  "lat": 37.85,
-  "lon": -109.46
- }
+
+  {
+    "id": "Arapahoe Basin",
+    "name": "Arapahoe Basin",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.6426,
+    "lon": -105.8719,
+    "base_ft": 10780,
+    "top_ft": 13050,
+    "web": "https://www.arapahoebasin.com/",
+    "cam": "https://www.arapahoebasin.com/mountain-cams/"
+  },
+  {
+    "id": "Aspen Snowmass",
+    "name": "Aspen Snowmass",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.2084,
+    "lon": -106.949,
+    "base_ft": 8000,
+    "top_ft": 12500,
+    "web": "https://www.aspensnowmass.com/"
+  },
+  {
+    "id": "Beaver Creek",
+    "name": "Beaver Creek",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.6042,
+    "lon": -106.5165,
+    "base_ft": 8100,
+    "top_ft": 11440,
+    "web": "https://www.beavercreek.com/",
+    "cam": "https://www.beavercreek.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+  },
+  {
+    "id": "Breckenridge",
+    "name": "Breckenridge",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.4817,
+    "lon": -106.0384,
+    "base_ft": 9600,
+    "top_ft": 12998,
+    "web": "https://www.breckenridge.com/",
+    "cam": "https://www.breckenridge.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+  },
+  {
+    "id": "Copper Mountain",
+    "name": "Copper Mountain",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.5022,
+    "lon": -106.1497,
+    "base_ft": 9712,
+    "top_ft": 12313,
+    "web": "https://www.coppercolorado.com/"
+  },
+  {
+    "id": "Crested Butte",
+    "name": "Crested Butte",
+    "state": "CO",
+    "zone": false,
+    "lat": 38.8986,
+    "lon": -106.9658,
+    "base_ft": 9375,
+    "top_ft": 12162,
+    "web": "https://www.skicb.com/",
+    "cam": "https://www.skicb.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+  },
+  {
+    "id": "Echo Mountain",
+    "name": "Echo Mountain",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.6819,
+    "lon": -105.5036,
+    "base_ft": 10000,
+    "top_ft": 10600
+  },
+  {
+    "id": "Eldora",
+    "name": "Eldora",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.9372,
+    "lon": -105.5827,
+    "base_ft": 9200,
+    "top_ft": 10600,
+    "web": "https://www.eldora.com/"
+  },
+  {
+    "id": "Hesperus",
+    "name": "Hesperus",
+    "state": "CO",
+    "zone": false,
+    "lat": 37.2993,
+    "lon": -108.0517,
+    "base_ft": 8100,
+    "top_ft": 8800
+  },
+  {
+    "id": "Howelsen Hill",
+    "name": "Howelsen Hill",
+    "state": "CO",
+    "zone": false,
+    "lat": 40.4816,
+    "lon": -106.8312,
+    "base_ft": 6700,
+    "top_ft": 7140
+  },
+  {
+    "id": "Keystone",
+    "name": "Keystone",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.605,
+    "lon": -105.954,
+    "base_ft": 9280,
+    "top_ft": 12408,
+    "web": "https://www.keystoneresort.com/",
+    "cam": "https://www.keystoneresort.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+  },
+  {
+    "id": "Loveland",
+    "name": "Loveland",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.68,
+    "lon": -105.8979,
+    "base_ft": 10800,
+    "top_ft": 13010,
+    "web": "https://www.skiloveland.com/",
+    "cam": "https://skiloveland.com/webcams"
+  },
+  {
+    "id": "Monarch",
+    "name": "Monarch",
+    "state": "CO",
+    "zone": false,
+    "lat": 38.5122,
+    "lon": -106.3322,
+    "base_ft": 10790,
+    "top_ft": 11952,
+    "web": "https://www.skimonarch.com/"
+  },
+  {
+    "id": "Powderhorn",
+    "name": "Powderhorn",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.0694,
+    "lon": -108.15,
+    "base_ft": 8200,
+    "top_ft": 9850,
+    "web": "https://www.powderhorn.com/"
+  },
+  {
+    "id": "Purgatory",
+    "name": "Purgatory",
+    "state": "CO",
+    "zone": false,
+    "lat": 37.6303,
+    "lon": -107.8143,
+    "base_ft": 8793,
+    "top_ft": 10822
+  },
+  {
+    "id": "Silverton Mountain",
+    "name": "Silverton Mountain",
+    "state": "CO",
+    "zone": false,
+    "lat": 37.8847,
+    "lon": -107.6663,
+    "base_ft": 10400,
+    "top_ft": 13487,
+    "web": "https://www.silvertonmountain.com/"
+  },
+  {
+    "id": "Ski Cooper",
+    "name": "Ski Cooper",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.3606,
+    "lon": -106.3022,
+    "base_ft": 10500,
+    "top_ft": 11700,
+    "web": "https://www.skicooper.com/"
+  },
+  {
+    "id": "Steamboat",
+    "name": "Steamboat",
+    "state": "CO",
+    "zone": false,
+    "lat": 40.4572,
+    "lon": -106.8045,
+    "base_ft": 6900,
+    "top_ft": 10568,
+    "web": "https://www.steamboat.com/"
+  },
+  {
+    "id": "Sunlight",
+    "name": "Sunlight",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.3989,
+    "lon": -107.3386,
+    "base_ft": 7885,
+    "top_ft": 9895,
+    "web": "https://www.sunlightmtn.com/"
+  },
+  {
+    "id": "Telluride",
+    "name": "Telluride",
+    "state": "CO",
+    "zone": false,
+    "lat": 37.9375,
+    "lon": -107.8123,
+    "base_ft": 8750,
+    "top_ft": 13150,
+    "web": "https://www.tellurideskiresort.com/"
+  },
+  {
+    "id": "Vail",
+    "name": "Vail",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.6061,
+    "lon": -106.355,
+    "base_ft": 8120,
+    "top_ft": 11570,
+    "web": "https://www.vail.com/",
+    "cam": "https://www.vail.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+  },
+  {
+    "id": "Winter Park",
+    "name": "Winter Park",
+    "state": "CO",
+    "zone": false,
+    "lat": 39.8868,
+    "lon": -105.7625,
+    "base_ft": 9000,
+    "top_ft": 12060,
+    "web": "https://www.winterparkresort.com/"
+  },
+  {
+    "id": "Wolf Creek",
+    "name": "Wolf Creek",
+    "state": "CO",
+    "zone": false,
+    "lat": 37.4722,
+    "lon": -106.7939,
+    "base_ft": 10300,
+    "top_ft": 11904,
+    "web": "https://www.wolfcreekski.com/"
+  },
+  {
+    "id": "Alta",
+    "name": "Alta",
+    "state": "UT",
+    "zone": false,
+    "lat": 40.5884,
+    "lon": -111.6386,
+    "base_ft": 8530,
+    "top_ft": 10550,
+    "web": "https://www.alta.com/",
+    "cam": "https://www.alta.com/weather"
+  },
+  {
+    "id": "Beaver Mountain",
+    "name": "Beaver Mountain",
+    "state": "UT",
+    "zone": false,
+    "lat": 41.9686,
+    "lon": -111.5405,
+    "base_ft": 7200,
+    "top_ft": 8800,
+    "web": "https://www.beavermountain.com/"
+  },
+  {
+    "id": "Brian Head",
+    "name": "Brian Head",
+    "state": "UT",
+    "zone": false,
+    "lat": 37.7018,
+    "lon": -112.8498,
+    "base_ft": 9600,
+    "top_ft": 10920,
+    "web": "https://www.brianhead.com/"
+  },
+  {
+    "id": "Brighton",
+    "name": "Brighton",
+    "state": "UT",
+    "zone": false,
+    "lat": 40.598,
+    "lon": -111.5832,
+    "base_ft": 8755,
+    "top_ft": 10500,
+    "web": "https://www.brightonresort.com/"
+  },
+  {
+    "id": "Deer Valley",
+    "name": "Deer Valley",
+    "state": "UT",
+    "zone": false,
+    "lat": 40.6374,
+    "lon": -111.4783,
+    "base_ft": 6570,
+    "top_ft": 9570,
+    "web": "https://www.deervalley.com/"
+  },
+  {
+    "id": "Nordic Valley",
+    "name": "Nordic Valley",
+    "state": "UT",
+    "zone": false,
+    "lat": 41.307,
+    "lon": -111.859,
+    "base_ft": 5400,
+    "top_ft": 6400,
+    "web": "https://www.nordicvalley.com/"
+  },
+  {
+    "id": "Park City",
+    "name": "Park City",
+    "state": "UT",
+    "zone": false,
+    "lat": 40.6514,
+    "lon": -111.508,
+    "base_ft": 6900,
+    "top_ft": 10026,
+    "web": "https://www.parkcitymountain.com/",
+    "cam": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/mountain-cams.aspx"
+  },
+  {
+    "id": "Powder Mountain",
+    "name": "Powder Mountain",
+    "state": "UT",
+    "zone": false,
+    "lat": 41.379,
+    "lon": -111.781,
+    "base_ft": 8300,
+    "top_ft": 9422,
+    "web": "https://www.powdermountain.com/"
+  },
+  {
+    "id": "Snowbasin",
+    "name": "Snowbasin",
+    "state": "UT",
+    "zone": false,
+    "lat": 41.216,
+    "lon": -111.857,
+    "base_ft": 6400,
+    "top_ft": 9350,
+    "web": "https://www.snowbasin.com/"
+  },
+  {
+    "id": "Snowbird",
+    "name": "Snowbird",
+    "state": "UT",
+    "zone": false,
+    "lat": 40.583,
+    "lon": -111.6556,
+    "base_ft": 7760,
+    "top_ft": 11000,
+    "web": "https://www.snowbird.com/"
+  },
+  {
+    "id": "Solitude",
+    "name": "Solitude",
+    "state": "UT",
+    "zone": false,
+    "lat": 40.6199,
+    "lon": -111.5919,
+    "base_ft": 7994,
+    "top_ft": 10488,
+    "web": "https://www.solitudemountain.com/"
+  },
+  {
+    "id": "Sundance",
+    "name": "Sundance",
+    "state": "UT",
+    "zone": false,
+    "lat": 40.3928,
+    "lon": -111.5886,
+    "base_ft": 6100,
+    "top_ft": 8250,
+    "web": "https://www.sundanceresort.com/"
+  },
+  {
+    "id": "Taos",
+    "name": "Taos",
+    "state": "NM",
+    "zone": false,
+    "lat": 36.596,
+    "lon": -105.454,
+    "base_ft": 9207,
+    "top_ft": 12481,
+    "web": "https://www.skitaos.com/"
+  },
+  {
+    "id": "Bridger Bowl",
+    "name": "Bridger Bowl",
+    "state": "MT",
+    "zone": false,
+    "lat": 45.817,
+    "lon": -110.898,
+    "base_ft": 6100,
+    "top_ft": 8700,
+    "web": "https://www.bridgerbowl.com/",
+    "cam": "https://bridgerbowl.com/weather/webcams"
+  },
+  {
+    "id": "Big Sky",
+    "name": "Big Sky",
+    "state": "MT",
+    "zone": false,
+    "lat": 45.285,
+    "lon": -111.401,
+    "base_ft": 7500,
+    "top_ft": 11166,
+    "web": "https://www.bigskyresort.com/",
+    "cam": "https://www.bigskyresort.com/current-conditions/webcams"
+  },
+  {
+    "id": "Berthoud Pass",
+    "name": "Berthoud Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 39.7981,
+    "lon": -105.7788,
+    "base_ft": 11300,
+    "top_ft": 12800
+  },
+  {
+    "id": "Loveland Pass",
+    "name": "Loveland Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 39.6637,
+    "lon": -105.88,
+    "base_ft": 11990,
+    "top_ft": 13000
+  },
+  {
+    "id": "Vail Pass",
+    "name": "Vail Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 39.5317,
+    "lon": -106.2175,
+    "base_ft": 10660,
+    "top_ft": 12000
+  },
+  {
+    "id": "Hoosier Pass",
+    "name": "Hoosier Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 39.36,
+    "lon": -106.061,
+    "base_ft": 11540,
+    "top_ft": 13000
+  },
+  {
+    "id": "Independence Pass",
+    "name": "Independence Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 39.1086,
+    "lon": -106.5683,
+    "base_ft": 12090,
+    "top_ft": 13500
+  },
+  {
+    "id": "Monarch Pass",
+    "name": "Monarch Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 38.495,
+    "lon": -106.33,
+    "base_ft": 11310,
+    "top_ft": 12700
+  },
+  {
+    "id": "Kebler Pass",
+    "name": "Kebler Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 38.864,
+    "lon": -107.012,
+    "base_ft": 10000,
+    "top_ft": 12000
+  },
+  {
+    "id": "Red Mountain Pass",
+    "name": "Red Mountain Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 37.8928,
+    "lon": -107.7152,
+    "base_ft": 11020,
+    "top_ft": 12800
+  },
+  {
+    "id": "Molas Pass",
+    "name": "Molas Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 37.736,
+    "lon": -107.687,
+    "base_ft": 10910,
+    "top_ft": 12500
+  },
+  {
+    "id": "Lizard Head Pass",
+    "name": "Lizard Head Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 37.81,
+    "lon": -107.915,
+    "base_ft": 10220,
+    "top_ft": 12000
+  },
+  {
+    "id": "Wolf Creek Pass",
+    "name": "Wolf Creek Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 37.4833,
+    "lon": -106.8017,
+    "base_ft": 10860,
+    "top_ft": 12200
+  },
+  {
+    "id": "Cameron Pass",
+    "name": "Cameron Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 40.519,
+    "lon": -105.8939,
+    "base_ft": 10280,
+    "top_ft": 12000
+  },
+  {
+    "id": "Rabbit Ears Pass",
+    "name": "Rabbit Ears Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 40.372,
+    "lon": -106.637,
+    "base_ft": 9430,
+    "top_ft": 10800
+  },
+  {
+    "id": "Buffalo Pass",
+    "name": "Buffalo Pass",
+    "state": "CO",
+    "zone": true,
+    "lat": 40.536,
+    "lon": -106.683,
+    "base_ft": 10350,
+    "top_ft": 11500
+  },
+  {
+    "id": "Rocky Mountain National Park",
+    "name": "Rocky Mountain National Park",
+    "state": "CO",
+    "zone": true,
+    "lat": 40.343,
+    "lon": -105.683,
+    "base_ft": 9000,
+    "top_ft": 12500
+  },
+  {
+    "id": "Grand Mesa",
+    "name": "Grand Mesa",
+    "state": "CO",
+    "zone": true,
+    "lat": 39.036,
+    "lon": -108.04,
+    "base_ft": 10000,
+    "top_ft": 11000
+  },
+  {
+    "id": "Little Cottonwood Canyon",
+    "name": "Little Cottonwood Canyon",
+    "state": "UT",
+    "zone": true,
+    "lat": 40.571,
+    "lon": -111.637,
+    "base_ft": 7500,
+    "top_ft": 11000
+  },
+  {
+    "id": "Big Cottonwood Canyon",
+    "name": "Big Cottonwood Canyon",
+    "state": "UT",
+    "zone": true,
+    "lat": 40.62,
+    "lon": -111.61,
+    "base_ft": 7500,
+    "top_ft": 10500
+  },
+  {
+    "id": "Park City Ridgeline",
+    "name": "Park City Ridgeline",
+    "state": "UT",
+    "zone": true,
+    "lat": 40.64,
+    "lon": -111.57,
+    "base_ft": 7000,
+    "top_ft": 10000
+  },
+  {
+    "id": "Ogden Mountains",
+    "name": "Ogden Mountains",
+    "state": "UT",
+    "zone": true,
+    "lat": 41.2,
+    "lon": -111.88,
+    "base_ft": 6000,
+    "top_ft": 9500
+  },
+  {
+    "id": "Provo and Timpanogos",
+    "name": "Provo and Timpanogos",
+    "state": "UT",
+    "zone": true,
+    "lat": 40.3911,
+    "lon": -111.6458,
+    "base_ft": 7000,
+    "top_ft": 11000
+  },
+  {
+    "id": "Mirror Lake Highway",
+    "name": "Mirror Lake Highway",
+    "state": "UT",
+    "zone": true,
+    "lat": 40.684,
+    "lon": -110.896,
+    "base_ft": 10700,
+    "top_ft": 12000
+  },
+  {
+    "id": "Logan Canyon",
+    "name": "Logan Canyon",
+    "state": "UT",
+    "zone": true,
+    "lat": 41.89,
+    "lon": -111.57,
+    "base_ft": 6500,
+    "top_ft": 9500
+  },
+  {
+    "id": "La Sal Mountains",
+    "name": "La Sal Mountains",
+    "state": "UT",
+    "zone": true,
+    "lat": 38.48,
+    "lon": -109.26,
+    "base_ft": 8500,
+    "top_ft": 12000
+  },
+  {
+    "id": "Abajo Mountains",
+    "name": "Abajo Mountains",
+    "state": "UT",
+    "zone": true,
+    "lat": 37.85,
+    "lon": -109.46,
+    "base_ft": 8000,
+    "top_ft": 11000
+  }
 ]
