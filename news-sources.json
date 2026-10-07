@@ -1,0 +1,128 @@
+[
+  {
+    "id": "powder",
+    "name": "Powder",
+    "url": "https://www.powder.com/feed/",
+    "region": "national",
+    "type": "media",
+    "enabled": true,
+    "note": "verified"
+  },
+  {
+    "id": "unofficial",
+    "name": "Unofficial Networks",
+    "url": "https://unofficialnetworks.com/feed/",
+    "region": "national",
+    "type": "media",
+    "enabled": true,
+    "note": "verified"
+  },
+  {
+    "id": "snowbrains",
+    "name": "SnowBrains",
+    "url": "https://snowbrains.com/feed/",
+    "region": "national",
+    "type": "media",
+    "enabled": true,
+    "note": "verified"
+  },
+  {
+    "id": "sam",
+    "name": "Ski Area Management",
+    "url": "https://www.saminfo.com/feed",
+    "region": "national",
+    "type": "industry",
+    "enabled": true,
+    "note": "verified"
+  },
+  {
+    "id": "tgr",
+    "name": "Teton Gravity Research",
+    "url": "https://www.tetongravity.com/feed/",
+    "region": "national",
+    "type": "media",
+    "enabled": true,
+    "note": "verified"
+  },
+  {
+    "id": "backcountry",
+    "name": "Backcountry Magazine",
+    "url": "https://backcountrymagazine.com/feed/",
+    "region": "national",
+    "type": "backcountry",
+    "enabled": true,
+    "note": "verified (posts rarely)"
+  },
+  {
+    "id": "cbnews",
+    "name": "Crested Butte News",
+    "url": "https://crestedbuttenews.com/feed/",
+    "region": "CO",
+    "type": "local",
+    "enabled": true,
+    "note": "verified (may lag the website)"
+  },
+  {
+    "id": "sltrib",
+    "name": "Salt Lake Tribune (sports)",
+    "url": "https://www.sltrib.com/arc/outboundfeeds/sports/?outputType=xml",
+    "region": "UT",
+    "type": "local",
+    "enabled": true,
+    "note": "verified (no ski feed exists; sports only)"
+  },
+  {
+    "id": "cosun",
+    "name": "Colorado Sun",
+    "url": "https://coloradosun.com/feed/",
+    "region": "CO",
+    "type": "local",
+    "enabled": true,
+    "note": "unverified: the test tool could not read it"
+  },
+  {
+    "id": "summitdaily",
+    "name": "Summit Daily",
+    "url": "https://www.summitdaily.com/feed/",
+    "region": "CO",
+    "type": "local",
+    "enabled": true,
+    "note": "unverified: the test tool could not read it"
+  },
+  {
+    "id": "vaildaily",
+    "name": "Vail Daily",
+    "url": "https://www.vaildaily.com/feed/",
+    "region": "CO",
+    "type": "local",
+    "enabled": true,
+    "note": "unverified: the test tool could not read it"
+  },
+  {
+    "id": "aspentimes",
+    "name": "Aspen Times",
+    "url": "https://www.aspentimes.com/feed/",
+    "region": "CO",
+    "type": "local",
+    "enabled": true,
+    "note": "unverified: the test tool could not read it"
+  },
+  {
+    "id": "steamboat",
+    "name": "Steamboat Pilot & Today",
+    "url": "https://www.steamboatpilot.com/feed/",
+    "region": "CO",
+    "type": "local",
+    "enabled": true,
+    "note": "unverified: the test tool could not read it"
+  },
+  {
+    "id": "bozeman",
+    "name": "Bozeman Daily Chronicle",
+    "url": "https://www.bozemandailychronicle.com/site/rss/",
+    "region": "MT",
+    "type": "local",
+    "enabled": true,
+    "note": "unverified: server was rate-limiting during the test"
+  }
+]
