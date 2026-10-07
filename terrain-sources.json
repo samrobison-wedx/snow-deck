@@ -1,9 +1,434 @@
-
 [
   {
     "id": "Arapahoe Basin",
     "url": "https://www.arapahoebasin.com/",
     "lifts": "(\\d+)\\s*/\\s*(\\d+)\\s*Open Lifts",
     "trails": "(\\d+)\\s*/\\s*(\\d+)\\s*Open Runs"
+  },
+  {
+    "id": "Keystone",
+    "url": "https://www.keystoneresort.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "lifts": "(\\d+)\\s*/\\s*(\\d+)\\s*Lifts Open",
+    "trails": "(\\d+)\\s*/\\s*(\\d+)\\s*Trails Open"
+  },
+  {
+    "id": "Aspen Snowmass",
+    "url": "https://www.aspensnowmass.com/",
+    "unverified": true
+  },
+  {
+    "id": "Beaver Creek",
+    "url": "https://www.beavercreek.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Breckenridge",
+    "url": "https://www.breckenridge.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Copper Mountain",
+    "url": "https://www.coppercolorado.com/",
+    "unverified": true
+  },
+  {
+    "id": "Crested Butte",
+    "url": "https://www.skicb.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Eldora",
+    "url": "https://www.eldora.com/",
+    "unverified": true
+  },
+  {
+    "id": "Loveland",
+    "url": "https://www.skiloveland.com/",
+    "unverified": true
+  },
+  {
+    "id": "Monarch",
+    "url": "https://www.skimonarch.com/",
+    "unverified": true
+  },
+  {
+    "id": "Powderhorn",
+    "url": "https://www.powderhorn.com/",
+    "unverified": true
+  },
+  {
+    "id": "Silverton Mountain",
+    "url": "https://www.silvertonmountain.com/",
+    "unverified": true
+  },
+  {
+    "id": "Ski Cooper",
+    "url": "https://www.skicooper.com/",
+    "unverified": true
+  },
+  {
+    "id": "Steamboat",
+    "url": "https://www.steamboat.com/",
+    "unverified": true
+  },
+  {
+    "id": "Sunlight",
+    "url": "https://www.sunlightmtn.com/",
+    "unverified": true
+  },
+  {
+    "id": "Telluride",
+    "url": "https://www.tellurideskiresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Vail",
+    "url": "https://www.vail.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Winter Park",
+    "url": "https://www.winterparkresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Wolf Creek",
+    "url": "https://www.wolfcreekski.com/",
+    "unverified": true
+  },
+  {
+    "id": "Alta",
+    "url": "https://www.alta.com/",
+    "unverified": true
+  },
+  {
+    "id": "Beaver Mountain",
+    "url": "https://www.beavermountain.com/",
+    "unverified": true
+  },
+  {
+    "id": "Brian Head",
+    "url": "https://www.brianhead.com/",
+    "unverified": true
+  },
+  {
+    "id": "Brighton",
+    "url": "https://www.brightonresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Deer Valley",
+    "url": "https://www.deervalley.com/",
+    "unverified": true
+  },
+  {
+    "id": "Nordic Valley",
+    "url": "https://www.nordicvalley.com/",
+    "unverified": true
+  },
+  {
+    "id": "Park City",
+    "url": "https://www.parkcitymountain.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Powder Mountain",
+    "url": "https://www.powdermountain.com/",
+    "unverified": true
+  },
+  {
+    "id": "Snowbasin",
+    "url": "https://www.snowbasin.com/",
+    "unverified": true
+  },
+  {
+    "id": "Snowbird",
+    "url": "https://www.snowbird.com/",
+    "unverified": true
+  },
+  {
+    "id": "Solitude",
+    "url": "https://www.solitudemountain.com/",
+    "unverified": true
+  },
+  {
+    "id": "Sundance",
+    "url": "https://www.sundanceresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Taos",
+    "url": "https://www.skitaos.com/",
+    "unverified": true
+  },
+  {
+    "id": "Bridger Bowl",
+    "url": "https://www.bridgerbowl.com/",
+    "unverified": true
+  },
+  {
+    "id": "Big Sky",
+    "url": "https://www.bigskyresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Kirkwood",
+    "url": "https://www.kirkwood.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Palisades Tahoe",
+    "url": "https://www.palisadestahoe.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mammoth Mountain",
+    "url": "https://www.mammothmountain.com/",
+    "unverified": true
+  },
+  {
+    "id": "Heavenly",
+    "url": "https://www.skiheavenly.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Northstar",
+    "url": "https://www.northstarcalifornia.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Jackson Hole",
+    "url": "https://www.jacksonhole.com/",
+    "unverified": true
+  },
+  {
+    "id": "Grand Targhee",
+    "url": "https://www.grandtarghee.com/",
+    "unverified": true
+  },
+  {
+    "id": "Whitefish Mountain",
+    "url": "https://skiwhitefish.com/",
+    "unverified": true
+  },
+  {
+    "id": "Sun Valley",
+    "url": "https://www.sunvalley.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mount Bachelor",
+    "url": "https://www.mtbachelor.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mt. Hood Meadows",
+    "url": "https://www.skihood.com/",
+    "unverified": true
+  },
+  {
+    "id": "Timberline",
+    "url": "https://www.timberlinelodge.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mt. Hood Skibowl",
+    "url": "https://skibowl.com/",
+    "unverified": true
+  },
+  {
+    "id": "Cooper Spur",
+    "url": "https://cooperspur.com/",
+    "unverified": true
+  },
+  {
+    "id": "Summit Ski Area",
+    "url": "https://www.summitskiarea.com/",
+    "unverified": true
+  },
+  {
+    "id": "Killington",
+    "url": "https://www.killington.com/",
+    "unverified": true
+  },
+  {
+    "id": "Stowe",
+    "url": "https://www.stowe.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Sugarbush",
+    "url": "https://www.sugarbush.com/",
+    "unverified": true
+  },
+  {
+    "id": "Okemo",
+    "url": "https://www.okemo.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Stratton",
+    "url": "https://www.stratton.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mount Snow",
+    "url": "https://www.mountsnow.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Jay Peak",
+    "url": "https://jaypeakresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Smugglers' Notch",
+    "url": "https://www.smuggs.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mad River Glen",
+    "url": "https://www.madriverglen.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mont Tremblant",
+    "url": "https://www.tremblant.ca/",
+    "unverified": true
+  },
+  {
+    "id": "Lake Louise",
+    "url": "https://www.skilouise.com/",
+    "unverified": true
+  },
+  {
+    "id": "Sunshine Village",
+    "url": "https://www.skibanff.com/",
+    "unverified": true
+  },
+  {
+    "id": "Revelstoke",
+    "url": "https://www.revelstokemountainresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Kicking Horse",
+    "url": "https://kickinghorseresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Sunday River",
+    "url": "https://www.sundayriver.com/",
+    "unverified": true
+  },
+  {
+    "id": "Sugarloaf",
+    "url": "https://www.sugarloaf.com/",
+    "unverified": true
+  },
+  {
+    "id": "Saddleback",
+    "url": "https://www.saddlebackmaine.com/",
+    "unverified": true
+  },
+  {
+    "id": "Shawnee Peak",
+    "url": "https://www.shawneepeak.com/",
+    "unverified": true
+  },
+  {
+    "id": "Loon Mountain",
+    "url": "https://www.loonmtn.com/",
+    "unverified": true
+  },
+  {
+    "id": "Cannon Mountain",
+    "url": "https://www.cannonmt.com/",
+    "unverified": true
+  },
+  {
+    "id": "Attitash",
+    "url": "https://www.attitash.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Wildcat",
+    "url": "https://www.skiwildcat.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Waterville Valley",
+    "url": "https://www.waterville.com/",
+    "unverified": true
+  },
+  {
+    "id": "Bretton Woods",
+    "url": "https://www.brettonwoods.com/",
+    "unverified": true
+  },
+  {
+    "id": "Mount Sunapee",
+    "url": "https://www.mountsunapee.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Gunstock",
+    "url": "https://www.gunstock.com/",
+    "unverified": true
+  },
+  {
+    "id": "Santa Fe",
+    "url": "https://skisantafe.com/",
+    "unverified": true
+  },
+  {
+    "id": "Angel Fire",
+    "url": "https://angelfireresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Red River",
+    "url": "https://redriverskiarea.com/",
+    "unverified": true
+  },
+  {
+    "id": "Crystal Mountain",
+    "url": "https://www.crystalmountainresort.com/",
+    "unverified": true
+  },
+  {
+    "id": "Stevens Pass",
+    "url": "https://www.stevenspass.com/the-mountain/mountain-conditions/terrain-and-lift-status.aspx",
+    "unverified": true
+  },
+  {
+    "id": "Mt. Baker",
+    "url": "https://www.mtbaker.us/",
+    "unverified": true
+  },
+  {
+    "id": "Wachusett",
+    "url": "https://www.wachusett.com/",
+    "unverified": true
+  },
+  {
+    "id": "Echo Mountain",
+    "url": "https://www.echomtn.com/",
+    "unverified": true
+  },
+  {
+    "id": "Hesperus",
+    "url": "https://www.ski-hesperus.com/",
+    "unverified": true
+  },
+  {
+    "id": "Howelsen Hill",
+    "url": "https://steamboatsprings.gov/",
+    "unverified": true
+  },
+  {
+    "id": "Purgatory",
+    "url": "https://purgatory.ski/",
+    "unverified": true
   }
 ]
