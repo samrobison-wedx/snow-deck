@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snow Deck</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F3F7FA;--card:#FFFFFF;--ink:#17323A;--mute:#5C7580;--line:#DCE6EC;--ice:#E4EEF5;--blue:#2A6F9E;--snow:#3A8DC4;--pine:#2E7D5B;--shadow:0 1px 2px rgba(23,50,58,.06);
+--d1:#4CAF6A;--d2:#E6C229;--d3:#EE8A22;--d4:#D8402F;--d5:#1E1E1E;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1B21;--card:#172830;--ink:#E8F1F5;--mute:#8FA8B3;--line:#27404B;--ice:#1F3641;--blue:#6FB3E0;--snow:#7CC2EE;--pine:#5CC596;--shadow:none}}
+:root[data-theme="dark"]{--bg:#0F1B21;--card:#172830;--ink:#E8F1F5;--mute:#8FA8B3;--line:#27404B;--ice:#1F3641;--blue:#6FB3E0;--snow:#7CC2EE;--pine:#5CC596;--shadow:none}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.5 "Source Sans 3",system-ui,sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque",system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--snow);outline-offset:2px}
+.wrap{max-width:1200px;margin:0 auto;padding:20px 20px 48px}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between;margin-bottom:6px}
+.logo{display:flex;align-items:center;gap:10px}
+.logo h1{font-size:30px;font-weight:800}
+.sub{color:var(--mute);margin:0 0 18px}
+.btns{display:flex;gap:8px}
+.btn{border:1px solid var(--line);background:var(--card);padding:8px 14px;border-radius:10px;font-weight:600}
+.btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+:root[data-theme="dark"] .btn.primary{color:#0F1B21}
+.note{background:var(--ice);border-radius:10px;padding:8px 12px;font-size:14px;color:var(--mute);margin-bottom:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:20px;display:none}
+.panel.open{display:block}
+.panel-top{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.panel input[type=search]{flex:1;min-width:180px;max-width:360px;padding:9px 12px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font:inherit}
+.count{font-weight:600}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:6px 14px;max-height:340px;overflow:auto}
+.list h3{grid-column:1/-1;font-size:15px;color:var(--mute);margin-top:10px}
+.opt{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:8px;cursor:pointer}
+.opt:hover{background:var(--ice)}
+.opt input{accent-color:var(--blue);width:17px;height:17px}
+.opt.dis{opacity:.45;cursor:not-allowed}
+.opt small{color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;box-shadow:var(--shadow);display:flex;flex-direction:column;gap:14px}
+.ch{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.ch h2{font-size:20px;font-weight:700;line-height:1.15}
+.meta{color:var(--mute);font-size:14px}
+.x{border:0;background:none;color:var(--mute);font-size:20px;line-height:1;padding:2px 6px;border-radius:6px}
+.x:hover{background:var(--ice)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.stat{background:var(--ice);border-radius:10px;padding:8px 10px}
+.stat b{display:block;font:800 26px/1.1 "Bricolage Grotesque",sans-serif;color:var(--blue)}
+.stat span{font-size:13px;color:var(--mute)}
+.fc h3{font-size:14px;font-weight:600;color:var(--mute);margin-bottom:6px;font-family:"Source Sans 3",sans-serif}
+.bars{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end;height:92px}
+.bar{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;font-size:12px;color:var(--mute)}
+.bar i{display:block;width:100%;max-width:26px;border-radius:6px 6px 2px 2px;background:linear-gradient(var(--snow),var(--blue));min-height:3px}
+.bar em{font-style:normal;font-weight:600;color:var(--ink);font-size:13px}
+.prog{display:grid;gap:8px}
+.row{display:grid;grid-template-columns:52px 1fr auto;gap:10px;align-items:center;font-size:14px}
+.track{height:8px;background:var(--ice);border-radius:99px;overflow:hidden}
+.track i{display:block;height:100%;background:var(--pine);border-radius:99px}
+.av{display:flex;align-items:center;gap:10px;border-top:1px solid var(--line);padding-top:12px}
+.ladder{display:flex;gap:3px}
+.ladder i{width:20px;height:10px;border-radius:3px;background:var(--line)}
+.av strong{font-size:14px}
+.zone{font-size:14px;color:var(--mute)}
+.empty{grid-column:1/-1;text-align:center;padding:50px 10px;color:var(--mute)}
+.gear{padding:8px 10px;display:flex}
+.back{position:fixed;inset:0;background:rgba(10,25,31,.45);display:none;z-index:9}
+.back.open{display:block}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);background:var(--card);border-left:1px solid var(--line);z-index:10;overflow:auto;padding:calc(18px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(105%);transition:transform .2s}
+.drawer.open{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.dh h2{font-size:24px}
+.sec{margin-top:18px}
+.sec h3{font-size:17px;margin-bottom:4px}
+.sw{display:flex;justify-content:space-between;align-items:center;gap:14px;padding:10px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.sw small{display:block;color:var(--mute);font-size:13px;line-height:1.3}
+.sw input{appearance:none;flex:none;width:42px;height:24px;border-radius:99px;background:var(--line);position:relative;cursor:pointer;transition:background .15s}
+.sw input::after{content:"";position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:50%;background:#fff;transition:transform .15s}
+.sw input:checked{background:var(--blue)}
+.sw input:checked::after{transform:translateX(18px)}
+.sw input:disabled{opacity:.4}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.seg button{border:0;background:none;padding:6px 12px}
+.seg button[aria-pressed=true]{background:var(--blue);color:#fff}
+.sub2{margin-left:14px;padding-left:12px;border-left:3px solid var(--ice)}
+select{font:inherit;padding:5px 8px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.groups{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px}
+.chip{border:1px solid var(--line);background:var(--bg);border-radius:99px;padding:5px 12px;font-size:14px;font-weight:600}
+.chip:hover{background:var(--ice)}
+.chip small{color:var(--mute);font-weight:400}
+.gm{font-size:14px;color:var(--mute);margin:-4px 0 10px;min-height:20px}
+.cond{display:inline-block;background:var(--ice);border-radius:99px;padding:2px 10px;font-size:14px;font-weight:600}
+.wx{display:grid;gap:8px;font-size:14px;border-top:1px solid var(--line);padding-top:12px}
+.wxn{display:flex;gap:14px;color:var(--mute)}.wxn b{color:var(--ink)}
+.wxd{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;text-align:center;font-size:12px;color:var(--mute)}
+.wxd b{display:block;color:var(--ink);font-size:13px}.rain{color:var(--blue);font-weight:600}
+.alerts{display:flex;flex-wrap:wrap;gap:6px}
+.al{background:#FFF1D6;color:#7A4B00;border-radius:8px;padding:3px 9px;font-size:13px;font-weight:600}
+:root[data-theme="dark"] .al{background:#3A2E12;color:#F2C46B}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .al{background:#3A2E12;color:#F2C46B}}
+.stat small{font-size:14px;font-weight:600;margin-left:2px}
+.ms{position:relative}
+.ms summary{list-style:none;cursor:pointer;border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:6px 12px;font-weight:600}
+.ms summary::after{content:" ▾";color:var(--mute)}
+.ms[open] .msl{position:absolute;z-index:5;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;max-height:260px;overflow:auto;min-width:210px;box-shadow:0 8px 24px rgba(0,0,0,.18);margin-top:4px}
+.gr{margin-bottom:12px}.gr h3{font-size:15px;color:var(--mute);margin-bottom:6px;font-family:"Source Sans 3",sans-serif;font-weight:600}
+.grow{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+[hidden]{display:none!important}
+.ctl{display:flex;flex:none}
+.x:disabled{opacity:.25;cursor:default}
+.card[draggable=true]{cursor:grab}.card.drag{opacity:.4}
+.scr{display:flex;align-items:center;gap:10px;font-size:14px}
+.scr b{font:800 20px/1 "Bricolage Grotesque",sans-serif;background:var(--pine);color:#fff;border-radius:8px;padding:5px 9px}
+:root[data-theme="dark"] .scr b{color:#0F1B21}
+@media (max-width:520px){.wrap{padding:14px 14px 40px}.logo h1{font-size:26px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div class="logo">
+<svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><path d="M2 28 13 8l6 10 3-5 10 15z" fill="#2A6F9E"/><path d="M13 8l-4.2 7.6L12 14l2 2.5 2-2.2 3 3.7z" fill="#fff"/></svg>
+<h1>Snow Deck</h1>
+</div>
+<div class="btns">
+<button class="btn gear" id="gear" aria-label="Open options" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+<button class="btn primary" id="toggle" aria-expanded="false">Choose areas (<span id="n">0</span>/12)</button>
+</div>
+</header>
+<p class="sub">Snowfall, forecast, open terrain and avalanche danger for the places you ski.</p>
+<div class="note">Preview with sample data. Live data appears once the data collector has run.</div>
+
+<section class="panel" id="panel" aria-label="Choose areas">
+<div id="gwrap"></div><div class="gm" id="gm" aria-live="polite">Pass and region groups are a starting point. Pass memberships change each season, so confirm yours before you buy.</div>
+<div class="panel-top">
+<input type="search" id="q" placeholder="Search mountains and zones" aria-label="Search mountains and zones">
+<span class="count" id="count"></span>
+<button class="btn" id="clear">Clear all</button>
+</div>
+<div class="list" id="list"></div>
+</section>
+
+<div class="toolbar"><span class="meta">Drag cards or use the arrows to set your order.</span><span class="seg" id="tseg"><button data-seg="view" data-v="mine">My order</button><button data-seg="view" data-v="rank">Best score</button></span></div>
+<main class="grid" id="grid"></main>
+</div>
+
+<div class="back" id="back"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-label="Options">
+<div class="dh"><h2>Options</h2><button class="x" id="dclose" aria-label="Close options">×</button></div>
+<div class="sec"><h3>Display</h3>
+<div class="sw"><span>Theme</span><span class="seg"><button data-seg="theme" data-v="auto">Auto</button><button data-seg="theme" data-v="light">Light</button><button data-seg="theme" data-v="dark">Dark</button></span></div>
+<div class="sw"><span>Units</span><span class="seg"><button data-seg="units" data-v="imperial">in · °F</button><button data-seg="units" data-v="metric">cm · °C</button></span></div></div>
+<div class="sec"><h3>Cards</h3>
+<label class="sw"><span>Avalanche risk at resorts<small>Not available yet. Backcountry zones always show it.</small></span><input type="checkbox" role="switch" data-k="avalIn" disabled></label>
+<label class="sw"><span>Reported snow conditions<small>Estimated from recent snow and temperature.</small></span><input type="checkbox" role="switch" data-k="cond"></label>
+<label class="sw"><span>Detailed weather<small>Current temperature, wind, 7-day highs and lows, and rain.</small></span><input type="checkbox" role="switch" data-k="wx"></label><label class="sw"><span>Rank mountains<small>Adds a 0 to 100 score and a Best score sort. It blends recent and forecast snow, base depth, open terrain and snow quality, then subtracts for rain, high wind and high avalanche danger.</small></span><input type="checkbox" role="switch" data-k="rank"></label></div>
+<div class="sec"><h3>Alerts</h3>
+<label class="sw"><span>Turn on alerts<small>Alerts appear on your cards for now. Push and email delivery are coming.</small></span><input type="checkbox" role="switch" data-k="al.on"></label>
+<div class="sub2">
+<label class="sw"><span>Big storms<small>Notify me when a lot of snow is coming.</small></span><input type="checkbox" role="switch" data-k="al.storm"></label>
+<div class="sw"><span>Storm size<small>Snow in the next 3 days</small></span><select data-k="al.stormIn"><option value="8">8+</option><option value="12">12+</option><option value="18">18+</option><option value="24">24+</option></select></div>
+<label class="sw"><span>Powder days<small>Notify me after a big overnight dump.</small></span><input type="checkbox" role="switch" data-k="al.powder"></label>
+<div class="sw"><span>Powder day size<small>Snow in last 24 hours</small></span><select data-k="al.powderIn"><option value="4">4+</option><option value="6">6+</option><option value="10">10+</option><option value="14">14+</option></select></div>
+<label class="sw"><span>Avalanche danger changes<small>When the danger rating goes up or down.</small></span><input type="checkbox" role="switch" data-k="al.aval"></label>
+<label class="sw"><span>Rain on snow<small>Warm days that could soak the snowpack.</small></span><input type="checkbox" role="switch" data-k="al.rain"></label>
+<label class="sw"><span>High wind<small>Wind that could close lifts.</small></span><input type="checkbox" role="switch" data-k="al.wind"></label>
+</div></div>
+<div class="sec"><button class="btn" id="reset">Reset all options</button></div>
+</aside>
+<script>
+const RAW="Arapahoe Basin|CO|r;Aspen Snowmass|CO|r;Beaver Creek|CO|r;Breckenridge|CO|r;Copper Mountain|CO|r;Crested Butte|CO|r;Echo Mountain|CO|r;Eldora|CO|r;Hesperus|CO|r;Howelsen Hill|CO|r;Keystone|CO|r;Loveland|CO|r;Monarch|CO|r;Powderhorn|CO|r;Purgatory|CO|r;Silverton Mountain|CO|r;Ski Cooper|CO|r;Steamboat|CO|r;Sunlight|CO|r;Telluride|CO|r;Vail|CO|r;Winter Park|CO|r;Wolf Creek|CO|r;Alta|UT|r;Beaver Mountain|UT|r;Brian Head|UT|r;Brighton|UT|r;Deer Valley|UT|r;Nordic Valley|UT|r;Park City|UT|r;Powder Mountain|UT|r;Snowbasin|UT|r;Snowbird|UT|r;Solitude|UT|r;Sundance|UT|r;Taos|NM|r;Bridger Bowl|MT|r;Big Sky|MT|r;Berthoud Pass|CO|z;Loveland Pass|CO|z;Vail Pass|CO|z;Hoosier Pass|CO|z;Independence Pass|CO|z;Monarch Pass|CO|z;Kebler Pass|CO|z;Red Mountain Pass|CO|z;Molas Pass|CO|z;Lizard Head Pass|CO|z;Wolf Creek Pass|CO|z;Cameron Pass|CO|z;Rabbit Ears Pass|CO|z;Buffalo Pass|CO|z;Rocky Mountain National Park|CO|z;Grand Mesa|CO|z;Little Cottonwood Canyon|UT|z;Big Cottonwood Canyon|UT|z;Park City Ridgeline|UT|z;Ogden Mountains|UT|z;Provo and Timpanogos|UT|z;Mirror Lake Highway|UT|z;Logan Canyon|UT|z;La Sal Mountains|UT|z;Abajo Mountains|UT|z";
+const AREAS=RAW.split(";").map(s=>{const p=s.split("|");return{id:p[0],name:p[0],st:p[1],zone:p[2]==="z"}});
+const L=s=>s.split(","),BY=Object.fromEntries(AREAS.map(a=>[a.id,a]));
+const ST={CO:"Colorado",UT:"Utah",NM:"New Mexico",WY:"Wyoming",MT:"Montana",ID:"Idaho",CA:"California",WA:"Washington",OR:"Oregon",VT:"Vermont"};
+const PASSES=[
+["Epic Pass",L("Vail,Beaver Creek,Breckenridge,Keystone,Crested Butte,Park City,Heavenly,Northstar,Kirkwood,Stevens Pass,Stowe,Okemo,Mt. Snow")],
+["Ikon Pass",L("Aspen Snowmass,Winter Park,Arapahoe Basin,Copper Mountain,Eldora,Steamboat,Solitude,Deer Valley,Alta,Snowbird,Jackson Hole,Big Sky,Sun Valley,Palisades Tahoe,Mammoth Mountain,Crystal Mountain,Mt. Bachelor,Stratton,Sugarbush")],
+["Indie Pass",L("Loveland,Monarch,Powder Mountain,Beaver Mountain,Brundage,Discovery,Magic Mountain,Mt. Ashland")]];
+PASSES.forEach(p=>p[1]=p[1].filter(id=>BY[id]));
+const LEVELS=["","Low","Moderate","Considerable","High","Extreme"];
+const MAX=48,$=id=>document.getElementById(id);
+const DEF={theme:"auto",units:"imperial",rank:false,view:"mine",avalIn:false,cond:false,wx:false,al:{on:false,storm:true,stormIn:12,powder:true,powderIn:6,aval:true,rain:false,wind:false}};
+let S=JSON.parse(JSON.stringify(DEF)),sel=["Aspen Snowmass","Alta","Big Sky","Taos","Berthoud Pass","Little Cottonwood Canyon"];
+try{const o=JSON.parse(localStorage.getItem("snowdeck-settings")||"null");if(o)S={...S,...o,al:{...S.al,...(o.al||{})}};
+const s=JSON.parse(localStorage.getItem("snowdeck-sel")||"null");if(Array.isArray(s))sel=s.filter(id=>AREAS.some(a=>a.id===id)).slice(0,MAX)}catch(e){}
+const save=()=>{try{localStorage.setItem("snowdeck-sel",JSON.stringify(sel));localStorage.setItem("snowdeck-settings",JSON.stringify(S))}catch(e){}};
+const imp=()=>S.units==="imperial";
+const sn=v=>imp()?v:Math.round(v*2.54),su=()=>imp()?"in":"cm";
+const tp=f=>(imp()?Math.round(f):Math.round((f-32)*5/9))+"°";
+const wd=m=>imp()?m+" mph":Math.round(m*1.61)+" km/h";
+
+function rng(s){let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}
+return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);h^=h>>>16;return(h>>>0)/4294967296}}
+function sample(a){const r=rng(a.id);const s24=Math.round(r()*r()*18),s72=s24+Math.round(r()*16),base=40+Math.round(r()*85);
+const now=Math.round(8+r()*30),temps=[...Array(7)].map(()=>{const hi=Math.round(now+r()*12-4);return{hi,lo:hi-Math.round(6+r()*10)}});
+const fc=temps.map(t=>Math.round(r()*r()*16)),rain=temps.map((t,i)=>{const x=t.hi>=36&&r()>.45;if(x)fc[i]=0;return x});
+const aval=1+Math.min(4,Math.floor(r()*r()*5.5)),prev=Math.max(1,Math.min(5,aval+(r()<.35?(r()<.5?-1:1):0)));
+const lo=0,to=0,bands=[Math.min(5,aval+(r()>.6?1:0)),aval,Math.max(1,aval-(r()>.5?1:0))];
+const hi0=temps[0].hi,pool=hi0>=38?["Slushy","Wet snow","Variable"]:s24>=6?["Powder","Packed powder"]:hi0<=22?["Packed powder","Icy","Groomed"]:["Groomed","Variable","Icy","Crud"];
+return{s24,s72,base,fc,aval,prev,lo,to,bands,now,temps,rain,wind:Math.round(5+r()*r()*45),cond:pool[Math.floor(r()*pool.length)]}}
+let LIVE=null;
+function estCond(d){const h=d.temps[0].hi;return h>=40?"Slushy":h>=34?"Wet snow":d.s24>=6?"Powder":d.s24>=2?"Packed powder":"Variable"}
+function data(a){if(!LIVE)return sample(a);const Z=LIVE.areas[a.id];
+if(!Z)return{s24:0,s72:0,base:0,fc:[0,0,0,0,0,0,0],temps:Array(7).fill({hi:32,lo:20}),rain:Array(7).fill(false),wind:0,now:32,aval:0,prev:0,bands:[0,0,0],cond:"Variable",live:true,missing:true};
+return{...Z,aval:Z.aval||0,prev:Z.prev||Z.aval||0,bands:[0,0,0],live:true,off:Z.offSeason,cond:estCond(Z)}}
+const days=[...Array(7)].map((_,i)=>{const d=new Date();d.setDate(d.getDate()+i);return i===0?"Today":d.toLocaleDateString("en-US",{weekday:"short"})});
+const ladder=n=>`<span class="ladder" aria-hidden="true">${[1,2,3,4,5].map(i=>`<i style="${i<=n?`background:var(--d${n})`:""}"></i>`).join("")}</span>`;
+
+function alerts(a,d){const A=S.al;if(!A.on)return"";const c=[];
+const st=d.fc.slice(0,3).reduce((x,y)=>x+y,0);
+if(A.storm&&st>=A.stormIn)c.push(`Big storm: ${sn(st)} ${su()} in 3 days`);
+if(A.powder&&d.s24>=A.powderIn)c.push(`Powder day: ${sn(d.s24)} ${su()} overnight`);
+if(A.aval&&(a.zone||S.avalIn)&&d.aval!==d.prev)c.push(`Avalanche danger ${d.aval>d.prev?"up":"down"}: ${LEVELS[d.prev]} to ${LEVELS[d.aval]}`);
+if(A.rain&&d.rain.some(Boolean))c.push("Rain on snow possible");
+if(A.wind&&d.wind>=35)c.push(`High wind: ${wd(d.wind)}`);
+return c.length?`<div class="alerts">${c.map(x=>`<span class="al">${x}</span>`).join("")}</div>`:""}
+
+const CQ={Powder:15,"Packed powder":10,Groomed:8,Variable:4,Crud:3,Icy:1,"Wet snow":2,Slushy:2};
+function score(a,d){const f3=d.fc.slice(0,3).reduce((x,y)=>x+y,0);let p=Math.min(1,d.s24/12)*30+Math.min(1,f3/18)*20+Math.min(1,d.s72/24)*10+Math.min(1,d.base/120)*10+10.5+(CQ[d.cond]||0);
+if(d.rain.slice(0,3).some(Boolean))p-=10;if(d.wind>=35)p-=8;if(a.zone||S.avalIn)p-=d.aval>=4?10:d.aval===3?4:0;return Math.max(0,Math.min(100,Math.round(p)))}
+const grade=n=>n>=80?"Excellent":n>=60?"Good":n>=40?"Fair":"Slim";
+function card(a,i,rk,n){const d=data(a),mx=Math.max(8,...d.fc);
+const bars=d.fc.map((v,i)=>`<div class="bar"><em>${sn(v)}</em><i style="height:${Math.max(3,v/mx*58)}px"></i><span>${days[i]}</span></div>`).join("");
+const terrain=a.zone?`<div class="zone">Backcountry zone. No lifts, so check the avalanche forecast before you go.</div>`:`<div class="zone">Lift and trail status: coming soon.</div>`;
+const showAv=a.zone||S.avalIn;
+const av=showAv?`<div class="av">${ladder(d.aval)}<strong>${d.aval?`Avalanche danger: ${d.aval} ${LEVELS[d.aval]}`:"No avalanche rating right now"}</strong></div>`+(d.live&&d.avalZone?`<div class="zone" style="margin-top:-6px">${d.avalZone}${d.off?" · off-season":""}</div>`:""):"";
+const cond=S.cond?`<div><span class="meta">${a.zone?"Estimated conditions":"Estimated conditions"}: </span><span class="cond">${d.cond}</span></div>`:"";
+const wx=S.wx?`<div class="wx"><div class="wxn"><span>Now <b>${tp(d.now)}</b></span><span>Wind <b>${wd(d.wind)}</b></span></div>
+<div class="wxd">${d.temps.map((t,i)=>`<div>${days[i].slice(0,3)}<b>${tp(t.hi)}</b>${tp(t.lo)}${d.rain[i]?`<div class="rain">Rain</div>`:""}</div>`).join("")}</div></div>`:"";
+const sc=score(a,d);
+return`<article class="card" ${rk?"":'draggable="true"'} data-i="${i}"><div class="ch"><div><h2>${rk?"#"+(i+1)+" ":""}${a.name}</h2><div class="meta">${a.st} · ${a.zone?"Backcountry zone":"Resort"}</div></div><div class="ctl"><button class="x" data-mv="-1" data-i="${i}" aria-label="Move ${a.name} earlier" ${rk||i===0?"disabled":""}>‹</button><button class="x" data-mv="1" data-i="${i}" aria-label="Move ${a.name} later" ${rk||i===n-1?"disabled":""}>›</button><button class="x" data-rm="${a.id}" aria-label="Remove ${a.name}">×</button></div></div>
+${S.rank?`<div class="scr"><b>${sc}</b><span>${grade(sc)} for skiing now</span></div>`:""}
+${alerts(a,d)}
+<div class="stats"><div class="stat"><b>${sn(d.s24)}<small>${su()}</small></b><span>Last 24 hours</span></div><div class="stat"><b>${sn(d.s72)}<small>${su()}</small></b><span>Last 72 hours</span></div><div class="stat"><b>${sn(d.base)}<small>${su()}</small></b><span>Base depth</span></div></div>
+${cond}<div class="fc"><h3>7-day snowfall forecast (${su()})</h3><div class="bars">${bars}</div></div>${wx}${terrain}${av}${d.missing?`<div class="zone">Live data for this area is not available yet.</div>`:""}${d.live&&!d.missing?`<div class="meta" style="font-size:12px">Snow: ${d.snotel?d.snotel.name+" SNOTEL, "+Math.round(d.snotel.km)+" km away":"no nearby station"}. Forecast: National Weather Service.</div>`:""}</article>`}
+
+function render(){const rk=S.rank&&S.view==="rank";let list=sel.map(id=>BY[id]);
+if(rk)list=list.map(a=>[a,score(a,data(a))]).sort((x,y)=>y[1]-x[1]).map(x=>x[0]);
+$("grid").innerHTML=list.length?list.map((a,i)=>card(a,i,rk,list.length)).join(""):`<div class="empty"><h2>No areas yet</h2><p>Choose mountains or backcountry zones to start your deck. You can add up to ${MAX}.</p></div>`;
+$("tseg").hidden=!S.rank;$("n").textContent=sel.length;$("count").textContent=`${sel.length} of ${MAX} selected`;save();renderList()}
+function renderList(){const q=$("q").value.toLowerCase();let h="";
+for(const z of [false,true]){const items=AREAS.filter(a=>a.zone===z&&(a.name+a.st).toLowerCase().includes(q));if(!items.length)continue;
+h+=`<h3>${z?"Backcountry zones":"Resorts"}</h3>`;
+for(const a of items){const on=sel.includes(a.id),dis=!on&&sel.length>=MAX;h+=`<label class="opt${dis?" dis":""}"><input type="checkbox" data-id="${a.id}" ${on?"checked":""} ${dis?"disabled":""}>${a.name} <small>${a.st}</small></label>`}}
+$("list").innerHTML=h||`<p class="meta">No matches.</p>`}
+
+const picks={pass:new Set(),res:new Set(),bc:new Set()};
+const pick=(k,a)=>!picks[k].size||picks[k].has(a.st);
+const stList=bc=>[...new Set(AREAS.filter(a=>a.zone===bc).map(a=>a.st))].sort((x,y)=>ST[x].localeCompare(ST[y]));
+const ms=(k,bc)=>`<details class="ms" id="ms-${k}"><summary id="mst-${k}">All states</summary><div class="msl"><label class="opt"><input type="checkbox" data-ms="${k}" data-st="*" checked> All states</label>${stList(bc).map(t=>`<label class="opt"><input type="checkbox" data-ms="${k}" data-st="${t}"> ${ST[t]}</label>`).join("")}</div></details>`;
+$("gwrap").innerHTML=`<div class="gr"><h3>Passes</h3><div class="grow">${PASSES.map((p,i)=>`<button class="chip" data-p="${i}">${p[0]} <small id="pc${i}"></small></button>`).join("")}${ms("pass",false)}</div></div>
+<div class="gr"><h3>Resorts by state</h3><div class="grow">${ms("res",false)}<button class="btn" data-add="res" id="add-res"></button></div></div>
+<div class="gr"><h3>Backcountry by state</h3><div class="grow">${ms("bc",true)}<button class="btn" data-add="bc" id="add-bc"></button></div></div>`;
+function counts(){PASSES.forEach((p,i)=>$("pc"+i).textContent=p[1].filter(id=>pick("pass",BY[id])).length);
+$("add-res").textContent=`Add ${AREAS.filter(a=>!a.zone&&pick("res",a)).length} resorts`;$("add-bc").textContent=`Add ${AREAS.filter(a=>a.zone&&pick("bc",a)).length} zones`}
+function addIds(ids,label){const need=ids.filter(i=>!sel.includes(i)),add=need.slice(0,MAX-sel.length);sel.push(...add);
+$("gm").textContent=!need.length?`${label}: everything is already on your deck.`:add.length<need.length?`Added ${add.length} of ${need.length} from ${label}. Your deck holds ${MAX} areas, so remove some to add more.`:`Added ${add.length} from ${label}.`;render()}
+$("gwrap").addEventListener("change",e=>{const k=e.target.dataset.ms;if(!k)return;const t=e.target.dataset.st;
+if(t==="*")picks[k].clear();else if(picks[k].has(t))picks[k].delete(t);else picks[k].add(t);
+document.querySelectorAll(`[data-ms="${k}"]`).forEach(c=>c.checked=c.dataset.st==="*"?!picks[k].size:picks[k].has(c.dataset.st));
+$("mst-"+k).textContent=!picks[k].size?"All states":picks[k].size<3?[...picks[k]].map(x=>ST[x]).join(", "):picks[k].size+" states";counts()});
+$("gwrap").addEventListener("click",e=>{const p=e.target.closest("[data-p]"),ad=e.target.closest("[data-add]");
+if(p){const g=PASSES[+p.dataset.p];addIds(g[1].filter(id=>pick("pass",BY[id])),g[0])}
+if(ad){const bc=ad.dataset.add==="bc";addIds(AREAS.filter(a=>a.zone===bc&&pick(ad.dataset.add,a)).map(a=>a.id),bc?"backcountry zones":"resorts")}});
+counts();
+$("grid").addEventListener("click",e=>{const m=e.target.closest("[data-mv]");if(!m)return;const i=+m.dataset.i,j=i+ +m.dataset.mv;if(j<0||j>=sel.length)return;[sel[i],sel[j]]=[sel[j],sel[i]];render()});
+let dragI=null;
+$("grid").addEventListener("dragstart",e=>{const c=e.target.closest(".card");if(!c)return;dragI=+c.dataset.i;c.classList.add("drag");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain","card")});
+$("grid").addEventListener("dragover",e=>{if(dragI!==null)e.preventDefault()});
+$("grid").addEventListener("drop",e=>{const c=e.target.closest(".card");if(dragI===null||!c)return;e.preventDefault();const j=+c.dataset.i,[it]=sel.splice(dragI,1);sel.splice(j,0,it);dragI=null;render()});
+$("grid").addEventListener("dragend",()=>{dragI=null;document.querySelectorAll(".card.drag").forEach(c=>c.classList.remove("drag"))});
+$("list").addEventListener("change",e=>{const id=e.target.dataset.id;if(!id)return;if(e.target.checked){if(sel.length<MAX)sel.push(id)}else sel=sel.filter(x=>x!==id);render()});
+$("grid").addEventListener("click",e=>{const id=e.target.dataset.rm;if(id){sel=sel.filter(x=>x!==id);render()}});
+$("q").addEventListener("input",renderList);
+$("clear").onclick=()=>{sel=[];$("gm").textContent="";render()};
+$("toggle").onclick=()=>{const o=$("panel").classList.toggle("open");$("toggle").setAttribute("aria-expanded",o)};
+
+// options drawer
+function theme(){if(S.theme==="auto")delete document.documentElement.dataset.theme;else document.documentElement.dataset.theme=S.theme}
+function openD(o){$("drawer").classList.toggle("open",o);$("back").classList.toggle("open",o);$("gear").setAttribute("aria-expanded",o);if(o)$("dclose").focus()}
+$("gear").onclick=()=>openD(true);$("dclose").onclick=$("back").onclick=()=>openD(false);
+document.addEventListener("keydown",e=>{if(e.key==="Escape")openD(false)});
+function sync(){document.querySelectorAll("[data-k]").forEach(el=>{const k=el.dataset.k.split("."),v=k.length>1?S[k[0]][k[1]]:S[k[0]];if(el.type==="checkbox")el.checked=!!v;else el.value=v});
+document.querySelectorAll("[data-seg]").forEach(b=>b.setAttribute("aria-pressed",S[b.dataset.seg]===b.dataset.v));
+document.querySelectorAll(".sub2 input[type=checkbox],.sub2 select").forEach(el=>el.disabled=!S.al.on)}
+$("drawer").addEventListener("change",e=>{const el=e.target;if(!el.dataset.k)return;const k=el.dataset.k.split("."),v=el.type==="checkbox"?el.checked:isNaN(el.value)?el.value:+el.value;
+if(k.length>1)S[k[0]][k[1]]=v;else S[k[0]]=v;sync();render()});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-seg]");if(b){S[b.dataset.seg]=b.dataset.v;theme();sync();render()}});
+$("reset").onclick=()=>{S=JSON.parse(JSON.stringify(DEF));theme();sync();render()};
+S.avalIn=false;theme();sync();render();
+fetch("data/conditions.json?t="+Date.now()).then(r=>r.ok?r.json():null).then(j=>{if(!j||!j.areas)return;LIVE=j;
+document.querySelector(".note").textContent="Live data, updated "+new Date(j.updated).toLocaleString()+". Forecasts: National Weather Service. Snow: SNOTEL. Avalanche: avalanche.org. Lift and trail status is not available yet.";render()}).catch(()=>{});
+</script>
+</body>
+</html>
