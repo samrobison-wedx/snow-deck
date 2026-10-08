@@ -490,8 +490,8 @@ let DEMO=false;
 /* data access */
 let LIVE=null,TERR=null;const DC=new Map();
 /* lift counts are hidden in summer, when old numbers are the usual cause of wrong data */
-const offSeason=()=>{const m=new Date().getMonth();return m>=5&&m<=8};
-function terr(a){const T=TERR&&TERR.resorts&&TERR.resorts[a.id];return T&&Date.now()-Date.parse(T.fetched)<10*36e5&&!offSeason()?T:null}
+const offSeason=T=>{const m=new Date().getMonth();return m>=4&&m<=9&&!(T&&T.early)};
+function terr(a){const T=TERR&&TERR.resorts&&TERR.resorts[a.id];return T&&Date.now()-Date.parse(T.fetched)<10*36e5&&!offSeason(T)?T:null}
 const lf=T=>T&&T.lifts?(T.lifts[1]?T.lifts[0]/T.lifts[1]:T.lifts[0]>0?.5:0):0;
 const T0=a=>{const T=a.zone?null:terr(a);return lf(T)*15};
 function estCond(d){const h=d.temps[0].hi;return h>=40?"Slushy":h>=34?"Wet snow":d.s24>=6?"Powder":d.s24>=2?"Packed powder":"Variable"}
