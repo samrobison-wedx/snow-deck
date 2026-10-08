@@ -141,6 +141,17 @@ def judge(s, text):
         return {"closed": True}, "closed for the season"
     if not e:
         return None, "no numbers found"
+    # sanity: open can never exceed the total, and totals must look like a real resort
+    for k, cap in (("lifts", 60), ("trails", 400)):
+        v = e.get(k)
+        if v and v[1] is not None and (v[0] > v[1] or v[1] > cap or v[1] == 0):
+            return None, "implausible %s numbers %s (ignored)" % (k, v)
+    # outside the ski season only the few resorts that open early or run late may report counts
+    if today.month in (5, 6, 7, 8, 9, 10) and not s.get("early"):
+        return None, "off-season, counts ignored"
+    # pages not yet checked by hand must show a fresh 'updated' date, otherwise they could be old marketing text
+    if s.get("unverified") and not (st and (today - st).days <= STALE_DAYS):
+        return None, "unverified page with no recent 'updated' date (ignored)"
     return e, "ok"
  
 # ---------- optional headless browser ----------
@@ -201,6 +212,8 @@ def main():
         now = datetime.now(timezone.utc).isoformat()
         if e:
             e["fetched"] = now
+            if s.get("early"):
+                e["early"] = True
             res[s["id"]] = e
             good.append(s["id"])
             bad.pop(s["id"], None)
