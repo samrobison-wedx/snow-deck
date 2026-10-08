@@ -3,6 +3,7 @@
 Reads areas.json, gathers data from free public sources, writes data/conditions.json.
 Sources: National Weather Service, Open-Meteo (other forecast models), NRCS SNOTEL, avalanche.org."""
 import html, json, math, os, re, sys, time, urllib.parse, urllib.request
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from zoneinfo import ZoneInfo
  
@@ -17,6 +18,7 @@ AV = "https://api.avalanche.org/v2/public"
 MODELS = {"gfs_seamless": "GFS", "ecmwf_ifs025": "ECMWF", "icon_seamless": "ICON", "gem_seamless": "GEM"}
 NOW = datetime.now(TZ)
 M_TO_FT = 3.28084
+WORKERS = 5  # areas fetched at the same time; small enough to stay polite to the free services
  
 def get(url, tries=3):
     err = None
@@ -299,8 +301,12 @@ def main():
     except Exception:
         avy_hist = {}
     result, ok = {}, 0
-    for a in areas:
-        print(a["id"])
+    t0 = time.time()
+ 
+    def work(a):
+        """Everything for one area. Runs in a worker thread; messages are collected so the log stays readable."""
+        log = []
+        P = lambda *x: log.append(" ".join(str(i) for i in x))
         try:
             tz = ZoneInfo(a.get("tz", "America/Denver"))
             e = None if a.get("country", "US") != "US" else forecast(a["lat"], a["lon"], tz)  # NWS covers the US only
@@ -309,7 +315,7 @@ def main():
             else:
                 e = forecast_om(a, tz)
                 if e:
-                    print("  forecast from Open-Meteo")
+                    P("  forecast from Open-Meteo")
             if not e:
                 raise RuntimeError("no forecast")
             model = e.pop("_model", None)
@@ -324,7 +330,7 @@ def main():
                     try:
                         model = (forecast_om(a, tz) or {}).get("_model")
                     except Exception as ex:
-                        print("  model snow depth skipped:", ex)
+                        P("  model snow depth skipped:", ex)
                 if model:
                     e.update({"s24": model["s24"], "s72": model["s72"], "base": model.get("base", 0), "baseModel": True})
             try:
@@ -332,7 +338,7 @@ def main():
                 if om:
                     e["om"] = om
             except Exception as ex:
-                print("  other models skipped:", ex)
+                P("  other models skipped:", ex)
             if a["zone"]:
                 z = avalanche_zone(a["lat"], a["lon"], feats)
                 zid, link, advice = z.pop("_zid"), z.pop("_link"), z.pop("_advice")
@@ -342,14 +348,14 @@ def main():
                     e["avalCenter"] = "CAIC"
                     link = link or "https://avalanche.state.co.us/"
                     if z.get("avalCenter") not in (None, "CAIC"):
-                        print("  note: Colorado zone matched center %s, not CAIC" % z.get("avalCenter"))
+                        P("  note: Colorado zone matched center %s, not CAIC" % z.get("avalCenter"))
                 if zid and z["avalCenter"]:
                     try:
                         det = av_detail(z["avalCenter"], zid, avcache)
                         det.update({"link": link, "advice": advice})
                         e["av"] = det
                     except Exception as ex:
-                        print("  avalanche detail skipped:", ex)
+                        P("  avalanche detail skipped:", ex)
                 prev_e = old.get(a["id"], {})
                 oa, changed = prev_e.get("aval"), prev_e.get("changedAt")
                 if oa is not None and e["aval"] is not None and oa != e["aval"]:
@@ -368,13 +374,23 @@ def main():
                     for k in sorted(ah)[:-900]:
                         del ah[k]
                 e["avHist"] = dict(sorted(hist.items())[-8:])
-            result[a["id"]] = e
-            ok += 1
+            time.sleep(0.2)
+            return a["id"], e, log
         except Exception as ex:
-            print("  skipped:", ex)
-            if a["id"] in old:
-                result[a["id"]] = dict(old[a["id"]], stale=True)
-        time.sleep(0.4)
+            log.append("  skipped: %s" % ex)
+            return a["id"], (dict(old[a["id"]], stale=True) if a["id"] in old else None), log
+ 
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        for f in [pool.submit(work, a) for a in areas]:
+            aid, e, log = f.result()
+            print(aid)
+            for line in log:
+                print(line)
+            if e is not None:
+                result[aid] = e
+                if not e.get("stale"):
+                    ok += 1
+    print("Fetched all areas in %d seconds" % (time.time() - t0))
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     json.dump({"schema": 3, "updated": datetime.now(timezone.utc).isoformat(), "areas": result}, open(OUT, "w"), separators=(",", ":"))
     json.dump({"schema": 1, "areas": avy_hist}, open(AVH, "w"), separators=(",", ":"))
