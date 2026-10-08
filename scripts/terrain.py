@@ -1,25 +1,35 @@
 #!/usr/bin/env python3
-"""Snow Deck lift and trail collector. Standard library only.
-Reads terrain-sources.json, fetches each resort's own page, pulls out
-"open / total" numbers with the patterns listed there, and writes data/terrain.json.
-If a page shows no numbers in its plain HTML (many load them with JavaScript), it is opened in a headless browser
-(Playwright) when that is installed, and the same patterns are applied to the rendered text. robots.txt is respected either way."""
+"""Snow Deck lift and trail collector. Standard library only (Playwright is optional).
+ 
+Reads terrain-sources.json, fetches each resort's own page, pulls out "open / total" numbers and writes data/terrain.json.
+Step 1: plain page fetch (several resorts at a time).
+Step 2: pages that show no numbers (many load them with JavaScript) are opened in a headless browser, if Playwright is installed.
+Safety checks, so old or made-up numbers are not shown as current:
+  - a page that says it was last updated more than 3 days ago is ignored
+  - a page that says the resort is closed for the season is recorded as "closed" instead of showing counts
+  - generic (non resort-specific) patterns only count when the word "open" is right next to the numbers
+robots.txt is respected. Results are saved after each step, and the run stops by itself after about 20 minutes."""
 import html, json, os, re, sys, time, urllib.error, urllib.request, urllib.robotparser
-from datetime import datetime, timezone
+from concurrent.futures import ThreadPoolExecutor
+from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
  
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "data", "terrain.json")
 UA = "SnowDeck (https://github.com/%s; personal project)" % os.environ.get("GITHUB_REPOSITORY", "local-test")
+START = time.time()
+BUDGET = 20 * 60      # seconds; after this the run saves what it has and stops
+STALE_DAYS = 3
+WORKERS = 6
  
 def fetch(url, accept="text/html,application/xhtml+xml,*/*;q=0.8"):
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept, "Accept-Language": "en-US,en;q=0.9"})
-    with urllib.request.urlopen(req, timeout=40) as r:
+    with urllib.request.urlopen(req, timeout=25) as r:
         return r.read().decode("utf-8", "replace")
  
 _robots = {}
 def allowed(url):
-    """Respect robots.txt. If it can't be read, skip the resort to be safe. Answers are remembered per site."""
+    """Respect robots.txt. If it can't be read, skip the resort to be safe. Answers are remembered per page."""
     p = urlparse(url)
     key = (p.scheme, p.netloc, p.path)
     if key not in _robots:
@@ -35,23 +45,15 @@ def _allowed(url, p):
             if he.code == 404:  # no robots.txt means no stated restrictions
                 return True
             raise
-        ok = rp.can_fetch(UA, url)
-        if not ok:
-            print("  robots.txt says automated access to this page is not allowed")
-        return ok
-    except Exception as e:
-        print("  could not read robots.txt:", e)
+        return rp.can_fetch(UA, url)
+    except Exception:
         return False
-    
  
 def page_text(raw):
     raw = re.sub(r"(?is)<(script|style).*?</\1>", " ", raw)
     return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw)))
  
-# Common ways resorts write "open / total". Used when a source has no patterns of its own.
-# Each pattern must capture (open, total) in that order.
-# Two common layouts, tried as a pair so that "5 / 12 Lifts Open 40 / 120 Trails Open" and
-# "Lifts Open 5 / 12  Trails Open 40 / 120" are not mixed up. Every pattern captures (open, total).
+# ---------- reading the numbers ----------
 SEP = r"\s*(?:/|of|out of)\s*"
 STYLE_A = {  # number first: "5 / 12 Lifts Open"
     "lifts": [r"(\d+)" + SEP + r"(\d+)\s*lifts?\b"],
@@ -61,24 +63,23 @@ STYLE_B = {  # label first: "Lifts Open: 5 / 12"
     "lifts": [r"\b(?:open\s+)?lifts?(?:\s*open)?(?:\s*today)?\s*:?\s*(\d+)" + SEP + r"(\d+)"],
     "trails": [r"\b(?:open\s+)?(?:trails?|runs?)(?:\s*open)?(?:\s*today)?\s*:?\s*(\d+)" + SEP + r"(\d+)"],
 }
-DEFAULTS = {k: STYLE_A[k] + STYLE_B[k] for k in ("lifts", "trails")}
 LIMIT = {"lifts": 60, "trails": 500}  # a bigger total is almost certainly a misread
  
-def pull(text, patterns, kind="lifts"):
+def pull(text, patterns, kind="lifts", need_open=False):
     """Returns [open, total], or [open, None] when a pattern has only the open count."""
     if isinstance(patterns, str):
         patterns = [patterns]
     for pat in patterns:
-        m = re.search(pat, text, re.I)
-        if not m:
-            continue
-        o = int(m.group(1))
-        if m.lastindex and m.lastindex >= 2:
-            t = int(m.group(2))
-            if 0 <= o <= t and 0 < t <= LIMIT.get(kind, 500):
-                return [o, t]
-        elif 0 <= o <= LIMIT.get(kind, 500):
-            return [o, None]
+        for m in re.finditer(pat, text, re.I):
+            if need_open and not re.search(r"open", text[max(0, m.start() - 40):m.end() + 40], re.I):
+                continue
+            o = int(m.group(1))
+            if m.lastindex and m.lastindex >= 2:
+                t = int(m.group(2))
+                if 0 <= o <= t and 0 < t <= LIMIT.get(kind, 500):
+                    return [o, t]
+            elif 0 <= o <= LIMIT.get(kind, 500):
+                return [o, None]
     return None
  
 def extract(s, text):
@@ -91,17 +92,59 @@ def extract(s, text):
             e[k] = v
     need = [k for k in ("lifts", "trails") if k not in e]
     if need:
-        A = {k: pull(text, STYLE_A[k], k) for k in need}
-        B = {k: pull(text, STYLE_B[k], k) for k in need}
+        A = {k: pull(text, STYLE_A[k], k, True) for k in need}
+        B = {k: pull(text, STYLE_B[k], k, True) for k in need}
         na, nb = sum(1 for v in A.values() if v), sum(1 for v in B.values() if v)
-        pick = B if nb > na else A
-        for k, v in pick.items():
+        for k, v in (B if nb > na else A).items():
             if v:
                 e[k] = v
     return e
  
+# ---------- old or closed-season pages ----------
+MONTHS = {m: i + 1 for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"])}
+MON = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?"
+STAMP = re.compile(r"(?:last\s+updated|updated|as\s+of|report\s+(?:date|time))\s*(?:on|at)?\s*:?\s*(?:[a-z]+day,?\s+)?"
+                   r"(?:" + MON + r"\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(20\d\d))?|(\d{1,2})/(\d{1,2})(?:/(\d{2,4}))?)", re.I)
+CLOSED = re.compile(r"closed\s+for\s+(?:the\s+)?(?:(?:20)?\d\d\s*[-–/]\s*(?:20)?\d\d\s+)?(?:season|summer|winter|offseason|off-season)"
+                    r"|season\s+(?:has\s+)?(?:ended|is\s+over|is\s+complete)|see\s+you\s+(?:next\s+)?(?:season|winter|fall)|until\s+next\s+(?:season|winter)", re.I)
+ 
+def newest_stamp(text, today):
+    """Most recent 'updated ...' date mentioned on the page, or None if there is none."""
+    best = None
+    for m in STAMP.finditer(text):
+        try:
+            if m.group(1):
+                mo, d, y = MONTHS[m.group(1).lower()[:3]], int(m.group(2)), int(m.group(3)) if m.group(3) else None
+            else:
+                mo, d, y = int(m.group(4)), int(m.group(5)), m.group(6)
+                y = (int(y) + 2000 if int(y) < 100 else int(y)) if y else None
+            if y is None:
+                y = today.year
+                if datetime(y, mo, d).date() > today + timedelta(days=2):
+                    y -= 1
+            dt = datetime(y, mo, d).date()
+        except (ValueError, KeyError):
+            continue
+        if best is None or dt > best:
+            best = dt
+    return best
+ 
+def judge(s, text):
+    """Returns (result dict or None, reason). result may be {'closed': True}."""
+    e = extract(s, text)
+    today = datetime.now(timezone.utc).date()
+    st = newest_stamp(text, today)
+    if e and st and (today - st).days > STALE_DAYS:
+        return None, "page says it was last updated %s (old data, ignored)" % st.isoformat()
+    opened = any(v and v[0] > 0 for v in e.values())
+    if CLOSED.search(text) and not opened:
+        return {"closed": True}, "closed for the season"
+    if not e:
+        return None, "no numbers found"
+    return e, "ok"
+ 
+# ---------- optional headless browser ----------
 class Browser:
-    """Optional headless browser. Only started if a page needs it and Playwright is installed."""
     def __init__(self):
         self.pw = self.br = None
         self.failed = False
@@ -115,12 +158,15 @@ class Browser:
                 self.br = self.pw.chromium.launch()
             pg = self.br.new_page(user_agent=UA)
             try:
-                pg.goto(url, wait_until="networkidle", timeout=45000)
-            except Exception:
-                pass  # some pages never go idle; use whatever has loaded
-            pg.wait_for_timeout(2500)
-            t = pg.inner_text("body")
-            pg.close()
+                pg.goto(url, wait_until="domcontentloaded", timeout=25000)
+                try:
+                    pg.wait_for_load_state("networkidle", timeout=8000)
+                except Exception:
+                    pass
+                pg.wait_for_timeout(1500)
+                t = pg.inner_text("body")
+            finally:
+                pg.close()
             return re.sub(r"\s+", " ", t)
         except ImportError:
             print("  (Playwright is not installed, so pages that load their numbers by script are skipped)")
@@ -135,63 +181,82 @@ class Browser:
         except Exception:
             pass
  
+def out_of_time():
+    return time.time() - START > BUDGET
+ 
 def main():
-    sources = json.load(open(os.path.join(ROOT, "terrain-sources.json")))
+    sources = [s for s in json.load(open(os.path.join(ROOT, "terrain-sources.json"))) if s.get("enabled") is not False]
     try:
         res = json.load(open(OUT)).get("resorts", {})
     except Exception:
         res = {}
-    ok, good, bad = 0, [], []
+    good, bad = [], {}
+ 
+    def save():
+        os.makedirs(os.path.dirname(OUT), exist_ok=True)
+        json.dump({"updated": datetime.now(timezone.utc).isoformat(), "resorts": res,
+                   "report": {"ok": good, "problems": bad}}, open(OUT, "w"), separators=(",", ":"))
+ 
+    def record(s, e, why, how):
+        now = datetime.now(timezone.utc).isoformat()
+        if e:
+            e["fetched"] = now
+            res[s["id"]] = e
+            good.append(s["id"])
+            bad.pop(s["id"], None)
+        else:
+            bad[s["id"]] = why
+ 
+    # step 1: plain pages
+    def step1(s):
+        try:
+            for u in (s.get("urls") or [s["url"]]):
+                if not allowed(u):
+                    return s, None, "robots.txt does not allow it", ""
+                e, why = judge(s, page_text(fetch(u)))
+                if e:
+                    return s, e, why, "page"
+            return s, None, why, ""
+        except Exception as ex:
+            return s, None, "error: %s" % str(ex)[:80], ""
+    todo = []
+    with ThreadPoolExecutor(max_workers=WORKERS) as pool:
+        for s, e, why, how in pool.map(step1, sources):
+            print("%-22s %s %s" % (s["id"], how or "-", (e or why)))
+            if e:
+                record(s, e, why, how)
+            elif not s.get("nojs") and why in ("no numbers found",) and not out_of_time():
+                todo.append(s)
+            else:
+                bad[s["id"]] = why
+    save()
+ 
+    # step 2: headless browser for the rest
     browser = Browser()
-    for s in sources:
-        print(s["id"])
-        if s.get("enabled") is False:
-            print("  off:", s.get("note", ""))
+    for s in todo:
+        if out_of_time():
+            bad[s["id"]] = "ran out of time"
             continue
         try:
-            urls = s.get("urls") or [s["url"]]
-            e, how, blocked = {}, "", False
-            for u in urls:
-                if not allowed(u):
-                    print("  robots.txt does not allow", u)
-                    blocked = True
-                    continue
-                blocked = False
-                text = page_text(fetch(u))
-                e = extract(s, text)
-                if e:
-                    how = "page"
-                    break
-            if not e and not blocked and not s.get("nojs"):
-                text = browser.text(urls[0])
-                if text:
-                    e = extract(s, text)
-                    how = "browser"
-                    if not e:
-                        print("  rendered text starts:", text[:200])
-            if not e:
-                why = "robots.txt" if blocked else "no numbers found (closed for the season, or the layout needs a pattern)"
-                print("  ", why)
-                bad.append((s["id"], why))
-                continue
-            e["fetched"] = datetime.now(timezone.utc).isoformat()
-            res[s["id"]] = e
-            ok += 1
-            good.append("%s (%s)" % (s["id"], how))
-            print("  ", how, e)
+            text = browser.text((s.get("urls") or [s["url"]])[0])
+            if text is None:
+                bad[s["id"]] = "browser not available or page did not load"
+            else:
+                e, why = judge(s, text)
+                print("%-22s browser %s" % (s["id"], e or why))
+                record(s, e, why, "browser")
         except Exception as ex:
-            print("  failed:", ex)
-            bad.append((s["id"], "error: %s" % str(ex)[:80]))
-        time.sleep(2)
+            bad[s["id"]] = "error: %s" % str(ex)[:80]
+        time.sleep(1)
     browser.close()
-    os.makedirs(os.path.dirname(OUT), exist_ok=True)
-    json.dump({"updated": datetime.now(timezone.utc).isoformat(), "resorts": res}, open(OUT, "w"), separators=(",", ":"))
+    save()
+ 
     print("\n=== SUMMARY ===")
     print("Working (%d): %s" % (len(good), ", ".join(good) or "none"))
     print("Needs attention (%d):" % len(bad))
-    for n, why in bad:
+    for n, why in sorted(bad.items()):
         print("  - %s: %s" % (n, why))
-    print("Done: %d of %d resorts updated" % (ok, len(sources)))
+    print("Done in %d seconds" % (time.time() - START))
  
 if __name__ == "__main__":
     main()
