@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: false
 jobs:
   update:
-    timeout-minutes: 40
+    timeout-minutes: 45
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -25,6 +25,7 @@ jobs:
       - name: Collect lifts and trails
         run: python scripts/terrain.py
       - name: Save data
+        if: always()
         run: |
           git config user.name "snow-deck-bot"
           git config user.email "snow-deck-bot@users.noreply.github.com"
