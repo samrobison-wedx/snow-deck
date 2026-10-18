@@ -24,6 +24,9 @@ jobs:
           playwright install --with-deps chromium
       - name: Collect lifts and trails
         run: python scripts/terrain.py
+      - name: Collect opening dates
+        continue-on-error: true
+        run: python scripts/opening.py
       - name: Save data
         if: always()
         run: |
@@ -31,6 +34,7 @@ jobs:
           git config user.email "snow-deck-bot@users.noreply.github.com"
           mkdir -p data
           git add data/terrain.json
+          [ -f data/opening.json ] && git add data/opening.json || true
           git diff --cached --quiet && exit 0
           git commit -m "Update terrain status"
           for i in 1 2 3 4 5 6 7 8; do
