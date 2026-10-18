@@ -1,8 +1,4 @@
 {
   "_help": "Type opening dates here when the website reader misses them. Format: \"Resort id\": {\"date\": \"YYYY-MM-DD\", \"note\": \"Announced by the resort\", \"url\": \"link to the announcement\"}. Typed dates win over dates the collector finds. Delete the example lines below.",
-  "_example": {
-    "date": "2026-11-20",
-    "note": "Example only (ignored because the name starts with an underscore)",
-    "url": "https://example.com"
-  }
+  "_example": {"date": "2026-11-20", "note": "Example only (ignored because the name starts with an underscore)", "url": "https://example.com"}
 }
