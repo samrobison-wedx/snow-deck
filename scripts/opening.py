@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Snow Deck opening-date collector. Standard library only.
- 
+
 Writes data/opening.json with, for each resort that has one:
   "official": a date the resort itself states (read from its own website, or typed into opening-dates.json; typed dates win)
   "news":     a date a recent news article clearly states, with a link to the article (always shown as an unconfirmed estimate)
@@ -9,10 +9,10 @@ import json, os, re, sys, time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
- 
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import terrain as T  # shares fetch(), allowed(), page_text() and the polite User-Agent
- 
+
 ROOT = T.ROOT
 OUT = os.path.join(ROOT, "data", "opening.json")
 BUDGET = 8 * 60
@@ -27,7 +27,7 @@ KEY = re.compile(r"(opening\s+day|scheduled\s+to\s+open|set\s+to\s+open|plans?\s
 # words that mean the date is about something else (events, passes, sales, past results)
 NOISE = re.compile(r"(pass\s+sales?|deadline|price|prices|sale\b|early\s+bird|tickets?\s+on\s+sale|summer|bike|festival|concert|closing|closes?\s+(?:on\s+)?|last\s+day|hiring|job\s+fair|"
                    r"anniversary|ski\s+swap|film|race\b|fireworks)", re.I)
- 
+
 def pick_date(text, today, window=110, strict=False):
     """First opening-looking date in text that is still ahead (within 270 days). Returns (date, snippet) or None."""
     for k in KEY.finditer(text):
@@ -49,7 +49,7 @@ def pick_date(text, today, window=110, strict=False):
             if today <= dt <= today + timedelta(days=270) and mo in (9, 10, 11, 12, 1, 2, 3, 4, 5, 6):
                 return dt, re.sub(r"\s+", " ", seg[max(0, m.start() - 70): m.end() + 40]).strip()
     return None
- 
+
 def main():
     today = datetime.now(timezone.utc).astimezone().date()
     out, report = {}, {}
@@ -127,7 +127,6 @@ def main():
     json.dump({"updated": datetime.now(timezone.utc).isoformat(), "resorts": out, "report": report}, open(OUT, "w"), separators=(",", ":"))
     print("\nOpening dates: %d resorts have at least one date (%d from a resort/typed, %d from news)" % (
         len(out), sum(1 for v in out.values() if v.get("official")), sum(1 for v in out.values() if v.get("news"))))
- 
+
 if __name__ == "__main__":
     main()
- 
