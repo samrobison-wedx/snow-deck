@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Snow Deck lift and trail collector. Standard library only (Playwright is optional).
- 
+
 Reads terrain-sources.json, fetches each resort's own page, pulls out "open / total" numbers and writes data/terrain.json.
 Step 1: plain page fetch (several resorts at a time).
 Step 2: pages that show no numbers (many load them with JavaScript) are opened in a headless browser, if Playwright is installed.
@@ -13,7 +13,7 @@ import html, json, os, re, sys, time, urllib.error, urllib.request, urllib.robot
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timedelta, timezone
 from urllib.parse import urlparse
- 
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(ROOT, "data", "terrain.json")
 UA = "SnowDeck (https://github.com/%s; personal project)" % os.environ.get("GITHUB_REPOSITORY", "local-test")
@@ -21,12 +21,12 @@ START = time.time()
 BUDGET = 20 * 60      # seconds; after this the run saves what it has and stops
 STALE_DAYS = 3
 WORKERS = 6
- 
+
 def fetch(url, accept="text/html,application/xhtml+xml,*/*;q=0.8"):
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": accept, "Accept-Language": "en-US,en;q=0.9"})
     with urllib.request.urlopen(req, timeout=25) as r:
         return r.read().decode("utf-8", "replace")
- 
+
 _robots = {}
 def allowed(url):
     """Respect robots.txt. If it can't be read, skip the resort to be safe. Answers are remembered per page."""
@@ -35,7 +35,7 @@ def allowed(url):
     if key not in _robots:
         _robots[key] = _allowed(url, p)
     return _robots[key]
- 
+
 def _allowed(url, p):
     try:
         rp = urllib.robotparser.RobotFileParser()
@@ -48,11 +48,11 @@ def _allowed(url, p):
         return rp.can_fetch(UA, url)
     except Exception:
         return False
- 
+
 def page_text(raw):
     raw = re.sub(r"(?is)<(script|style).*?</\1>", " ", raw)
     return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", raw)))
- 
+
 # ---------- reading the numbers ----------
 SEP = r"\s*(?:/|of|out of)\s*"
 STYLE_A = {  # number first: "5 / 12 Lifts Open"
@@ -64,7 +64,7 @@ STYLE_B = {  # label first: "Lifts Open: 5 / 12"
     "trails": [r"\b(?:open\s+)?(?:trails?|runs?)(?:\s*open)?(?:\s*today)?\s*:?\s*(\d+)" + SEP + r"(\d+)"],
 }
 LIMIT = {"lifts": 60, "trails": 500}  # a bigger total is almost certainly a misread
- 
+
 def pull(text, patterns, kind="lifts", need_open=False):
     """Returns [open, total], or [open, None] when a pattern has only the open count."""
     if isinstance(patterns, str):
@@ -81,7 +81,7 @@ def pull(text, patterns, kind="lifts", need_open=False):
             elif 0 <= o <= LIMIT.get(kind, 500):
                 return [o, None]
     return None
- 
+
 def extract(s, text):
     """Resort-specific patterns first; anything still missing comes from the better-fitting generic layout."""
     e = {}
@@ -99,7 +99,7 @@ def extract(s, text):
             if v:
                 e[k] = v
     return e
- 
+
 # ---------- old or closed-season pages ----------
 MONTHS = {m: i + 1 for i, m in enumerate(["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"])}
 MON = r"(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?"
@@ -107,7 +107,7 @@ STAMP = re.compile(r"(?:last\s+updated|updated|as\s+of|report\s+(?:date|time))\s
                    r"(?:" + MON + r"\s+(\d{1,2})(?:st|nd|rd|th)?(?:,?\s*(20\d\d))?|(\d{1,2})/(\d{1,2})(?:/(\d{2,4}))?)", re.I)
 CLOSED = re.compile(r"closed\s+for\s+(?:the\s+)?(?:(?:20)?\d\d\s*[-–/]\s*(?:20)?\d\d\s+)?(?:season|summer|winter|offseason|off-season)"
                     r"|season\s+(?:has\s+)?(?:ended|is\s+over|is\s+complete)|see\s+you\s+(?:next\s+)?(?:season|winter|fall)|until\s+next\s+(?:season|winter)", re.I)
- 
+
 def newest_stamp(text, today):
     """Most recent 'updated ...' date mentioned on the page, or None if there is none."""
     best = None
@@ -128,7 +128,7 @@ def newest_stamp(text, today):
         if best is None or dt > best:
             best = dt
     return best
- 
+
 def judge(s, text):
     """Returns (result dict or None, reason). result may be {'closed': True}."""
     e = extract(s, text)
@@ -148,7 +148,7 @@ def judge(s, text):
         if v and v[1] is not None and (v[0] > v[1] or v[1] > cap or v[1] == 0):
             return None, "implausible %s numbers %s (ignored)" % (k, v)
     return e, "ok"
- 
+
 # ---------- optional headless browser ----------
 class Browser:
     def __init__(self):
@@ -186,10 +186,10 @@ class Browser:
             if self.pw: self.pw.stop()
         except Exception:
             pass
- 
+
 def out_of_time():
     return time.time() - START > BUDGET
- 
+
 def main():
     sources = [s for s in json.load(open(os.path.join(ROOT, "terrain-sources.json"))) if s.get("enabled") is not False]
     try:
@@ -197,12 +197,12 @@ def main():
     except Exception:
         res = {}
     good, bad = [], {}
- 
+
     def save():
         os.makedirs(os.path.dirname(OUT), exist_ok=True)
         json.dump({"updated": datetime.now(timezone.utc).isoformat(), "resorts": res,
                    "report": {"ok": good, "problems": bad}}, open(OUT, "w"), separators=(",", ":"))
- 
+
     def record(s, e, why, how):
         now = datetime.now(timezone.utc).isoformat()
         if e:
@@ -214,7 +214,7 @@ def main():
             bad.pop(s["id"], None)
         else:
             bad[s["id"]] = why
- 
+
     # step 1: plain pages
     def step1(s):
         try:
@@ -238,7 +238,7 @@ def main():
             else:
                 bad[s["id"]] = why
     save()
- 
+
     # step 2: headless browser for the rest
     browser = Browser()
     for s in todo:
@@ -258,14 +258,13 @@ def main():
         time.sleep(1)
     browser.close()
     save()
- 
+
     print("\n=== SUMMARY ===")
     print("Working (%d): %s" % (len(good), ", ".join(good) or "none"))
     print("Needs attention (%d):" % len(bad))
     for n, why in sorted(bad.items()):
         print("  - %s: %s" % (n, why))
     print("Done in %d seconds" % (time.time() - START))
- 
+
 if __name__ == "__main__":
     main()
- 
