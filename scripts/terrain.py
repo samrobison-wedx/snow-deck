@@ -134,8 +134,9 @@ def judge(s, text):
     e = extract(s, text)
     today = datetime.now(timezone.utc).date()
     st = newest_stamp(text, today)
-    if e and st and (today - st).days > STALE_DAYS:
-        return None, "page says it was last updated %s (old data, ignored)" % st.isoformat()
+    sstart = datetime(today.year if today.month >= 9 else today.year - 1, 9, 1).date()
+    if e and st and st < sstart:
+        return None, "page says it was last updated %s, before this season began (%s), so it is old data" % (st.isoformat(), sstart.isoformat())
     opened = any(v and v[0] > 0 for v in e.values())
     if CLOSED.search(text) and not opened:
         return {"closed": True}, "closed for the season"
@@ -146,12 +147,6 @@ def judge(s, text):
         v = e.get(k)
         if v and v[1] is not None and (v[0] > v[1] or v[1] > cap or v[1] == 0):
             return None, "implausible %s numbers %s (ignored)" % (k, v)
-    # outside the ski season only the few resorts that open early or run late may report counts
-    if today.month in (5, 6, 7, 8, 9, 10) and not s.get("early"):
-        return None, "off-season, counts ignored"
-    # pages not yet checked by hand must show a fresh 'updated' date, otherwise they could be old marketing text
-    if s.get("unverified") and not (st and (today - st).days <= STALE_DAYS):
-        return None, "unverified page with no recent 'updated' date (ignored)"
     return e, "ok"
  
 # ---------- optional headless browser ----------
